@@ -155,7 +155,7 @@ export function CarnetScreen() {
       </div>
       <div className="cert" style={{ border: "1px solid var(--border-strong)", borderRadius: 12, overflow: "hidden" }}>
         <div style={{ padding: 14 }}>
-          <LogoLockup size={16} textSize={10} />
+          <LogoLockup size={16} />
           <div style={{ fontWeight: 600, fontSize: 15, marginTop: 10 }}>{MEMBERS[memberIdx]}</div>
           <div style={{ fontSize: 12, color: "var(--muted)", marginTop: 2 }}>Plan Alpha, salud local</div>
         </div>
@@ -184,7 +184,7 @@ export function CarnetBienScreen({ productKey }) {
         <BackHeader title={`Carnet · ${title}`} />
         <div className="cert" style={{ border: "1px solid var(--border-strong)", borderRadius: 12, overflow: "hidden" }}>
           <div style={{ padding: 14 }}>
-            <LogoLockup size={16} textSize={10} />
+            <LogoLockup size={16} />
             <div style={{ fontWeight: 600, fontSize: 15, marginTop: 10 }}>{ap.plan}</div>
             <div style={{ fontSize: 12, color: "var(--muted)", marginTop: 2 }}>{title}</div>
           </div>
@@ -216,7 +216,7 @@ export function CarnetBienScreen({ productKey }) {
       <BackHeader title={`Carnet · ${title}`} />
       <div className="cert" style={{ border: "1px solid var(--border-strong)", borderRadius: 12, overflow: "hidden" }}>
         <div style={{ padding: 14 }}>
-          <LogoLockup size={16} textSize={10} />
+          <LogoLockup size={16} />
           <div style={{ fontWeight: 600, fontSize: 15, marginTop: 10 }}>{c.plan}</div>
           <div style={{ fontSize: 12, color: "var(--muted)", marginTop: 2 }}>{title}</div>
         </div>

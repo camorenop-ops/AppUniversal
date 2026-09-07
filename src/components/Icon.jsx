@@ -1,3 +1,5 @@
+import logoUniversal from "../assets/logo-universal.png";
+
 export const ICONS = {
   home: '<path d="M4 11 12 4l8 7"/><path d="M6 10v9h12v-9"/>',
   list: '<path d="M4 6h16M4 12h16M4 18h10"/>',
@@ -68,24 +70,6 @@ export function Icon({ name, size = 18, color = "currentColor", style }) {
   );
 }
 
-export function LogoMark({ size = 22 }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 40 40" aria-hidden="true" style={{ flexShrink: 0, verticalAlign: "-6px" }}>
-      <g transform="translate(20,20)">
-        <rect x="-3" y="-17" width="6" height="12" rx="3" fill="#4A90D9" />
-        <rect x="-3" y="-17" width="6" height="12" rx="3" fill="#1E2761" transform="rotate(90)" />
-        <rect x="-3" y="-17" width="6" height="12" rx="3" fill="#4A90D9" transform="rotate(180)" />
-        <rect x="-3" y="-17" width="6" height="12" rx="3" fill="#1E2761" transform="rotate(270)" />
-      </g>
-    </svg>
-  );
-}
-
-export function LogoLockup({ size = 22, textSize = 13 }) {
-  return (
-    <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-      <LogoMark size={size} />
-      <span style={{ fontSize: textSize, color: "var(--accent)", fontWeight: 700, letterSpacing: ".03em" }}>UNIVERSAL</span>
-    </div>
-  );
+export function LogoLockup({ size = 22 }) {
+  return <img src={logoUniversal} alt="Universal" style={{ height: size, display: "block" }} />;
 }
