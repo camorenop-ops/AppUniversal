@@ -72,12 +72,12 @@ export function HomeTab() {
 
   return (
     <>
-      <div className="toptabs">
-        {FILIALES.map((f) => <Pill key={f} label={f} on={f === activeFilial} onClick={() => setFilial(f)} />)}
-      </div>
       <LogoLockup size={22} textSize={13} />
       <div style={{ fontSize: 15, margin: "6px 0 12px" }}>Carlos Andrés Moreno Prieto</div>
       <AdsStrip ads={ANUNCIOS} onSelect={openStub} />
+      <div className="toptabs">
+        {FILIALES.map((f) => <Pill key={f} label={f} on={f === activeFilial} onClick={() => setFilial(f)} />)}
+      </div>
       {content}
     </>
   );
