@@ -83,6 +83,26 @@ export function MapMock({ pins }) {
   );
 }
 
+export function AdsStrip({ ads, onSelect }) {
+  return (
+    <div className="ads-strip">
+      {ads.map((a, i) => {
+        const style = a.img
+          ? { backgroundImage: `url(${a.img})` }
+          : { background: "linear-gradient(135deg,var(--navy),var(--accent))" };
+        return (
+          <div key={i} className="ad-card" style={style} onClick={() => onSelect(a.t)}>
+            <div className="overlay">
+              <div className="tag">{a.tag}</div>
+              <div className="t">{a.t}</div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 export function Tile({ product, onClick, onCotizar }) {
   const off = product.noContratado;
   return (

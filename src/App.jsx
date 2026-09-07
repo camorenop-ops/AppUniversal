@@ -12,8 +12,8 @@ export default function App() {
     <AppProvider>
       <div className="topbar">
         <p className="eyebrow">UNIVERSAL APP · PROPUESTA B</p>
-        <h1>Universal App</h1>
-        <p>Prototipo navegable — planes reales de Salud y Auto con detalle de coberturas por categorías.</p>
+        <h1>Panel por Línea de Negocio</h1>
+        <p>Navegación superior segmentada por filial (Seguros, AFI, Fiduciaria, ARS, Asistencia), coberturas agrupadas por categoría y carnet estilo certificado.</p>
       </div>
       <div className="stage">
         <PhoneFrame />

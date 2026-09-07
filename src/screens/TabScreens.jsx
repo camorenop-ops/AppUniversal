@@ -1,7 +1,7 @@
 import { useApp } from "../context/AppContext";
 import { LogoLockup, Icon } from "../components/Icon";
-import { Pill, Row, SectionLabel, Tile, QuickActionsRow } from "../components/UI";
-import { FONDOS, PROYECTOS, SALUD_ITEMS, AUTO_ITEMS } from "../data/data";
+import { Pill, Row, SectionLabel, Tile, QuickActionsRow, AdsStrip } from "../components/UI";
+import { FONDOS, PROYECTOS, SALUD_ITEMS, AUTO_ITEMS, ANUNCIOS } from "../data/data";
 
 export function HomeTab() {
   const {
@@ -72,11 +72,12 @@ export function HomeTab() {
 
   return (
     <>
-      <LogoLockup size={22} textSize={13} />
-      <div style={{ fontSize: 15, margin: "6px 0 12px" }}>Carlos Andrés Moreno Prieto</div>
-      <div style={{ display: "flex", gap: 6, overflowX: "auto", marginBottom: 14 }}>
+      <div className="toptabs">
         {FILIALES.map((f) => <Pill key={f} label={f} on={f === activeFilial} onClick={() => setFilial(f)} />)}
       </div>
+      <LogoLockup size={22} textSize={13} />
+      <div style={{ fontSize: 15, margin: "6px 0 12px" }}>Carlos Andrés Moreno Prieto</div>
+      <AdsStrip ads={ANUNCIOS} onSelect={openStub} />
       {content}
     </>
   );

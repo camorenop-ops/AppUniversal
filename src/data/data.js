@@ -1,3 +1,6 @@
+import adAuto from "../assets/ad-auto.jpg";
+import adSalud from "../assets/ad-salud.jpg";
+
 export const INITIAL_DEPENDIENTES = [
   "Amy Carolina Pereyra García",
   "Gabriel Eduardo Moreno Pereyra",
@@ -152,6 +155,11 @@ export const ASISTENCIA_INFO = {
   asistenciahogar: [["Estado", "Activo"], ["Cobertura", "Plomería, electricidad, cerrajería"]],
 };
 export const FILIALES = ["Seguros", "AFI", "Fiduciaria", "ARS", "Asistencia"];
+export const ANUNCIOS = [
+  { tag: "SEGUROS UNIVERSAL · AUTO", t: "Retoque Express gratis con tu Súper Full", img: adAuto },
+  { tag: "SEGUROS UNIVERSAL · SALUD", t: "Plan Exclusivo: cobertura desde la gestación", img: adSalud },
+  { tag: "GRUPO UNIVERSAL", t: "60 años protegiendo lo que más quieres", img: null },
+];
 export const CENTROS = [
   { x: 50, y: 62, label: "Tú", primary: true },
   { x: 28, y: 28, label: "Clínica Abreu" },
