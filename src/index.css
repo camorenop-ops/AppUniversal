@@ -1,4 +1,5 @@
 :root {
+  color-scheme: light;
   --navy: #1E2761;
   --accent: #154C8C;
   --ice: #EAF1FC;
@@ -22,6 +23,9 @@ body {
   background: var(--bg-page);
   color: #1a1f2b;
   min-height: 100vh;
+}
+.greeting-name {
+  font-size: 15px;
 }
 
 .topbar {
@@ -471,7 +475,7 @@ input.u-input {
   .phone { width: 100%; max-width: 100%; height: 100vh; border-radius: 0; padding: 0; box-shadow: none; background: #fff; }
   .phone .notch { display: none; }
   .screen-body { border-radius: 0; min-height: 100vh; }
-  #screen { padding-top: calc(18px + env(safe-area-inset-top)); }
+  #screen { padding-top: calc(20px + env(safe-area-inset-top)); padding-left: 18px; padding-right: 18px; }
   #navbar { padding-bottom: env(safe-area-inset-bottom); }
 }
 body.standalone .topbar { display: none; }
@@ -479,5 +483,53 @@ body.standalone .stage { padding: 0; min-height: 100vh; }
 body.standalone .phone { width: 100%; max-width: 100%; height: 100vh; border-radius: 0; padding: 0; box-shadow: none; background: #fff; }
 body.standalone .phone .notch { display: none; }
 body.standalone .screen-body { border-radius: 0; min-height: 100vh; }
-body.standalone #screen { padding-top: calc(18px + env(safe-area-inset-top)); }
+body.standalone #screen { padding-top: calc(20px + env(safe-area-inset-top)); padding-left: 18px; padding-right: 18px; }
 body.standalone #navbar { padding-bottom: env(safe-area-inset-bottom); }
+
+/* En pantalla completa real (celular o PWA instalada) el tipo se diseñó
+   para el mockup en miniatura de 320px; aquí se escala a proporciones
+   de app nativa. */
+@media (max-width: 480px) {
+  body { font-size: 16px; }
+  .greeting-name { font-size: 17px; }
+  .section-label { font-size: 13px; }
+  .pill, .chip { font-size: 13px; padding: 7px 13px; }
+  .toptabs .pill { padding: 8px 14px; }
+  .tile .l { font-size: 16px; }
+  .tile .s { font-size: 13px; }
+  .cotizar-row span { font-size: 11.5px; }
+  .badge-active { font-size: 12px; padding: 4px 11px; }
+  button { font-size: 15px; padding: 13px; }
+  .ad-card .tag { font-size: 10.5px; }
+  .ad-card .t { font-size: 15px; }
+  #navbar > div { font-size: 11.5px; padding: 11px 0; }
+  .row { padding: 13px 2px; }
+  .row span.label { font-size: 15.5px; }
+  .add-row span.label { font-size: 14px; }
+  .search-bar { font-size: 13.5px; }
+  input.u-input { font-size: 14.5px; padding: 12px 14px; }
+  .qa-label { font-size: 11px; }
+  .back-header span { font-size: 17px; }
+}
+body.standalone {
+  font-size: 16px;
+}
+body.standalone .greeting-name { font-size: 17px; }
+body.standalone .section-label { font-size: 13px; }
+body.standalone .pill, body.standalone .chip { font-size: 13px; padding: 7px 13px; }
+body.standalone .toptabs .pill { padding: 8px 14px; }
+body.standalone .tile .l { font-size: 16px; }
+body.standalone .tile .s { font-size: 13px; }
+body.standalone .cotizar-row span { font-size: 11.5px; }
+body.standalone .badge-active { font-size: 12px; padding: 4px 11px; }
+body.standalone button { font-size: 15px; padding: 13px; }
+body.standalone .ad-card .tag { font-size: 10.5px; }
+body.standalone .ad-card .t { font-size: 15px; }
+body.standalone #navbar > div { font-size: 11.5px; padding: 11px 0; }
+body.standalone .row { padding: 13px 2px; }
+body.standalone .row span.label { font-size: 15.5px; }
+body.standalone .add-row span.label { font-size: 14px; }
+body.standalone .search-bar { font-size: 13.5px; }
+body.standalone input.u-input { font-size: 14.5px; padding: 12px 14px; }
+body.standalone .qa-label { font-size: 11px; }
+body.standalone .back-header span { font-size: 17px; }
