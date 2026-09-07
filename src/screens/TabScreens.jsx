@@ -72,7 +72,7 @@ export function HomeTab() {
 
   return (
     <>
-      <LogoLockup size={22} />
+      <LogoLockup size={28} className="home-logo" />
       <div className="greeting-name" style={{ margin: "6px 0 12px" }}>Carlos Andrés Moreno Prieto</div>
       <AdsStrip ads={ANUNCIOS} onSelect={openStub} />
       <div className="toptabs">

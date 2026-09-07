@@ -70,6 +70,6 @@ export function Icon({ name, size = 18, color = "currentColor", style }) {
   );
 }
 
-export function LogoLockup({ size = 22 }) {
-  return <img src={logoUniversal} alt="Universal" style={{ height: size, display: "block" }} />;
+export function LogoLockup({ size = 22, className }) {
+  return <img src={logoUniversal} alt="Universal" className={className} style={{ height: size, display: "block" }} />;
 }

@@ -510,6 +510,7 @@ body.standalone #navbar { padding-bottom: env(safe-area-inset-bottom); }
   input.u-input { font-size: 14.5px; padding: 12px 14px; }
   .qa-label { font-size: 11px; }
   .back-header span { font-size: 17px; }
+  .home-logo { height: 34px !important; }
 }
 body.standalone {
   font-size: 16px;
@@ -533,3 +534,4 @@ body.standalone .search-bar { font-size: 13.5px; }
 body.standalone input.u-input { font-size: 14.5px; padding: 12px 14px; }
 body.standalone .qa-label { font-size: 11px; }
 body.standalone .back-header span { font-size: 17px; }
+body.standalone .home-logo { height: 34px !important; }
