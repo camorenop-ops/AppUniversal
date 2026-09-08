@@ -87,7 +87,6 @@ export function AppProvider({ children }) {
   const openChat = () => navigate({ view: "chat" });
   const openMapaCentros = () => navigate({ view: "mapaCentros" });
   const openRedMedica = () => navigate({ view: "redMedica" });
-  const openAsistenciaAuto = () => navigate({ view: "asistenciaAuto" });
   const openFondo = (kind, fondoKey) => navigate({ view: "fondo", kind, fondoKey });
   const openFondoDetalle = (fondoKey) => navigate({ view: "fondoDetalle", fondoKey });
   const openEstadoCuenta = () => navigate({ view: "estadoCuenta" });
@@ -520,7 +519,7 @@ export function AppProvider({ children }) {
   }
   function seleccionarTipoReclamoAuto(tipo) {
     if (tipo === "asistencia") {
-      openAsistenciaAuto();
+      openAsistenciaSolicitud("vehicular");
       return;
     }
     setReclamoForm({ ...reclamoForm, tipoAuto: tipo });
@@ -572,7 +571,7 @@ export function AppProvider({ children }) {
     cot, reembolsoForm, autForm, depForm, cambioPlanForm, renovacionForm, endosoForm, pagoPolizasForm, reclamoForm, traspasoForm,
     asistenciaSolicitudForm,
     navigate, goBack, goTab, setFilial, setMember, findProduct,
-    openChat, openMapaCentros, openRedMedica, openAsistenciaAuto, openFondo, openFondoDetalle,
+    openChat, openMapaCentros, openRedMedica, openFondo, openFondoDetalle,
     openEstadoCuenta, openCarnetBien, openProduct, openCarnet, openStub,
     openEmergencia, openInfo,
     resetCot, openCotizar, elegirSaludDestino, setCotField, responderCuestionario, nextCot, prevCot,

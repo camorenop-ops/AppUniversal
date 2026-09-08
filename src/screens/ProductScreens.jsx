@@ -38,7 +38,7 @@ export function SaludScreen() {
 }
 
 export function AutoScreen() {
-  const { products, openAsistenciaAuto, openCarnetBien } = useApp();
+  const { products, openAsistenciaSolicitud, openCarnetBien } = useApp();
   const ap = products.find((p) => p.key === "auto");
   return (
     <>
@@ -48,7 +48,7 @@ export function AutoScreen() {
       <div style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 8 }}>Contrato: 03003780-28817</div>
       <SectionLabel>Accesos rápidos</SectionLabel>
       <QuickActionsRow items={[
-        ["phone", "Solicitar asistencia", openAsistenciaAuto],
+        ["phone", "Solicitar asistencia", () => openAsistenciaSolicitud("vehicular")],
         ["creditcard", "Carnet", () => openCarnetBien("auto")],
       ]} />
       <SectionLabel>Vehículos asegurados ({ap.vehiculos.length} de 4)</SectionLabel>

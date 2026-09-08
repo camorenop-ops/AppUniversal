@@ -84,20 +84,6 @@ export function RedMedicaScreen() {
   );
 }
 
-export function AsistenciaAutoScreen() {
-  const { openStub } = useApp();
-  return (
-    <>
-      <BackHeader title="Solicitar asistencia" />
-      <div style={{ fontSize: 13, color: "var(--muted)", marginBottom: 8 }}>Confirma tu ubicación para enviar ayuda.</div>
-      <MapMock pins={[{ x: 50, y: 55, label: "Tu ubicación", primary: true }]} />
-      <SectionLabel>Tipo de servicio</SectionLabel>
-      <Row icon="tool" label="Asistencia mecánica" onClick={() => openStub("Asistencia mecánica")} />
-      <Row icon="alerttriangle" label="Asistencia por accidente" onClick={() => openStub("Asistencia por accidente")} />
-    </>
-  );
-}
-
 export function FondoScreen({ kind, fondoKey }) {
   const { goBack } = useApp();
   const [comprobante, setComprobante] = useState(false);
