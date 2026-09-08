@@ -21,6 +21,11 @@ import {
   EndosoSeleccionarPolizaScreen, EndosoTipoScreen, EndosoBancoScreen, EndosoOtroScreen,
   EndosoCondicionesScreen, EndosoGeneradoScreen,
 } from "./screens/RenovacionEndosoScreens";
+import {
+  PagoSeleccionScreen, PagoMetodoScreen, PagoConfirmadoScreen,
+  ReclamoSeleccionarPolizaScreen, ReclamoAutoTipoScreen, ReclamoAutoFormScreen,
+  ReclamoDocumentosScreen, ReclamoGenericoScreen, ReclamoSometidoScreen,
+} from "./screens/PagoReclamoScreens";
 
 export function Router() {
   const { current } = useApp();
@@ -115,6 +120,24 @@ export function Router() {
       return <EndosoCondicionesScreen />;
     case "endosoGenerado":
       return <EndosoGeneradoScreen />;
+    case "pagoPolizas":
+      return <PagoSeleccionScreen />;
+    case "pagoPolizasMetodo":
+      return <PagoMetodoScreen />;
+    case "pagoPolizasConfirmado":
+      return <PagoConfirmadoScreen />;
+    case "reclamoSeleccionar":
+      return <ReclamoSeleccionarPolizaScreen />;
+    case "reclamoAutoTipo":
+      return <ReclamoAutoTipoScreen />;
+    case "reclamoAutoForm":
+      return <ReclamoAutoFormScreen />;
+    case "reclamoDocumentos":
+      return <ReclamoDocumentosScreen />;
+    case "reclamoGenerico":
+      return <ReclamoGenericoScreen />;
+    case "reclamoSometido":
+      return <ReclamoSometidoScreen />;
     default:
       return null;
   }

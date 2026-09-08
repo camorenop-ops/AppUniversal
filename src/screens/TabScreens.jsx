@@ -15,7 +15,7 @@ export function HomeTab() {
   const {
     activeFilial, setFilial, products, asistenciaProducts, dependientes,
     openProduct, openCotizar, openFondo, openEstadoCuenta, openInfo, openStub,
-    openRenovaciones, openEndosarPoliza,
+    openRenovaciones, openEndosarPoliza, openPagoPolizas, openReclamo,
   } = useApp();
 
   let content;
@@ -26,6 +26,8 @@ export function HomeTab() {
         <QuickActionsRow items={[
           ["refresh", "Renovación", openRenovaciones],
           ["filedesc", "Endosar póliza", openEndosarPoliza],
+          ["creditcard", "Pago", openPagoPolizas],
+          ["alerttriangle", "Reclamo", openReclamo],
         ]} />
         <SectionLabel>Mis pólizas</SectionLabel>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(2,minmax(0,1fr))", gap: 10 }}>

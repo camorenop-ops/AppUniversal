@@ -187,6 +187,20 @@ export function Progress({ pasoActual }) {
   );
 }
 
+export function MetodoPagoRow({ icon, label, on, onClick }) {
+  return (
+    <div
+      onClick={onClick}
+      className="row"
+      style={{ background: on ? "var(--ice)" : "transparent", borderRadius: 10, border: `1px solid ${on ? "var(--accent)" : "transparent"}`, padding: "9px 8px" }}
+    >
+      <span style={{ color: on ? "var(--accent)" : "var(--muted)" }}><Icon name={icon} size={17} /></span>
+      <span className="label" style={{ color: on ? "var(--accent)" : "#1a1f2b", fontWeight: on ? 600 : 400 }}>{label}</span>
+      {on && <Icon name="circlecheck" size={16} color="var(--accent)" />}
+    </div>
+  );
+}
+
 export function StepNav({ onBack, onForward, forwardLabel, disabled }) {
   return (
     <div style={{ display: "flex", gap: 8, marginTop: 16 }}>

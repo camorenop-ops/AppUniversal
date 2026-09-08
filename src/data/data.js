@@ -11,24 +11,24 @@ export function initialProducts() {
   return [
     {
       key: "salud", label: "Salud", plan: "Plan Alpha", sub: `Plan Alpha, ${INITIAL_DEPENDIENTES.length} dependientes`, icon: "stethoscope",
-      renovacion: "15/11/2026", primaActual: 42000, primaRenovacion: 46500,
+      renovacion: "15/11/2026", primaActual: 42000, primaRenovacion: 46500, montoPendiente: 3500,
     },
     {
       key: "auto", label: "Auto", sub: "Full, Toyota Prado 2024", icon: "car", plan: "Full",
       vehiculos: [{ marca: "Toyota", modelo: "Prado", anio: "2024", placa: "A123456", color: "Gris" }],
-      renovacion: "20/10/2026", primaActual: 38500, primaRenovacion: 41200,
+      renovacion: "20/10/2026", primaActual: 38500, primaRenovacion: 41200, montoPendiente: 3208,
     },
     {
       key: "vida", label: "Vida Universal", sub: "5 millones asegurados", icon: "heart", plan: "Vida Universal", extra: "Monto asegurado: 5,000,000 pesos",
-      renovacion: "20/01/2027", primaActual: 12800, primaRenovacion: 13400,
+      renovacion: "20/01/2027", primaActual: 12800, primaRenovacion: 13400, montoPendiente: 1067,
     },
     {
       key: "hogar", label: "GarantiCasa", sub: "Multiriesgo, Santo Domingo", icon: "home", plan: "GarantiCasa Multiriesgo", extra: "Apartamento de 120 m², Santo Domingo",
-      renovacion: "10/03/2027", primaActual: 18200, primaRenovacion: 19700,
+      renovacion: "10/03/2027", primaActual: 18200, primaRenovacion: 19700, montoPendiente: 1517,
     },
     {
       key: "garantivilla", label: "GarantiVilla", sub: "Villa, Punta Cana", icon: "building", plan: "GarantiVilla", extra: "Villa vacacional, Punta Cana, La Altagracia",
-      renovacion: "05/06/2027", primaActual: 26400, primaRenovacion: 28900,
+      renovacion: "05/06/2027", primaActual: 26400, primaRenovacion: 28900, montoPendiente: 2200,
     },
     { key: "viaje", label: "Seguro de Viaje", sub: "No contratado", icon: "send", noContratado: true },
   ];
@@ -45,6 +45,21 @@ export const RENOVACION_BENEFICIOS = {
 export const BANCOS_RD = [
   "Banreservas", "Banco Popular Dominicano", "BHD León", "Scotiabank",
   "Banco Santa Cruz", "Banco Caribe", "Banco Promerica", "Banco Vimenca",
+];
+
+export const TIPOS_RECLAMO_AUTO = [
+  ["tool", "asistencia", "Asistencia vehicular"],
+  ["car", "choque", "Choque"],
+  ["shield", "robo", "Robo"],
+  ["alerttriangle", "terceros", "Daño a terceros"],
+];
+
+export const REQUISITOS_RECLAMO_HOGAR = [
+  "Formulario de reclamación firmado",
+  "Fotos del daño",
+  "Presupuesto o factura de reparación",
+  "Copia de cédula del asegurado",
+  "Denuncia policial (si aplica)",
 ];
 
 export function initialAsistenciaProducts() {

@@ -47,6 +47,8 @@ export function AppProvider({ children }) {
   const [cambioPlanForm, setCambioPlanForm] = useState(null);
   const [renovacionForm, setRenovacionForm] = useState(null);
   const [endosoForm, setEndosoForm] = useState(null);
+  const [pagoPolizasForm, setPagoPolizasForm] = useState(null);
+  const [reclamoForm, setReclamoForm] = useState(null);
 
   // ---------- navegación ----------
   function navigate(v) {
@@ -470,11 +472,69 @@ export function AppProvider({ children }) {
     setEndosoForm({ ...endosoForm, enviadoPor: medio });
   }
 
+  // ---------- pago de pólizas ----------
+  function openPagoPolizas() {
+    setPagoPolizasForm({ seleccion: [], metodo: null });
+    navigate({ view: "pagoPolizas" });
+  }
+  function toggleSeleccionPago(key) {
+    const ya = pagoPolizasForm.seleccion.includes(key);
+    setPagoPolizasForm({
+      ...pagoPolizasForm,
+      seleccion: ya ? pagoPolizasForm.seleccion.filter((k) => k !== key) : [...pagoPolizasForm.seleccion, key],
+    });
+  }
+  const continuarPagoPolizas = () => navigate({ view: "pagoPolizasMetodo" });
+  function setMetodoPagoPolizas(metodo) {
+    setPagoPolizasForm({ ...pagoPolizasForm, metodo });
+  }
+  const confirmarPagoPolizas = () => navigate({ view: "pagoPolizasConfirmado" });
+
+  // ---------- reclamos ----------
+  function openReclamo() {
+    setReclamoForm({ productKey: null, tipoAuto: null, fotoCapturada: false, descripcion: "", documentos: {} });
+    navigate({ view: "reclamoSeleccionar" });
+  }
+  function seleccionarPolizaReclamo(key) {
+    setReclamoForm({ ...reclamoForm, productKey: key });
+    if (key === "salud") {
+      openSolicitarReembolso();
+      return;
+    }
+    if (key === "auto") {
+      navigate({ view: "reclamoAutoTipo" });
+      return;
+    }
+    if (key === "hogar" || key === "garantivilla") {
+      navigate({ view: "reclamoDocumentos" });
+      return;
+    }
+    navigate({ view: "reclamoGenerico" });
+  }
+  function seleccionarTipoReclamoAuto(tipo) {
+    if (tipo === "asistencia") {
+      openAsistenciaAuto();
+      return;
+    }
+    setReclamoForm({ ...reclamoForm, tipoAuto: tipo });
+    navigate({ view: "reclamoAutoForm" });
+  }
+  function capturarFotoReclamo() {
+    setReclamoForm({ ...reclamoForm, fotoCapturada: true });
+  }
+  function setReclamoDescripcion(val) {
+    setReclamoForm({ ...reclamoForm, descripcion: val });
+  }
+  function toggleDocumentoReclamo(nombre) {
+    setReclamoForm({ ...reclamoForm, documentos: { ...reclamoForm.documentos, [nombre]: !reclamoForm.documentos[nombre] } });
+  }
+  const someterReclamo = () => navigate({ view: "reclamoSometido" });
+
   const value = {
     stack, current, activeTab, activeFilial, memberIdx,
     products, asistenciaProducts, dependientes, reembolsos, autorizaciones,
     especialidadFiltro, setEspecialidadFiltro,
-    cot, reembolsoForm, autForm, depForm, cambioPlanForm, renovacionForm, endosoForm,
+    cot, reembolsoForm, autForm, depForm, cambioPlanForm, renovacionForm, endosoForm, pagoPolizasForm, reclamoForm,
     navigate, goBack, goTab, setFilial, setMember, findProduct,
     openChat, openMapaCentros, openRedMedica, openAsistenciaAuto, openFondo,
     openEstadoCuenta, openCarnetBien, openProduct, openCarnet, openPago, openStub,
@@ -496,6 +556,9 @@ export function AppProvider({ children }) {
     openRenovaciones, openRenovacionDetalle, aceptarRenovacion, confirmarPagoRenovacion,
     openEndosarPoliza, seleccionarPolizaEndoso, seleccionarTipoEndoso, setEndosoField,
     continuarEndosoDatos, aceptarCondicionesEndoso, enviarEndoso,
+    openPagoPolizas, toggleSeleccionPago, continuarPagoPolizas, setMetodoPagoPolizas, confirmarPagoPolizas,
+    openReclamo, seleccionarPolizaReclamo, seleccionarTipoReclamoAuto, capturarFotoReclamo,
+    setReclamoDescripcion, toggleDocumentoReclamo, someterReclamo,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

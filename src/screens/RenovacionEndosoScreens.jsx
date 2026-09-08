@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useApp } from "../context/AppContext";
 import { Icon } from "../components/Icon";
-import { BackHeader, SectionLabel, Chip, Row } from "../components/UI";
+import { BackHeader, SectionLabel, Chip, Row, MetodoPagoRow } from "../components/UI";
 import { RENOVACION_BENEFICIOS, BANCOS_RD } from "../data/data";
 
 function money(n) {
@@ -82,20 +82,6 @@ export function RenovacionDetalleScreen() {
       </div>
       <button className="solid" onClick={aceptarRenovacion} style={{ width: "100%" }}>Aceptar renovación</button>
     </>
-  );
-}
-
-function MetodoPagoRow({ icon, label, on, onClick }) {
-  return (
-    <div
-      onClick={onClick}
-      className="row"
-      style={{ background: on ? "var(--ice)" : "transparent", borderRadius: 10, border: `1px solid ${on ? "var(--accent)" : "transparent"}`, padding: "9px 8px" }}
-    >
-      <span style={{ color: on ? "var(--accent)" : "var(--muted)" }}><Icon name={icon} size={17} /></span>
-      <span className="label" style={{ color: on ? "var(--accent)" : "#1a1f2b", fontWeight: on ? 600 : 400 }}>{label}</span>
-      {on && <Icon name="circlecheck" size={16} color="var(--accent)" />}
-    </div>
   );
 }
 
