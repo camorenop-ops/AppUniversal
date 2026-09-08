@@ -14,7 +14,7 @@ import {
 } from "./screens/TramitesFlows";
 import {
   ChatScreen, EmergenciaScreen, MapaCentrosScreen, RedMedicaScreen, AsistenciaAutoScreen,
-  FondoScreen, EstadoCuentaScreen, CarnetScreen, CarnetBienScreen, StubScreen, InfoScreen,
+  FondoScreen, FondoDetalleScreen, EstadoCuentaScreen, CarnetScreen, CarnetBienScreen, StubScreen, InfoScreen,
 } from "./screens/MiscScreens";
 import {
   RenovacionesListScreen, RenovacionDetalleScreen, RenovacionPagoScreen, RenovacionConfirmadaScreen,
@@ -30,6 +30,7 @@ import { AfiliadoDetalleScreen, AfiliadoCoberturaHistorialScreen } from "./scree
 import {
   ArsTraspasoMenuScreen, ArsTraspasoSolicitarScreen, ArsTraspasoEnviadoScreen, ArsTraspasoEstadoScreen,
 } from "./screens/ArsTraspasoScreens";
+import { AsistenciaSolicitudScreen, AsistenciaSolicitudEnviadaScreen } from "./screens/AsistenciaSolicitudScreens";
 
 export function Router() {
   const { current } = useApp();
@@ -92,7 +93,9 @@ export function Router() {
     case "asistenciaAuto":
       return <AsistenciaAutoScreen />;
     case "fondo":
-      return <FondoScreen kind={current.kind} />;
+      return <FondoScreen kind={current.kind} fondoKey={current.fondoKey} />;
+    case "fondoDetalle":
+      return <FondoDetalleScreen fondoKey={current.fondoKey} />;
     case "estadoCuenta":
       return <EstadoCuentaScreen />;
     case "cambioPlan":
@@ -153,6 +156,10 @@ export function Router() {
       return <ArsTraspasoEnviadoScreen />;
     case "arsTraspasoEstado":
       return <ArsTraspasoEstadoScreen />;
+    case "asistenciaSolicitud":
+      return <AsistenciaSolicitudScreen />;
+    case "asistenciaSolicitudEnviada":
+      return <AsistenciaSolicitudEnviadaScreen />;
     default:
       return null;
   }

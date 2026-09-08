@@ -14,9 +14,9 @@ const FILIALES = [
 export function HomeTab() {
   const {
     activeFilial, setFilial, products, asistenciaProducts, dependientes,
-    openProduct, openCotizar, openFondo, openEstadoCuenta, openInfo, openStub,
+    openProduct, openCotizar, openFondo, openFondoDetalle, openEstadoCuenta, openInfo, openStub,
     openRenovaciones, openEndosarPoliza, openPagoPolizas, openReclamo, openAfiliadoDetalle,
-    openCoberturasDetalle, openArsTraspaso,
+    openCoberturasDetalle, openArsTraspaso, openAsistenciaSolicitud,
   } = useApp();
 
   let content;
@@ -51,12 +51,13 @@ export function HomeTab() {
           ["arrowdown", "Solicitar rescate", () => openFondo("rescate")],
           ["arrowup", "Notificar aporte", () => openFondo("aporte")],
         ]} />
-        <SectionLabel>Mis fondos</SectionLabel>
+        <SectionLabel>Fondos</SectionLabel>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(2,minmax(0,1fr))", gap: 10 }}>
           {FONDOS.map((f) => (
-            <div key={f.name} onClick={() => openInfo("AFI", f.name)} className="tile">
-              <div style={{ fontWeight: 600, fontSize: 14, marginTop: 8 }}>{f.name}</div>
-              <div style={{ fontSize: 12, color: "var(--muted)" }}>{f.rows[0][1]}</div>
+            <div key={f.key} onClick={() => openFondoDetalle(f.key)} className={"tile" + (f.invertido ? "" : " off")}>
+              <Icon name="chart" size={18} color={f.invertido ? "var(--accent)" : "var(--text-muted)"} />
+              <div className="l">{f.name}</div>
+              <div className="s">{f.invertido ? `Saldo: RD$ ${f.saldo.toLocaleString("es-DO")}` : "Sin inversión"}</div>
             </div>
           ))}
         </div>
@@ -89,15 +90,23 @@ export function HomeTab() {
     );
   } else {
     content = (
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(2,minmax(0,1fr))", gap: 10 }}>
-        {asistenciaProducts.map((p) => (
-          <Tile
-            key={p.key}
-            product={p}
-            onClick={() => (p.noContratado ? openCotizar(p.key) : openInfo("Asistencia", p.key))}
-          />
-        ))}
-      </div>
+      <>
+        <SectionLabel>Accesos rápidos</SectionLabel>
+        <QuickActionsRow items={[
+          ["car", "Asistencia vehicular", () => openAsistenciaSolicitud("vehicular")],
+          ["home", "Asistencia de hogar", () => openAsistenciaSolicitud("hogar")],
+        ]} />
+        <SectionLabel>Mis asistencias</SectionLabel>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(2,minmax(0,1fr))", gap: 10 }}>
+          {asistenciaProducts.map((p) => (
+            <Tile
+              key={p.key}
+              product={p}
+              onClick={() => (p.noContratado ? openCotizar(p.key) : openInfo("Asistencia", p.key))}
+            />
+          ))}
+        </div>
+      </>
     );
   }
 

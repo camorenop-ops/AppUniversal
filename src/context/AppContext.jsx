@@ -51,6 +51,7 @@ export function AppProvider({ children }) {
   const [pagoPolizasForm, setPagoPolizasForm] = useState(null);
   const [reclamoForm, setReclamoForm] = useState(null);
   const [traspasoForm, setTraspasoForm] = useState(null);
+  const [asistenciaSolicitudForm, setAsistenciaSolicitudForm] = useState(null);
 
   // ---------- navegación ----------
   function navigate(v) {
@@ -87,7 +88,8 @@ export function AppProvider({ children }) {
   const openMapaCentros = () => navigate({ view: "mapaCentros" });
   const openRedMedica = () => navigate({ view: "redMedica" });
   const openAsistenciaAuto = () => navigate({ view: "asistenciaAuto" });
-  const openFondo = (kind) => navigate({ view: "fondo", kind });
+  const openFondo = (kind, fondoKey) => navigate({ view: "fondo", kind, fondoKey });
+  const openFondoDetalle = (fondoKey) => navigate({ view: "fondoDetalle", fondoKey });
   const openEstadoCuenta = () => navigate({ view: "estadoCuenta" });
   const openCarnetBien = (key) => navigate({ view: "carnetBien", key });
   const openProduct = (key) => navigate({ view: "product", key });
@@ -547,13 +549,30 @@ export function AppProvider({ children }) {
   const enviarArsTraspaso = () => navigate({ view: "arsTraspasoEnviado" });
   const abrirArsTraspasoEstado = () => navigate({ view: "arsTraspasoEstado" });
 
+  // ---------- solicitar asistencia (vehicular / hogar) ----------
+  function openAsistenciaSolicitud(tipo) {
+    setAsistenciaSolicitudForm({ tipo, ubicacion: null, observacion: "", telefono: "" });
+    navigate({ view: "asistenciaSolicitud" });
+  }
+  function usarUbicacionActualAsistencia() {
+    setAsistenciaSolicitudForm({ ...asistenciaSolicitudForm, ubicacion: { x: 50, y: 52, label: "Ubicación actual detectada" } });
+  }
+  function marcarUbicacionAsistencia({ x, y }) {
+    setAsistenciaSolicitudForm({ ...asistenciaSolicitudForm, ubicacion: { x, y, label: "Ubicación marcada en el mapa" } });
+  }
+  function setAsistenciaSolicitudField(field, val) {
+    setAsistenciaSolicitudForm({ ...asistenciaSolicitudForm, [field]: val });
+  }
+  const enviarAsistenciaSolicitud = () => navigate({ view: "asistenciaSolicitudEnviada" });
+
   const value = {
     stack, current, activeTab, activeFilial, memberIdx,
     products, asistenciaProducts, dependientes, reembolsos, autorizaciones,
     especialidadFiltro, setEspecialidadFiltro,
     cot, reembolsoForm, autForm, depForm, cambioPlanForm, renovacionForm, endosoForm, pagoPolizasForm, reclamoForm, traspasoForm,
+    asistenciaSolicitudForm,
     navigate, goBack, goTab, setFilial, setMember, findProduct,
-    openChat, openMapaCentros, openRedMedica, openAsistenciaAuto, openFondo,
+    openChat, openMapaCentros, openRedMedica, openAsistenciaAuto, openFondo, openFondoDetalle,
     openEstadoCuenta, openCarnetBien, openProduct, openCarnet, openStub,
     openEmergencia, openInfo,
     resetCot, openCotizar, elegirSaludDestino, setCotField, responderCuestionario, nextCot, prevCot,
@@ -577,6 +596,8 @@ export function AppProvider({ children }) {
     openReclamo, seleccionarPolizaReclamo, seleccionarTipoReclamoAuto, capturarFotoReclamo,
     setReclamoDescripcion, toggleDocumentoReclamo, someterReclamo,
     openArsTraspaso, abrirArsTraspasoSolicitar, setTraspasoField, enviarArsTraspaso, abrirArsTraspasoEstado,
+    openAsistenciaSolicitud, usarUbicacionActualAsistencia, marcarUbicacionAsistencia,
+    setAsistenciaSolicitudField, enviarAsistenciaSolicitud,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

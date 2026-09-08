@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useApp } from "../context/AppContext";
 import { Icon, LogoLockup } from "../components/Icon";
-import { BackHeader, SectionLabel, Row, Chip, MapMock, InfoCard, CaptureCard } from "../components/UI";
+import { BackHeader, SectionLabel, Row, Chip, MapMock, InfoCard, CaptureCard, CoverageLine } from "../components/UI";
 import {
   PRESTADORES, ESPECIALIDADES, SINTOMAS, CENTROS, FONDOS, PROYECTOS, ESTADO_CUENTA,
   MEMBERS, PRODUCT_TITLES, CARNET_BIEN,
@@ -98,12 +98,12 @@ export function AsistenciaAutoScreen() {
   );
 }
 
-export function FondoScreen({ kind }) {
+export function FondoScreen({ kind, fondoKey }) {
   const { goBack } = useApp();
   const [comprobante, setComprobante] = useState(false);
   const title = kind === "rescate" ? "Solicitar rescate" : "Notificar aporte al fondo";
   const actionLabel = kind === "rescate" ? "Confirmar rescate" : "Confirmar aporte";
-  const f = FONDOS[0];
+  const f = FONDOS.find((x) => x.key === fondoKey) || FONDOS.find((x) => x.invertido) || FONDOS[0];
 
   if (kind === "aporte" && !comprobante) {
     return (
@@ -128,7 +128,7 @@ export function FondoScreen({ kind }) {
       <div className="card" style={{ marginBottom: 14 }}>
         <div style={{ fontSize: 12, color: "var(--muted)" }}>{f.name}</div>
         <div style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 6 }}>Saldo disponible</div>
-        <div style={{ fontSize: 20, fontWeight: 600, color: "var(--accent)" }}>{f.rows[0][1]}</div>
+        <div style={{ fontSize: 20, fontWeight: 600, color: "var(--accent)" }}>RD$ {f.saldo.toLocaleString("es-DO")}</div>
       </div>
       <div style={{ fontSize: 13, color: "var(--muted)", marginBottom: 6 }}>Monto a {kind === "rescate" ? "rescatar" : "aportar"}</div>
       <div style={{ border: "1px solid var(--border-strong)", borderRadius: 10, padding: 12, fontSize: 18, color: "var(--text-muted)", marginBottom: 6 }}>RD$ 0.00</div>
@@ -136,6 +136,44 @@ export function FondoScreen({ kind }) {
         ? <div style={{ fontSize: 12, color: "var(--accent)", fontWeight: 600, marginBottom: 14, cursor: "pointer" }}>Usar monto máximo disponible</div>
         : <div style={{ marginBottom: 14 }} />}
       <button className="solid" onClick={goBack} style={{ width: "100%" }}>{actionLabel}</button>
+    </>
+  );
+}
+
+export function FondoDetalleScreen({ fondoKey }) {
+  const { openFondo } = useApp();
+  const f = FONDOS.find((x) => x.key === fondoKey);
+
+  return (
+    <>
+      <BackHeader title={f.name} />
+      <div className="card" style={{ marginBottom: 14 }}>
+        <Icon name="chart" size={22} color={f.invertido ? "var(--accent)" : "var(--text-muted)"} />
+        <div style={{ fontWeight: 600, fontSize: 15, marginTop: 8 }}>{f.name}</div>
+        <div style={{ fontSize: 12, color: "var(--muted)", marginTop: 2 }}>Perfil de riesgo: {f.perfilRiesgo}</div>
+        {f.invertido ? (
+          <>
+            <div style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 10 }}>Tu saldo actual</div>
+            <div style={{ fontSize: 20, fontWeight: 600, color: "var(--accent)" }}>RD$ {f.saldo.toLocaleString("es-DO")}</div>
+            <div style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 4 }}>Invirtiendo desde {f.fechaInicio}</div>
+          </>
+        ) : (
+          <div style={{ fontSize: 12, color: "var(--muted)", marginTop: 10, fontStyle: "italic" }}>Aún no tienes inversión en este fondo.</div>
+        )}
+      </div>
+
+      <div style={{ fontSize: 12.5, color: "var(--muted)", marginBottom: 14, lineHeight: 1.5 }}>{f.descripcion}</div>
+
+      <SectionLabel>Información del fondo</SectionLabel>
+      <CoverageLine item={["Rendimiento anual", f.rendimientoAnual]} />
+      <CoverageLine item={["Perfil de riesgo", f.perfilRiesgo]} />
+      <CoverageLine item={["Monto mínimo de inversión", `RD$ ${f.montoMinimo.toLocaleString("es-DO")}`]} />
+      <CoverageLine item={["Comisión de administración", f.comision]} />
+
+      <SectionLabel>Rendimiento histórico</SectionLabel>
+      {f.rendimientoHistorico.map((r, i) => <CoverageLine key={i} item={r} />)}
+
+      <button className="solid" onClick={() => openFondo("aporte", f.key)} style={{ width: "100%", marginTop: 16 }}>Hacer aporte</button>
     </>
   );
 }
@@ -270,9 +308,8 @@ export function StubScreen({ title }) {
 
 export function InfoScreen({ title, icon, name, rows, sectionKind }) {
   let finalRows = rows;
-  if (!finalRows) {
-    if (sectionKind === "AFI") finalRows = FONDOS.find((f) => f.name === name)?.rows || [];
-    else if (sectionKind === "Fiduciaria") finalRows = PROYECTOS.find((p) => p.name === name)?.rows || [];
+  if (!finalRows && sectionKind === "Fiduciaria") {
+    finalRows = PROYECTOS.find((p) => p.name === name)?.rows || [];
   }
   return (
     <>
