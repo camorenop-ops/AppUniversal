@@ -65,8 +65,85 @@ function PersonaDatosStep({ title }) {
   );
 }
 
+function SexoChipsPersona({ idx, current }) {
+  const { setPersonaCampo } = useApp();
+  return ["Masculino", "Femenino"].map((o) => (
+    <span key={o} style={{ display: "inline-block", margin: "0 6px 6px 0" }}>
+      <Chip label={o} on={current === o} onClick={() => setPersonaCampo(idx, "sexo", o)} />
+    </span>
+  ));
+}
+
+function PersonaEmisionSaludStep({ title }) {
+  const {
+    cot, nextCot, capturarDocumentoPersona, setPersonaCampo, confirmarPersonaEmision, retrocederPersonaEmision,
+  } = useApp();
+  const idx = cot.personaEmisionIdx || 0;
+  const total = cot.personas.length;
+
+  if (idx >= total) {
+    return (
+      <>
+        <BackHeader title={`Cotizar ${title}`} />
+        <Progress pasoActual={3} />
+        <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: "var(--success-text)", marginBottom: 12 }}>
+          <Icon name="circlecheck" size={15} /> Datos confirmados de {total} beneficiario{total > 1 ? "s" : ""}
+        </div>
+        {cot.personas.map((p, i) => (
+          <div key={i} className="card" style={{ marginBottom: 8 }}>
+            <div style={{ fontWeight: 600, fontSize: 14 }}>{p.nombre} {p.apellidos}</div>
+            <div style={{ fontSize: 12, color: "var(--muted)", marginTop: 2 }}>{p.parentesco} · {p.sexo} · Nac. {p.fechaNacimiento}</div>
+          </div>
+        ))}
+        <StepNav onBack={retrocederPersonaEmision} onForward={nextCot} forwardLabel="Continuar a pago" disabled={false} />
+      </>
+    );
+  }
+
+  const persona = cot.personas[idx];
+  const listo = !!(persona.documentoCapturado && persona.nombre && persona.apellidos && persona.fechaNacimiento && persona.sexo);
+
+  return (
+    <>
+      <BackHeader title={`Cotizar ${title}`} />
+      <Progress pasoActual={3} />
+      <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 10 }}>
+        Beneficiario {idx + 1} de {total} · {persona.parentesco}
+      </div>
+      <SectionLabel>Documento de identidad</SectionLabel>
+      <CaptureCard
+        label="Foto del documento de identidad"
+        captured={!!persona.documentoCapturado}
+        onClick={() => capturarDocumentoPersona(idx)}
+      />
+      {persona.documentoCapturado && (
+        <>
+          <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: "var(--success-text)", margin: "12px 0" }}>
+            <Icon name="circlecheck" size={15} /> Documento procesado, verifica los datos
+          </div>
+          <SectionLabel>Nombres</SectionLabel>
+          <input className="u-input" value={persona.nombre || ""} onChange={(e) => setPersonaCampo(idx, "nombre", e.target.value)} />
+          <SectionLabel>Apellidos</SectionLabel>
+          <input className="u-input" value={persona.apellidos || ""} onChange={(e) => setPersonaCampo(idx, "apellidos", e.target.value)} />
+          <SectionLabel>Fecha de nacimiento</SectionLabel>
+          <input className="u-input" value={persona.fechaNacimiento || ""} onChange={(e) => setPersonaCampo(idx, "fechaNacimiento", e.target.value)} />
+          <SectionLabel>Sexo</SectionLabel>
+          <SexoChipsPersona idx={idx} current={persona.sexo} />
+        </>
+      )}
+      <StepNav
+        onBack={retrocederPersonaEmision}
+        onForward={() => confirmarPersonaEmision(idx)}
+        forwardLabel={idx === total - 1 ? "Confirmar y continuar" : "Confirmar y siguiente"}
+        disabled={!listo}
+      />
+    </>
+  );
+}
+
 function PersonaEmisionStep({ title }) {
-  const { prevCot, nextCot } = useApp();
+  const { cot, prevCot, nextCot } = useApp();
+  if (cot.key === "salud") return <PersonaEmisionSaludStep title={title} />;
   return (
     <>
       <BackHeader title={`Cotizar ${title}`} />

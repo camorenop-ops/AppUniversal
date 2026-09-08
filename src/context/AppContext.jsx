@@ -105,6 +105,7 @@ export function AppProvider({ children }) {
       edad: null,
       parentesco: null,
       personas: [],
+      personaEmisionIdx: 0,
       plan: null,
       tarifa: null,
       marca: "",
@@ -127,6 +128,42 @@ export function AppProvider({ children }) {
   }
   function removePersonaCotizador(index) {
     setCot({ ...cot, personas: cot.personas.filter((_, i) => i !== index) });
+  }
+  const DOCUMENTOS_MUESTRA = [
+    { nombre: "María Isabel", apellidos: "Ramírez Cruz", fechaNacimiento: "14/05/1990" },
+    { nombre: "Juan Carlos", apellidos: "Peña Gómez", fechaNacimiento: "22/11/1985" },
+    { nombre: "Ana Lucía", apellidos: "Fernández Solano", fechaNacimiento: "03/08/2012" },
+    { nombre: "Luis Miguel", apellidos: "Rodríguez Tejada", fechaNacimiento: "30/01/1978" },
+  ];
+  function capturarDocumentoPersona(index) {
+    const m = DOCUMENTOS_MUESTRA[Math.floor(Math.random() * DOCUMENTOS_MUESTRA.length)];
+    setCot({
+      ...cot,
+      personas: cot.personas.map((p, i) => (i === index ? {
+        ...p,
+        documentoCapturado: true,
+        nombre: m.nombre,
+        apellidos: m.apellidos,
+        fechaNacimiento: m.fechaNacimiento,
+      } : p)),
+    });
+  }
+  function setPersonaCampo(index, field, val) {
+    setCot({ ...cot, personas: cot.personas.map((p, i) => (i === index ? { ...p, [field]: val } : p)) });
+  }
+  function confirmarPersonaEmision(index) {
+    setCot({
+      ...cot,
+      personas: cot.personas.map((p, i) => (i === index ? { ...p, datosConfirmados: true } : p)),
+      personaEmisionIdx: cot.personaEmisionIdx + 1,
+    });
+  }
+  function retrocederPersonaEmision() {
+    if (cot.personaEmisionIdx > 0) {
+      setCot({ ...cot, personaEmisionIdx: cot.personaEmisionIdx - 1 });
+    } else {
+      prevCot();
+    }
   }
   function openCotizar(key) {
     if (key === "salud") {
@@ -338,6 +375,7 @@ export function AppProvider({ children }) {
     openEmergencia, openInfo,
     resetCot, openCotizar, elegirSaludDestino, setCotField, nextCot, prevCot,
     addPersonaCotizador, removePersonaCotizador,
+    capturarDocumentoPersona, setPersonaCampo, confirmarPersonaEmision, retrocederPersonaEmision,
     seleccionarPlan, capturarMatricula, validarAutoCaracteristicas, validarPropiedadDatos,
     comprarPoliza,
     openAgregarCobertura, agregarCobertura,
