@@ -121,6 +121,13 @@ export function AppProvider({ children }) {
       mueblesSeleccionados: [],
       valorMuebles: "",
       precioPropiedad: "",
+      emisionDocCapturado: false,
+      emisionNombre: "",
+      emisionApellidos: "",
+      emisionFechaNacimiento: "",
+      emisionCedula: "",
+      declaracionVeraz: false,
+      terminosAceptados: false,
     });
   }
   function addPersonaCotizador() {
@@ -137,13 +144,26 @@ export function AppProvider({ children }) {
     setCot({ ...cot, personas: cot.personas.filter((_, i) => i !== index) });
   }
   const DOCUMENTOS_MUESTRA = [
-    { sexo: "Femenino", nombre: "María Isabel", apellidos: "Ramírez Cruz", fechaNacimiento: "14/05/1990" },
-    { sexo: "Masculino", nombre: "Juan Carlos", apellidos: "Peña Gómez", fechaNacimiento: "22/11/1985" },
-    { sexo: "Femenino", nombre: "Ana Lucía", apellidos: "Fernández Solano", fechaNacimiento: "03/08/2012" },
-    { sexo: "Masculino", nombre: "Luis Miguel", apellidos: "Rodríguez Tejada", fechaNacimiento: "30/01/1978" },
-    { sexo: "Femenino", nombre: "Carmen Rosa", apellidos: "Objío Vargas", fechaNacimiento: "19/09/1995" },
-    { sexo: "Masculino", nombre: "Pedro Antonio", apellidos: "Cabrera Núñez", fechaNacimiento: "05/02/1982" },
+    { sexo: "Femenino", nombre: "María Isabel", apellidos: "Ramírez Cruz", fechaNacimiento: "14/05/1990", identificacion: "001-1234567-8" },
+    { sexo: "Masculino", nombre: "Juan Carlos", apellidos: "Peña Gómez", fechaNacimiento: "22/11/1985", identificacion: "002-2345678-9" },
+    { sexo: "Femenino", nombre: "Ana Lucía", apellidos: "Fernández Solano", fechaNacimiento: "03/08/2012", identificacion: "003-3456789-0" },
+    { sexo: "Masculino", nombre: "Luis Miguel", apellidos: "Rodríguez Tejada", fechaNacimiento: "30/01/1978", identificacion: "004-4567890-1" },
+    { sexo: "Femenino", nombre: "Carmen Rosa", apellidos: "Objío Vargas", fechaNacimiento: "19/09/1995", identificacion: "005-5678901-2" },
+    { sexo: "Masculino", nombre: "Pedro Antonio", apellidos: "Cabrera Núñez", fechaNacimiento: "05/02/1982", identificacion: "006-6789012-3" },
   ];
+  function capturarDocumentoVida() {
+    const pool = DOCUMENTOS_MUESTRA.filter((d) => d.sexo === cot.sexo);
+    const list = pool.length > 0 ? pool : DOCUMENTOS_MUESTRA;
+    const m = list[Math.floor(Math.random() * list.length)];
+    setCot({
+      ...cot,
+      emisionDocCapturado: true,
+      emisionNombre: m.nombre,
+      emisionApellidos: m.apellidos,
+      emisionFechaNacimiento: m.fechaNacimiento,
+      emisionCedula: m.identificacion,
+    });
+  }
   function capturarDocumentoPersona(index) {
     const persona = cot.personas[index];
     const nombresUsados = cot.personas.filter((p, i) => i !== index && p.nombre).map((p) => p.nombre);
@@ -409,6 +429,7 @@ export function AppProvider({ children }) {
     resetCot, openCotizar, elegirSaludDestino, setCotField, responderCuestionario, nextCot, prevCot,
     addPersonaCotizador, removePersonaCotizador,
     capturarDocumentoPersona, setPersonaCampo, confirmarPersonaEmision, retrocederPersonaEmision,
+    capturarDocumentoVida,
     seleccionarPlan, capturarMatricula, validarAutoCaracteristicas,
     usarUbicacionActual, marcarUbicacionMapa, toggleMueble, validarPropiedadValores,
     comprarPoliza,

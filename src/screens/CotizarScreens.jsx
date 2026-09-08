@@ -190,6 +190,74 @@ function PersonaEmisionStep({ title }) {
   );
 }
 
+function EmisionVidaDocStep({ title }) {
+  const { cot, prevCot, nextCot, capturarDocumentoVida, setCotField } = useApp();
+  const listo = !!(cot.emisionDocCapturado && cot.emisionNombre && cot.emisionApellidos && cot.emisionFechaNacimiento && cot.emisionCedula);
+  return (
+    <>
+      <BackHeader title={`Cotizar ${title}`} />
+      <Progress pasoActual={Math.min(cot.step, 4)} />
+      <SectionLabel>Documento de identidad</SectionLabel>
+      <CaptureCard
+        label="Foto del documento de identidad"
+        captured={!!cot.emisionDocCapturado}
+        onClick={capturarDocumentoVida}
+      />
+      {cot.emisionDocCapturado && (
+        <>
+          <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: "var(--success-text)", margin: "12px 0" }}>
+            <Icon name="circlecheck" size={15} /> Documento procesado, verifica los datos
+          </div>
+          <SectionLabel>Nombres</SectionLabel>
+          <input className="u-input" value={cot.emisionNombre} onChange={(e) => setCotField("emisionNombre", e.target.value)} />
+          <SectionLabel>Apellidos</SectionLabel>
+          <input className="u-input" value={cot.emisionApellidos} onChange={(e) => setCotField("emisionApellidos", e.target.value)} />
+          <SectionLabel>Fecha de nacimiento</SectionLabel>
+          <input className="u-input" value={cot.emisionFechaNacimiento} onChange={(e) => setCotField("emisionFechaNacimiento", e.target.value)} />
+          <SectionLabel>Cédula</SectionLabel>
+          <input className="u-input" value={cot.emisionCedula} onChange={(e) => setCotField("emisionCedula", e.target.value)} />
+        </>
+      )}
+      <StepNav onBack={prevCot} onForward={nextCot} forwardLabel="Continuar" disabled={!listo} />
+    </>
+  );
+}
+
+function EmisionVidaTerminosStep({ title }) {
+  const { cot, prevCot, nextCot, setCotField } = useApp();
+  const listo = cot.declaracionVeraz && cot.terminosAceptados;
+  return (
+    <>
+      <BackHeader title={`Cotizar ${title}`} />
+      <Progress pasoActual={Math.min(cot.step, 4)} />
+      <SectionLabel>Confirma tus datos</SectionLabel>
+      <div className="card" style={{ marginBottom: 14 }}>
+        <div style={{ fontSize: 12, color: "var(--muted)" }}>Asegurado</div>
+        <div style={{ fontSize: 14, fontWeight: 600, marginTop: 2 }}>{cot.emisionNombre} {cot.emisionApellidos}</div>
+        <div style={{ fontSize: 12, color: "var(--muted)", marginTop: 8 }}>Cédula</div>
+        <div style={{ fontSize: 13, marginTop: 2 }}>{cot.emisionCedula}</div>
+        <div style={{ fontSize: 12, color: "var(--muted)", marginTop: 8 }}>Fecha de nacimiento</div>
+        <div style={{ fontSize: 13, marginTop: 2 }}>{cot.emisionFechaNacimiento}</div>
+      </div>
+      <div
+        onClick={() => setCotField("declaracionVeraz", !cot.declaracionVeraz)}
+        style={{ display: "flex", alignItems: "flex-start", gap: 8, marginBottom: 12, cursor: "pointer" }}
+      >
+        <Icon name={cot.declaracionVeraz ? "circlecheck" : "circle"} size={18} color={cot.declaracionVeraz ? "var(--success-text)" : "var(--text-muted)"} />
+        <span style={{ fontSize: 12.5 }}>Declaro que toda la información suministrada es veraz y completa.</span>
+      </div>
+      <div
+        onClick={() => setCotField("terminosAceptados", !cot.terminosAceptados)}
+        style={{ display: "flex", alignItems: "flex-start", gap: 8, marginBottom: 12, cursor: "pointer" }}
+      >
+        <Icon name={cot.terminosAceptados ? "circlecheck" : "circle"} size={18} color={cot.terminosAceptados ? "var(--success-text)" : "var(--text-muted)"} />
+        <span style={{ fontSize: 12.5 }}>Acepto los términos y condiciones de la póliza.</span>
+      </div>
+      <StepNav onBack={prevCot} onForward={nextCot} forwardLabel="Continuar a pago" disabled={!listo} />
+    </>
+  );
+}
+
 function AutoMatriculaStep({ title }) {
   const { cot, prevCot, nextCot, capturarMatricula } = useApp();
   return (
@@ -441,7 +509,8 @@ export function CotizarScreen() {
       if (step === 1) return <PersonaDatosStep title={title} />;
       if (step === 2) return <CuestionarioSaludStep title={title} />;
       if (step === 3) return <OfertaComparadaStep title={title} />;
-      if (step === 4) return <PersonaEmisionStep title={title} />;
+      if (step === 4) return <EmisionVidaDocStep title={title} />;
+      if (step === 5) return <EmisionVidaTerminosStep title={title} />;
       return <CotizarPagoStep />;
     }
     if (step === 1) return <PersonaDatosStep title={title} />;
