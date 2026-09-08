@@ -405,9 +405,46 @@ export const LIMITE_POR_CASO_PLAN = { "Plan Esencial": 600000, "Plan Alpha": 120
 export const COBERTURA_MEDICAMENTOS_PLAN = { "Plan Esencial": 30000, "Plan Alpha": 60000, "Plan Exclusivo": 120000 };
 
 export const PLAN_BASICO_SALUD = {
-  nombre: "Plan Básico de Salud (PBS)",
-  limitePorCaso: 470000,
-  coberturaMedicamentos: 25000,
+  nombre: "Plan de Servicios de Salud (PDSS)",
+  limitePorCaso: 1000000,
+  coberturaMedicamentos: 12000,
+};
+
+COBERTURAS_DETALLE["PDSS"] = {
+  "shieldplus|Coberturas generales (Ley 87-01)": [
+    ["Prevención y promoción", "Sin cuota moderadora"],
+    ["Servicios odontológicos", "C.M.V."],
+    ["Habitación", "RD$2,346 por día"],
+    ["Hospitalización", "C.M.V. (cobertura 85%)"],
+    ["Cirugías ambulatorias y hospitalarias", "C.M.V. (cobertura 90%)"],
+    ["Hemoterapia", "C.M.V. (cobertura 90%)"],
+    ["Aparatos y prótesis", "C.M.V. (cobertura 80%)"],
+    ["Atenciones de alto costo y alta complejidad, por persona, por año, hasta RD$1,000,000", "C.M.V. Gradualidad. Cobertura 80%"],
+  ],
+  "firstaid|Medicamentos de alto costo": [
+    ["Medicamentos oncológicos (cáncer, neoadyuvantes, adyuvantes), hasta RD$2,090,000 por persona, por año", "Cobertura 80% (copago del afiliado: 20%)"],
+    ["Medicamentos de alto costo no oncológicos, hasta RD$1,000,000 por persona, por año", "Cobertura 80% (copago del afiliado: 20%)"],
+    ["Medicamentos ambulatorios, hasta RD$12,000 por persona, por año", "Cobertura 70% (copago del afiliado: 30%)"],
+  ],
+  "babycarriage|Maternidad": [
+    ["Honorarios médicos ginecológicos, parto normal", "100%"],
+    ["Honorarios médicos ginecológicos, parto por cesárea", "C.M.V."],
+    ["Honorarios recibimiento de niños, parto normal", "100%"],
+    ["Honorarios recibimiento de niños, parto por cesárea", "C.M.V."],
+  ],
+  "stethoscope|Servicios ambulatorios": [
+    ["Consultas ambulatorias (sin límite)", "C.M.F. RD$100"],
+    ["Terapias de rehabilitación", "C.M.V."],
+    ["Rayos X, laboratorios y pruebas especiales", "C.M.V."],
+    ["Emergencias", "100%"],
+    ["Vacunas", "100%"],
+  ],
+  "listcheck|Definiciones y notas": [
+    ["C.M.V. — Cuota Moderadora Variable", "Aporte de 20%/15% del valor del servicio y 10% en honorarios y gastos quirúrgicos, con tope de un salario cotizable"],
+    ["C.M.F. — Cuota Moderadora Fija", "Aporte fijo que hace el afiliado al utilizar un servicio del catálogo del PDSS"],
+    ["Honorarios médicos", "Según las Tablas de Honorarios Médicos (T.H.M.) vigentes"],
+    ["Sillas de ruedas", "Hasta RD$25,000 para afiliados con discapacidad permanente certificada y autorizada por CONADIS; incluye coches especializados para niños con parálisis cerebral infantil"],
+  ],
 };
 
 export const AFILIADOS_SALUD_INFO = {
@@ -440,4 +477,11 @@ export const AFILIADOS_SALUD_INFO = {
     autorizaciones: [],
     reembolsos: [],
   },
+};
+
+export const AFILIADOS_ARS_USADO = {
+  [TITULAR_NOMBRE]: { limiteUsado: 95000, medicamentosUsado: 4200 },
+  "Amy Carolina Pereyra García": { limiteUsado: 30000, medicamentosUsado: 3100 },
+  "Gabriel Eduardo Moreno Pereyra": { limiteUsado: 12000, medicamentosUsado: 1800 },
+  "Isabel Sofia Moreno Pereyra": { limiteUsado: 5000, medicamentosUsado: 900 },
 };

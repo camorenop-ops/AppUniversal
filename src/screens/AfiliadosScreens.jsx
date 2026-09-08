@@ -1,23 +1,25 @@
 import { useApp } from "../context/AppContext";
 import { BackHeader, SectionLabel, EstadoBadge } from "../components/UI";
 import {
-  TITULAR_NOMBRE, AFILIADOS_SALUD_INFO, LIMITE_POR_CASO_PLAN, COBERTURA_MEDICAMENTOS_PLAN, PLAN_BASICO_SALUD,
+  TITULAR_NOMBRE, AFILIADOS_SALUD_INFO, AFILIADOS_ARS_USADO, LIMITE_POR_CASO_PLAN, COBERTURA_MEDICAMENTOS_PLAN, PLAN_BASICO_SALUD,
 } from "../data/data";
 
 const INFO_POR_DEFECTO = { parentesco: "Dependiente", limiteUsado: 0, medicamentosUsado: 0, autorizaciones: [], reembolsos: [] };
+const USO_ARS_POR_DEFECTO = { limiteUsado: 0, medicamentosUsado: 0 };
 const ES_MEDICAMENTO = (item) => item.concepto.toLowerCase().includes("medicamento");
 
 export function AfiliadoDetalleScreen() {
-  const { current, products, openAfiliadoCobertura } = useApp();
+  const { current, products, openAfiliadoCobertura, openCoberturasDetalle } = useApp();
   const { nombre, origen } = current;
   const info = AFILIADOS_SALUD_INFO[nombre] || INFO_POR_DEFECTO;
   const esArs = origen === "ars";
+  const uso = esArs ? (AFILIADOS_ARS_USADO[nombre] || USO_ARS_POR_DEFECTO) : info;
   const plan = products.find((p) => p.key === "salud").plan;
   const nombrePlan = esArs ? PLAN_BASICO_SALUD.nombre : plan;
   const limiteTotal = esArs ? PLAN_BASICO_SALUD.limitePorCaso : LIMITE_POR_CASO_PLAN[plan];
   const medicamentosTotal = esArs ? PLAN_BASICO_SALUD.coberturaMedicamentos : COBERTURA_MEDICAMENTOS_PLAN[plan];
-  const limiteDisponible = limiteTotal - info.limiteUsado;
-  const medicamentosDisponible = medicamentosTotal - info.medicamentosUsado;
+  const limiteDisponible = limiteTotal - uso.limiteUsado;
+  const medicamentosDisponible = medicamentosTotal - uso.medicamentosUsado;
 
   return (
     <>
@@ -34,6 +36,12 @@ export function AfiliadoDetalleScreen() {
         <div style={{ fontSize: 18, fontWeight: 700, color: "var(--accent)", marginTop: 4 }}>RD$ {medicamentosDisponible.toLocaleString("es-DO")} disponible</div>
         <div style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 4 }}>de RD$ {medicamentosTotal.toLocaleString("es-DO")} anual</div>
       </div>
+      {esArs && (
+        <div onClick={() => openCoberturasDetalle("PDSS")} className="card" style={{ marginTop: 10, cursor: "pointer" }}>
+          <div style={{ fontSize: 13, fontWeight: 600, color: "var(--accent)" }}>Ver coberturas del PDSS</div>
+          <div style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 4 }}>Detalle completo del Plan de Servicios de Salud según la Ley 87-01</div>
+        </div>
+      )}
     </>
   );
 }
