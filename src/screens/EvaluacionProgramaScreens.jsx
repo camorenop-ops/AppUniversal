@@ -1,22 +1,22 @@
 import { useApp } from "../context/AppContext";
 import { Icon } from "../components/Icon";
 import { BackHeader, SectionLabel, Chip } from "../components/UI";
-import { PROGRAMAS_SALUD, CUESTIONARIO_EVALUACION_PROGRAMA, CITAS_DISPONIBLES } from "../data/data";
+import { PROGRAMAS_SALUD, CITAS_DISPONIBLES } from "../data/data";
 
 export function EvaluacionCuestionarioScreen() {
   const { evaluacionForm, responderEvaluacion, continuarEvaluacionCita } = useApp();
   const prog = PROGRAMAS_SALUD[evaluacionForm.programaKey];
   const respuestas = evaluacionForm.respuestas;
-  const completo = CUESTIONARIO_EVALUACION_PROGRAMA.every(([k]) => respuestas[k] === true || respuestas[k] === false);
+  const completo = prog.cuestionario.every(([k]) => respuestas[k] === true || respuestas[k] === false);
 
   return (
     <>
       <BackHeader title={`Evaluación · ${prog.nombre}`} />
       <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 14 }}>
-        Responde este cuestionario de salud. Un médico revisará tus respuestas para aprobar tu ingreso al programa.
+        Responde este cuestionario de salud para {prog.nombre}. Un médico revisará tus respuestas para aprobar tu ingreso al programa.
       </div>
       <SectionLabel>Cuestionario de salud</SectionLabel>
-      {CUESTIONARIO_EVALUACION_PROGRAMA.map(([k, pregunta]) => (
+      {prog.cuestionario.map(([k, pregunta]) => (
         <div key={k} style={{ marginBottom: 12 }}>
           <div style={{ fontSize: 13.5, marginBottom: 6 }}>{pregunta}</div>
           <span style={{ display: "inline-block", margin: "0 6px 6px 0" }}>

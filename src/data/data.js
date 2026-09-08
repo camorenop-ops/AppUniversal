@@ -544,6 +544,13 @@ export const PROGRAMAS_SALUD = {
       ["Papanicolau / mamografía", "Según edad y sexo, 1 vez al año"],
       ["Costo", "Incluido en la póliza, sin cargo adicional"],
     ],
+    cuestionario: [
+      ["chequeoReciente", "¿Te has realizado un chequeo médico en el último año?"],
+      ["antecedentesFamiliares", "¿Tienes antecedentes familiares de enfermedades crónicas?"],
+      ["habitos", "¿Fumas o consumes alcohol con frecuencia?"],
+      ["actividadFisica", "¿Realizas actividad física regularmente?"],
+      ["condicionActual", "¿Tienes alguna condición médica diagnosticada actualmente?"],
+    ],
   },
   chequeoEjecutivo: {
     nombre: "Chequeo Ejecutivo",
@@ -557,6 +564,13 @@ export const PROGRAMAS_SALUD = {
       ["Prueba de esfuerzo", "Según indicación médica"],
       ["Consulta con cardiología", "Incluida"],
       ["Frecuencia", "1 vez al año"],
+    ],
+    cuestionario: [
+      ["antecedentesCardiovasculares", "¿Tienes antecedentes de enfermedades cardiovasculares en tu familia?"],
+      ["hipertensionColesterol", "¿Padeces de hipertensión o colesterol alto?"],
+      ["fuma", "¿Fumas actualmente?"],
+      ["ekgReciente", "¿Te has realizado un electrocardiograma en los últimos 2 años?"],
+      ["sintomasEsfuerzo", "¿Experimentas fatiga, dolor de pecho o falta de aire al hacer esfuerzo físico?"],
     ],
   },
   pediatrico: {
@@ -582,6 +596,13 @@ export const PROGRAMAS_SALUD = {
       ["DPT refuerzo", "18 meses y 4 años"],
       ["VPH (virus del papiloma humano)", "De 9 a 14 años, 2 dosis"],
     ],
+    cuestionario: [
+      ["esquemaAlDia", "¿El esquema de vacunación está al día?"],
+      ["reaccionVacuna", "¿Ha tenido alguna reacción alérgica a una vacuna anteriormente?"],
+      ["condicionCronica", "¿Presenta alguna condición de salud crónica o congénita?"],
+      ["controlReciente", "¿Ha tenido un control de crecimiento y desarrollo en el último año?"],
+      ["medicamentosRegulares", "¿Toma algún medicamento de forma regular?"],
+    ],
   },
   cronicas: {
     nombre: "Programa de Enfermedades Crónicas",
@@ -594,6 +615,13 @@ export const PROGRAMAS_SALUD = {
       ["Acompañamiento nutricional", "Incluido"],
       ["Inscripción", "Requiere diagnóstico médico certificado"],
     ],
+    cuestionario: [
+      ["diagnosticoConfirmado", "¿Tienes un diagnóstico médico confirmado de diabetes, hipertensión u otra enfermedad crónica?"],
+      ["tratamientoActivo", "¿Cuentas con tratamiento médico activo para tu condición?"],
+      ["hospitalizadoPorCondicion", "¿Has sido hospitalizado(a) por esta condición en el último año?"],
+      ["medicamentosMantenimiento", "¿Tomas medicamentos de mantenimiento de forma regular?"],
+      ["medicoTratante", "¿Tienes un médico tratante asignado a tu condición?"],
+    ],
   },
 };
 
@@ -605,14 +633,6 @@ export function elegiblePrograma(prog, edad) {
   if (edadMaxima != null && !(e <= edadMaxima)) return false;
   return true;
 }
-
-export const CUESTIONARIO_EVALUACION_PROGRAMA = [
-  ["condicionDiagnosticada", "¿Tienes alguna condición médica diagnosticada relacionada con este programa?"],
-  ["tratamientoActual", "¿Estás actualmente bajo tratamiento médico?"],
-  ["hospitalizado", "¿Has sido hospitalizado(a) en el último año?"],
-  ["medicamentosRegulares", "¿Tomas medicamentos de forma regular?"],
-  ["alergias", "¿Tienes alguna alergia conocida?"],
-];
 
 export const CITAS_DISPONIBLES = [
   { fecha: "10/09/2026", horas: ["9:00 am", "11:00 am", "2:00 pm"] },
