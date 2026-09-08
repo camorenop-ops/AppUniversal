@@ -16,6 +16,11 @@ import {
   ChatScreen, EmergenciaScreen, MapaCentrosScreen, RedMedicaScreen, AsistenciaAutoScreen,
   FondoScreen, EstadoCuentaScreen, CarnetScreen, CarnetBienScreen, PagoScreen, StubScreen, InfoScreen,
 } from "./screens/MiscScreens";
+import {
+  RenovacionesListScreen, RenovacionDetalleScreen, RenovacionPagoScreen, RenovacionConfirmadaScreen,
+  EndosoSeleccionarPolizaScreen, EndosoTipoScreen, EndosoBancoScreen, EndosoOtroScreen,
+  EndosoCondicionesScreen, EndosoGeneradoScreen,
+} from "./screens/RenovacionEndosoScreens";
 
 export function Router() {
   const { current } = useApp();
@@ -90,6 +95,26 @@ export function Router() {
       return <CambioPlanConfirmarScreen />;
     case "cambioPlanHecho":
       return <CambioPlanHechoScreen />;
+    case "renovaciones":
+      return <RenovacionesListScreen />;
+    case "renovacionDetalle":
+      return <RenovacionDetalleScreen />;
+    case "renovacionPago":
+      return <RenovacionPagoScreen />;
+    case "renovacionConfirmada":
+      return <RenovacionConfirmadaScreen />;
+    case "endosoSeleccionar":
+      return <EndosoSeleccionarPolizaScreen />;
+    case "endosoTipo":
+      return <EndosoTipoScreen />;
+    case "endosoBanco":
+      return <EndosoBancoScreen />;
+    case "endosoOtro":
+      return <EndosoOtroScreen />;
+    case "endosoCondiciones":
+      return <EndosoCondicionesScreen />;
+    case "endosoGenerado":
+      return <EndosoGeneradoScreen />;
     default:
       return null;
   }

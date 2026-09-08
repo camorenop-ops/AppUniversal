@@ -11,6 +11,11 @@ import {
   UBICACIONES_MUESTRA,
 } from "../data/data";
 
+function avanzarUnAnio(fecha) {
+  const [d, m, y] = fecha.split("/");
+  return `${d}/${m}/${Number(y) + 1}`;
+}
+
 const AppContext = createContext(null);
 
 export function useApp() {
@@ -40,6 +45,8 @@ export function AppProvider({ children }) {
   const [autForm, setAutForm] = useState(null);
   const [depForm, setDepForm] = useState(null);
   const [cambioPlanForm, setCambioPlanForm] = useState(null);
+  const [renovacionForm, setRenovacionForm] = useState(null);
+  const [endosoForm, setEndosoForm] = useState(null);
 
   // ---------- navegación ----------
   function navigate(v) {
@@ -417,11 +424,57 @@ export function AppProvider({ children }) {
     navigate({ view: "cambioPlanHecho" });
   }
 
+  // ---------- renovación de pólizas ----------
+  const openRenovaciones = () => navigate({ view: "renovaciones" });
+  function openRenovacionDetalle(key) {
+    setRenovacionForm({ key });
+    navigate({ view: "renovacionDetalle", key });
+  }
+  const aceptarRenovacion = () => navigate({ view: "renovacionPago" });
+  function confirmarPagoRenovacion() {
+    const key = renovacionForm.key;
+    setProducts(products.map((p) => (p.key === key ? {
+      ...p,
+      renovacion: avanzarUnAnio(p.renovacion),
+      primaActual: p.primaRenovacion,
+      primaRenovacion: Math.round(p.primaRenovacion * 1.08),
+    } : p)));
+    navigate({ view: "renovacionConfirmada", key });
+  }
+
+  // ---------- endoso de pólizas ----------
+  function openEndosarPoliza() {
+    setEndosoForm({
+      productKey: null, tipo: null, banco: null, sucursal: "", ejecutivo: "",
+      beneficiario: "", condicionesAceptadas: false, enviadoPor: null,
+    });
+    navigate({ view: "endosoSeleccionar" });
+  }
+  function seleccionarPolizaEndoso(key) {
+    setEndosoForm({ ...endosoForm, productKey: key });
+    navigate({ view: "endosoTipo" });
+  }
+  function seleccionarTipoEndoso(tipo) {
+    setEndosoForm({ ...endosoForm, tipo });
+    navigate({ view: tipo === "banco" ? "endosoBanco" : "endosoOtro" });
+  }
+  function setEndosoField(field, val) {
+    setEndosoForm({ ...endosoForm, [field]: val });
+  }
+  const continuarEndosoDatos = () => navigate({ view: "endosoCondiciones" });
+  function aceptarCondicionesEndoso() {
+    setEndosoForm({ ...endosoForm, condicionesAceptadas: true });
+    navigate({ view: "endosoGenerado" });
+  }
+  function enviarEndoso(medio) {
+    setEndosoForm({ ...endosoForm, enviadoPor: medio });
+  }
+
   const value = {
     stack, current, activeTab, activeFilial, memberIdx,
     products, asistenciaProducts, dependientes, reembolsos, autorizaciones,
     especialidadFiltro, setEspecialidadFiltro,
-    cot, reembolsoForm, autForm, depForm, cambioPlanForm,
+    cot, reembolsoForm, autForm, depForm, cambioPlanForm, renovacionForm, endosoForm,
     navigate, goBack, goTab, setFilial, setMember, findProduct,
     openChat, openMapaCentros, openRedMedica, openAsistenciaAuto, openFondo,
     openEstadoCuenta, openCarnetBien, openProduct, openCarnet, openPago, openStub,
@@ -440,6 +493,9 @@ export function AppProvider({ children }) {
     openAgregarDependiente, capturarDocumento, guardarDependiente, volverASalud,
     openCoberturasDetalle,
     openCambioPlan, seleccionarNuevoPlan, confirmarCambioPlan,
+    openRenovaciones, openRenovacionDetalle, aceptarRenovacion, confirmarPagoRenovacion,
+    openEndosarPoliza, seleccionarPolizaEndoso, seleccionarTipoEndoso, setEndosoField,
+    continuarEndosoDatos, aceptarCondicionesEndoso, enviarEndoso,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

@@ -9,14 +9,43 @@ export const INITIAL_DEPENDIENTES = [
 
 export function initialProducts() {
   return [
-    { key: "salud", label: "Salud", plan: "Plan Alpha", sub: `Plan Alpha, ${INITIAL_DEPENDIENTES.length} dependientes`, icon: "stethoscope" },
-    { key: "auto", label: "Auto", sub: "Full, Toyota Prado 2024", icon: "car", plan: "Full", vehiculos: [{ marca: "Toyota", modelo: "Prado", anio: "2024", placa: "A123456", color: "Gris" }] },
-    { key: "vida", label: "Vida Universal", sub: "5 millones asegurados", icon: "heart", plan: "Vida Universal", extra: "Monto asegurado: 5,000,000 pesos" },
-    { key: "hogar", label: "GarantiCasa", sub: "Multiriesgo, Santo Domingo", icon: "home", plan: "GarantiCasa Multiriesgo", extra: "Apartamento de 120 m², Santo Domingo" },
-    { key: "garantivilla", label: "GarantiVilla", sub: "Villa, Punta Cana", icon: "building", plan: "GarantiVilla", extra: "Villa vacacional, Punta Cana, La Altagracia" },
+    {
+      key: "salud", label: "Salud", plan: "Plan Alpha", sub: `Plan Alpha, ${INITIAL_DEPENDIENTES.length} dependientes`, icon: "stethoscope",
+      renovacion: "15/11/2026", primaActual: 42000, primaRenovacion: 46500,
+    },
+    {
+      key: "auto", label: "Auto", sub: "Full, Toyota Prado 2024", icon: "car", plan: "Full",
+      vehiculos: [{ marca: "Toyota", modelo: "Prado", anio: "2024", placa: "A123456", color: "Gris" }],
+      renovacion: "20/10/2026", primaActual: 38500, primaRenovacion: 41200,
+    },
+    {
+      key: "vida", label: "Vida Universal", sub: "5 millones asegurados", icon: "heart", plan: "Vida Universal", extra: "Monto asegurado: 5,000,000 pesos",
+      renovacion: "20/01/2027", primaActual: 12800, primaRenovacion: 13400,
+    },
+    {
+      key: "hogar", label: "GarantiCasa", sub: "Multiriesgo, Santo Domingo", icon: "home", plan: "GarantiCasa Multiriesgo", extra: "Apartamento de 120 m², Santo Domingo",
+      renovacion: "10/03/2027", primaActual: 18200, primaRenovacion: 19700,
+    },
+    {
+      key: "garantivilla", label: "GarantiVilla", sub: "Villa, Punta Cana", icon: "building", plan: "GarantiVilla", extra: "Villa vacacional, Punta Cana, La Altagracia",
+      renovacion: "05/06/2027", primaActual: 26400, primaRenovacion: 28900,
+    },
     { key: "viaje", label: "Seguro de Viaje", sub: "No contratado", icon: "send", noContratado: true },
   ];
 }
+
+export const RENOVACION_BENEFICIOS = {
+  salud: ["Telemedicina ampliada a especialistas", "Copago reducido en laboratorios", "Cobertura de vacunas ampliada"],
+  auto: ["Grúa ilimitada en toda la isla", "Retoque Express incluido sin costo", "Nuevo taller preferido en Santiago"],
+  vida: ["Muerte accidental ampliada a 250% del monto asegurado", "Cobertura de enfermedades graves ampliada"],
+  hogar: ["Equipos electrónicos ampliados hasta RD$700,000", "Renta educativa incluida sin costo adicional"],
+  garantivilla: ["Gold Assist ampliado a emergencias 24/7", "Cobertura de paneles solares incluida"],
+};
+
+export const BANCOS_RD = [
+  "Banreservas", "Banco Popular Dominicano", "BHD León", "Scotiabank",
+  "Banco Santa Cruz", "Banco Caribe", "Banco Promerica", "Banco Vimenca",
+];
 
 export function initialAsistenciaProducts() {
   return [

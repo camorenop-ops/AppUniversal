@@ -52,6 +52,7 @@ export const ICONS = {
   upload: '<path d="M12 3v12M8 7l4-4 4 4"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/>',
   camera: '<rect x="3" y="7" width="18" height="13" rx="2"/><circle cx="12" cy="13.5" r="3.5"/><path d="M9 7l1-2h4l1 2"/>',
   circle: '<circle cx="12" cy="12" r="9"/>',
+  mail: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M4 7l8 6 8-6"/>',
 };
 
 export function Icon({ name, size = 18, color = "currentColor", style }) {

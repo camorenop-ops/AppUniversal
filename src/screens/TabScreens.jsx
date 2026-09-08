@@ -15,21 +15,30 @@ export function HomeTab() {
   const {
     activeFilial, setFilial, products, asistenciaProducts, dependientes,
     openProduct, openCotizar, openFondo, openEstadoCuenta, openInfo, openStub,
+    openRenovaciones, openEndosarPoliza,
   } = useApp();
 
   let content;
   if (activeFilial === "Seguros") {
     content = (
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(2,minmax(0,1fr))", gap: 10 }}>
-        {products.map((p) => (
-          <Tile
-            key={p.key}
-            product={p}
-            onClick={() => (p.noContratado ? openCotizar(p.key) : openProduct(p.key))}
-            onCotizar={openCotizar}
-          />
-        ))}
-      </div>
+      <>
+        <SectionLabel>Accesos rápidos</SectionLabel>
+        <QuickActionsRow items={[
+          ["refresh", "Renovación", openRenovaciones],
+          ["filedesc", "Endosar póliza", openEndosarPoliza],
+        ]} />
+        <SectionLabel>Mis pólizas</SectionLabel>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(2,minmax(0,1fr))", gap: 10 }}>
+          {products.map((p) => (
+            <Tile
+              key={p.key}
+              product={p}
+              onClick={() => (p.noContratado ? openCotizar(p.key) : openProduct(p.key))}
+              onCotizar={openCotizar}
+            />
+          ))}
+        </div>
+      </>
     );
   } else if (activeFilial === "AFI") {
     content = (
