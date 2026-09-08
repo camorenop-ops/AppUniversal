@@ -365,8 +365,8 @@ export function initialReembolsos() {
 }
 export function initialAutorizaciones() {
   return [
-    { fecha: "10/08/2026", concepto: "Resonancia magnética", estado: "Aprobada" },
-    { fecha: "28/07/2026", concepto: "Fisioterapia (10 sesiones)", estado: "En revisión" },
+    { fecha: "10/08/2026", concepto: "Resonancia magnética", estado: "Aprobada", valorAutorizado: "RD$ 8,500", prestador: "Centro de Diagnóstico por Imágenes CEDIMAT" },
+    { fecha: "28/07/2026", concepto: "Fisioterapia (10 sesiones)", estado: "En revisión", valorAutorizado: "RD$ 6,000", prestador: "Clínica de Rehabilitación Integral" },
   ];
 }
 
@@ -505,7 +505,7 @@ export const AFILIADOS_SALUD_INFO = {
     limiteUsado: 42000,
     medicamentosUsado: 9800,
     autorizaciones: [
-      { fecha: "02/06/2026", concepto: "Ecografía abdominal", estado: "Aprobada" },
+      { fecha: "02/06/2026", concepto: "Ecografía abdominal", estado: "Aprobada", valorAutorizado: "RD$ 3,200", prestador: "Hospital General Plaza de la Salud" },
     ],
     reembolsos: [
       { fecha: "20/07/2026", concepto: "Laboratorio", monto: "850 pesos", estado: "Rechazado" },

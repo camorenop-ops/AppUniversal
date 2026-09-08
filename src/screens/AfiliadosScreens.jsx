@@ -171,6 +171,12 @@ export function AfiliadoCoberturaHistorialScreen() {
             </div>
             <EstadoBadge estado={a.estado} />
           </div>
+          {a.prestador && (
+            <div style={{ fontSize: 11.5, color: "var(--muted)", marginTop: 6 }}>Prestador: {a.prestador}</div>
+          )}
+          {a.valorAutorizado && (
+            <div style={{ fontSize: 13, color: "var(--accent)", fontWeight: 600, marginTop: 6 }}>{a.valorAutorizado}</div>
+          )}
         </div>
       ))}
       <SectionLabel>Reembolsos</SectionLabel>
