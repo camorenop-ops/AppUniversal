@@ -124,11 +124,13 @@ export function RenovacionConfirmadaScreen() {
 
 export function EndosoSeleccionarPolizaScreen() {
   const { products, seleccionarPolizaEndoso } = useApp();
-  const activas = products.filter((p) => !p.noContratado);
+  const activas = products.filter((p) => !p.noContratado && p.key !== "salud");
   return (
     <>
       <BackHeader title="Endosar póliza" />
-      <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 12 }}>Selecciona la póliza que deseas endosar.</div>
+      <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 12 }}>
+        Selecciona la póliza que deseas endosar. Los seguros de salud no aplican para endoso.
+      </div>
       {activas.map((p) => (
         <Row key={p.key} icon={p.icon} label={`${p.label} · ${p.plan}`} onClick={() => seleccionarPolizaEndoso(p.key)} />
       ))}
