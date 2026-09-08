@@ -498,9 +498,10 @@ COBERTURAS_DETALLE["PDSS"] = {
 };
 
 export const AFILIADOS_SALUD_INFO = {
-  [TITULAR_NOMBRE]: { parentesco: "Titular", limiteUsado: 185000, medicamentosUsado: 18500 },
+  [TITULAR_NOMBRE]: { parentesco: "Titular", edad: 42, limiteUsado: 185000, medicamentosUsado: 18500 },
   "Amy Carolina Pereyra García": {
     parentesco: "Cónyuge",
+    edad: 38,
     limiteUsado: 42000,
     medicamentosUsado: 9800,
     autorizaciones: [
@@ -513,6 +514,7 @@ export const AFILIADOS_SALUD_INFO = {
   },
   "Gabriel Eduardo Moreno Pereyra": {
     parentesco: "Hijo",
+    edad: 10,
     limiteUsado: 15000,
     medicamentosUsado: 3200,
     autorizaciones: [],
@@ -522,12 +524,87 @@ export const AFILIADOS_SALUD_INFO = {
   },
   "Isabel Sofia Moreno Pereyra": {
     parentesco: "Hija",
+    edad: 6,
     limiteUsado: 8000,
     medicamentosUsado: 1500,
     autorizaciones: [],
     reembolsos: [],
   },
 };
+
+export const PROGRAMAS_SALUD = {
+  preventiva: {
+    nombre: "Salud Preventiva",
+    icon: "listcheck",
+    resumen: "Chequeos y controles preventivos incluidos en tu póliza.",
+    detalle: [
+      ["Chequeo médico anual", "Examen físico completo y laboratorios básicos"],
+      ["Presión arterial y glicemia", "Medición en cada consulta preventiva"],
+      ["Consulta nutricional", "1 sesión anual incluida"],
+      ["Papanicolau / mamografía", "Según edad y sexo, 1 vez al año"],
+      ["Costo", "Incluido en la póliza, sin cargo adicional"],
+    ],
+  },
+  chequeoEjecutivo: {
+    nombre: "Chequeo Ejecutivo",
+    icon: "stethoscope",
+    resumen: "Evaluación médica avanzada para mayores de 40 años.",
+    elegibilidad: { edadMinima: 40 },
+    detalle: [
+      ["Perfil de lípidos completo", "Colesterol total, HDL, LDL y triglicéridos"],
+      ["Electrocardiograma", "Incluido"],
+      ["Ultrasonido abdominal", "Incluido"],
+      ["Prueba de esfuerzo", "Según indicación médica"],
+      ["Consulta con cardiología", "Incluida"],
+      ["Frecuencia", "1 vez al año"],
+    ],
+  },
+  pediatrico: {
+    nombre: "Programa de Salud Pediátrica",
+    icon: "babycarriage",
+    resumen: "Control de niño sano y esquema completo de vacunación.",
+    elegibilidad: { edadMaxima: 12 },
+    detalle: [
+      ["Control de niño sano", "Seguimiento de crecimiento y desarrollo"],
+      ["Consultas de pediatría", "Según calendario de controles"],
+    ],
+    vacunas: [
+      ["BCG", "Al nacer"],
+      ["Hepatitis B", "Al nacer"],
+      ["Pentavalente (DPT + Hepatitis B + Hib)", "2, 4 y 6 meses"],
+      ["Polio (OPV/IPV)", "2, 4 y 6 meses; refuerzo a los 18 meses y 4 años"],
+      ["Rotavirus", "2 y 4 meses"],
+      ["Neumococo conjugada", "2 y 4 meses; refuerzo a los 12 meses"],
+      ["Influenza", "Anual, desde los 6 meses"],
+      ["SRP (sarampión, rubéola, paperas)", "12 meses; refuerzo a los 18 meses y 4 años"],
+      ["Varicela", "12 meses"],
+      ["Hepatitis A", "18 meses"],
+      ["DPT refuerzo", "18 meses y 4 años"],
+      ["VPH (virus del papiloma humano)", "De 9 a 14 años, 2 dosis"],
+    ],
+  },
+  cronicas: {
+    nombre: "Programa de Enfermedades Crónicas",
+    icon: "firstaid",
+    resumen: "Acompañamiento para el manejo de condiciones crónicas.",
+    detalle: [
+      ["Condiciones cubiertas", "Diabetes, hipertensión y enfermedades cardiovasculares"],
+      ["Monitoreo periódico", "Glicemia, presión arterial y colesterol cada 3 meses"],
+      ["Medicamentos de mantenimiento", "Cobertura ampliada bajo el programa"],
+      ["Acompañamiento nutricional", "Incluido"],
+      ["Inscripción", "Requiere diagnóstico médico certificado"],
+    ],
+  },
+};
+
+export function elegiblePrograma(prog, edad) {
+  if (!prog.elegibilidad) return true;
+  const e = Number(edad);
+  const { edadMinima, edadMaxima } = prog.elegibilidad;
+  if (edadMinima != null && !(e >= edadMinima)) return false;
+  if (edadMaxima != null && !(e <= edadMaxima)) return false;
+  return true;
+}
 
 export const AFILIADOS_ARS_USADO = {
   [TITULAR_NOMBRE]: { limiteUsado: 95000, medicamentosUsado: 4200 },

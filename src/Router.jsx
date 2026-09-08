@@ -26,7 +26,7 @@ import {
   ReclamoSaludTipoScreen, ReclamoSeleccionarPolizaScreen, ReclamoAutoTipoScreen, ReclamoAutoFormScreen,
   ReclamoDocumentosScreen, ReclamoGenericoScreen, ReclamoSometidoScreen,
 } from "./screens/PagoReclamoScreens";
-import { AfiliadoDetalleScreen, AfiliadoCoberturaHistorialScreen } from "./screens/AfiliadosScreens";
+import { AfiliadoDetalleScreen, AfiliadoCoberturaHistorialScreen, ProgramaSaludDetalleScreen } from "./screens/AfiliadosScreens";
 import {
   ArsTraspasoMenuScreen, ArsTraspasoSolicitarScreen, ArsTraspasoEnviadoScreen, ArsTraspasoEstadoScreen,
 } from "./screens/ArsTraspasoScreens";
@@ -146,6 +146,8 @@ export function Router() {
       return <AfiliadoDetalleScreen />;
     case "afiliadoCoberturaHistorial":
       return <AfiliadoCoberturaHistorialScreen />;
+    case "programaSalud":
+      return <ProgramaSaludDetalleScreen />;
     case "arsTraspaso":
       return <ArsTraspasoMenuScreen />;
     case "arsTraspasoSolicitar":

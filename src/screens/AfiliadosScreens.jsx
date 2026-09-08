@@ -1,15 +1,17 @@
 import { useApp } from "../context/AppContext";
-import { BackHeader, SectionLabel, EstadoBadge } from "../components/UI";
+import { Icon } from "../components/Icon";
+import { BackHeader, SectionLabel, EstadoBadge, CoverageLine } from "../components/UI";
 import {
   TITULAR_NOMBRE, AFILIADOS_SALUD_INFO, AFILIADOS_ARS_USADO, LIMITE_POR_CASO_PLAN, COBERTURA_MEDICAMENTOS_PLAN, PLAN_BASICO_SALUD,
+  PROGRAMAS_SALUD, elegiblePrograma,
 } from "../data/data";
 
-const INFO_POR_DEFECTO = { parentesco: "Dependiente", limiteUsado: 0, medicamentosUsado: 0, autorizaciones: [], reembolsos: [] };
+const INFO_POR_DEFECTO = { parentesco: "Dependiente", edad: null, limiteUsado: 0, medicamentosUsado: 0, autorizaciones: [], reembolsos: [] };
 const USO_ARS_POR_DEFECTO = { limiteUsado: 0, medicamentosUsado: 0 };
 const ES_MEDICAMENTO = (item) => item.concepto.toLowerCase().includes("medicamento");
 
 export function AfiliadoDetalleScreen() {
-  const { current, products, openAfiliadoCobertura } = useApp();
+  const { current, products, openAfiliadoCobertura, openProgramaSalud } = useApp();
   const { nombre, origen } = current;
   const info = AFILIADOS_SALUD_INFO[nombre] || INFO_POR_DEFECTO;
   const esArs = origen === "ars";
@@ -53,6 +55,60 @@ export function AfiliadoDetalleScreen() {
         <div style={{ fontSize: 18, fontWeight: 700, color: "var(--accent)", marginTop: 4 }}>RD$ {medicamentosDisponible.toLocaleString("es-DO")} disponible</div>
         <div style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 4 }}>de RD$ {medicamentosTotal.toLocaleString("es-DO")} anual</div>
       </div>
+
+      <SectionLabel>Programas de cobertura</SectionLabel>
+      {Object.entries(PROGRAMAS_SALUD).map(([key, prog]) => {
+        const elegible = elegiblePrograma(prog, info.edad);
+        return (
+          <div
+            key={key}
+            onClick={() => openProgramaSalud(nombre, key)}
+            className="card"
+            style={{ marginBottom: 8, cursor: "pointer", opacity: elegible ? 1 : 0.55 }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              <Icon name={prog.icon} size={18} color={elegible ? "var(--accent)" : "var(--text-muted)"} />
+              <div>
+                <div style={{ fontWeight: 600, fontSize: 13.5 }}>{prog.nombre}</div>
+                <div style={{ fontSize: 11.5, color: "var(--muted)", marginTop: 2, fontStyle: elegible ? "normal" : "italic" }}>
+                  {elegible ? prog.resumen : "No aplica para tu edad actual"}
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      })}
+    </>
+  );
+}
+
+export function ProgramaSaludDetalleScreen() {
+  const { current } = useApp();
+  const { nombre, key } = current;
+  const prog = PROGRAMAS_SALUD[key];
+  const info = AFILIADOS_SALUD_INFO[nombre] || INFO_POR_DEFECTO;
+  const elegible = elegiblePrograma(prog, info.edad);
+
+  return (
+    <>
+      <BackHeader title={prog.nombre} />
+      <div style={{ fontSize: 13, color: "var(--muted)", marginBottom: 14 }}>{prog.resumen}</div>
+      {!elegible && (
+        <div className="card" style={{ marginBottom: 14, background: "#EEF1F6" }}>
+          <div style={{ fontSize: 12.5, color: "var(--muted)" }}>
+            {prog.elegibilidad.edadMinima != null && `Este programa aplica a partir de los ${prog.elegibilidad.edadMinima} años. `}
+            {prog.elegibilidad.edadMaxima != null && `Este programa aplica hasta los ${prog.elegibilidad.edadMaxima} años.`}
+          </div>
+        </div>
+      )}
+      <SectionLabel>Detalle del programa</SectionLabel>
+      {prog.detalle.map((r, i) => <CoverageLine key={i} item={r} />)}
+      {prog.vacunas && (
+        <>
+          <SectionLabel>Esquema de vacunación</SectionLabel>
+          {prog.vacunas.map((r, i) => <CoverageLine key={i} item={r} />)}
+        </>
+      )}
     </>
   );
 }
