@@ -9,7 +9,7 @@ export const INITIAL_DEPENDIENTES = [
 
 export function initialProducts() {
   return [
-    { key: "salud", label: "Salud", sub: `Plan Alpha, ${INITIAL_DEPENDIENTES.length} dependientes`, icon: "stethoscope" },
+    { key: "salud", label: "Salud", plan: "Plan Alpha", sub: `Plan Alpha, ${INITIAL_DEPENDIENTES.length} dependientes`, icon: "stethoscope" },
     { key: "auto", label: "Auto", sub: "Full, Toyota Prado 2024", icon: "car", plan: "Full", vehiculos: [{ marca: "Toyota", modelo: "Prado", anio: "2024", placa: "A123456", color: "Gris" }] },
     { key: "vida", label: "Vida Universal", sub: "5 millones asegurados", icon: "heart", plan: "Vida Universal", extra: "Monto asegurado: 5,000,000 pesos" },
     { key: "hogar", label: "GarantiCasa", sub: "Multiriesgo, Santo Domingo", icon: "home", plan: "GarantiCasa Multiriesgo", extra: "Apartamento de 120 m², Santo Domingo" },
@@ -80,6 +80,14 @@ const FILAS_OPCIONALES_AUTO = [
 ];
 
 export const COBERTURAS_DETALLE = {
+  "Plan Esencial": {
+    "shieldplus|Límites del plan": [["Límite por caso", "RD$600,000"], ["Cobertura catastrófica", "RD$600,000"]],
+    "stethoscope|Ambulatorias": [["Consulta ambulatoria", "Copago aplica"], ["Emergencias ambulatorias", "60%"], ["Laboratorios", "60%"], ["Rayos X", "60%"], ["Estudios especiales", "60%"], ["Vacunas en centros afiliados", "No incluido"]],
+    "buildinghospital|Hospitalización": [["Habitación privada", "70%"], ["Cuidados intensivos", "70%"], ["Servicios especiales de hospital", "70%"], ["Medicamentos durante internamiento", "70%"], ["Honorarios médicos", "70%"]],
+    "babycarriage|Maternidad": [["Parto normal / Cesárea", "100% hasta RD$100,000"], ["Beneficio de neonato", "No incluido"], ["Complicaciones del recibimiento", "100% bajo el límite de la madre"], ["Screening neonatal", "No incluido"]],
+    "cash|Reembolso": [["Consultas fuera de la red", "Hasta RD$1,200"], ["Habitación privada", "Hasta RD$2,000"], ["Gastos fuera de la red", "60% según THM"]],
+    "listcheck|Incluidas": [["Telemedicina", "24/7 con IDA Healthcare"], ["Chequeo preventivo", "No incluido"], ["Detección cáncer oral", "No incluido"], ["Últimos Gastos Plus", "RD$75,000"], ["Seguro de vida", "RD$150,000"], ["Gold Assist", "No incluido"]],
+  },
   "Plan Alpha": {
     "shieldplus|Límites del plan": [["Límite por caso", "RD$1,200,000"], ["Cobertura catastrófica", "RD$1,200,000"]],
     "stethoscope|Ambulatorias": [["Consulta ambulatoria", "Copago aplica"], ["Emergencias ambulatorias", "80%"], ["Laboratorios", "80%"], ["Rayos X", "80%"], ["Estudios especiales", "80%"], ["Vacunas en centros afiliados", "Según esquema"]],
@@ -193,22 +201,25 @@ export function initialAutorizaciones() {
 }
 
 export const BASE_PERSONA = {
-  salud: { "Plan Alpha": 15000, "Plan Exclusivo": 28000 },
+  salud: { "Plan Esencial": 9000, "Plan Alpha": 15000, "Plan Exclusivo": 28000 },
   vida: { "Básico": 6000, "Premium": 14500 },
   viaje: { "Nacional": 1800, "Internacional": 4200 },
 };
-export const EDAD_FACTOR = { "18-30": 1.0, "31-45": 1.1, "46-60": 1.3, "60+": 1.6 };
+export function edadFactor(edad) {
+  const e = Number(edad) || 0;
+  return 1 + Math.max(0, e - 25) * 0.012 + Math.max(0, e - 60) * 0.02;
+}
 export const AUTO_FACTOR = { "Básico": 0.012, "Pérdida Total": 0.025, "Full": 0.045, "Súper Full": 0.065 };
 export const PROPIEDAD_FACTOR = { "Básica": 0.0018, "Amplia": 0.0035 };
 export const ASISTENCIA_HOGAR_PRECIOS = { "Básica": 450, "Premium": 950 };
 
 export const COMPARATIVO_FILAS = {
   salud: [
-    { label: "Seguro de vida incluido", valores: ["RD$300,000", "RD$500,000"] },
-    { label: "Detección cáncer oral", valores: ["Sí", "No"] },
-    { label: "Chequeo preventivo 40+", valores: ["Sí", "Sí"] },
-    { label: "Telemedicina 24/7", valores: ["Sí", "Sí"] },
-    { label: "Salones VIP aeropuerto", valores: ["No", "Sí"] },
+    { label: "Seguro de vida incluido", valores: ["RD$150,000", "RD$300,000", "RD$500,000"] },
+    { label: "Detección cáncer oral", valores: ["No", "Sí", "No"] },
+    { label: "Chequeo preventivo 40+", valores: ["No", "Sí", "Sí"] },
+    { label: "Telemedicina 24/7", valores: ["Sí", "Sí", "Sí"] },
+    { label: "Salones VIP aeropuerto", valores: ["No", "No", "Sí"] },
   ],
   vida: [
     { label: "Muerte natural", valores: ["100%", "100%"] },

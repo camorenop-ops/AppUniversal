@@ -1,14 +1,21 @@
 import { useApp } from "../context/AppContext";
 import { LogoLockup, Icon } from "../components/Icon";
-import { Pill, Row, SectionLabel, Tile, QuickActionsRow, AdsStrip } from "../components/UI";
+import { FilialTab, Row, SectionLabel, Tile, QuickActionsRow, AdsStrip } from "../components/UI";
 import { FONDOS, PROYECTOS, SALUD_ITEMS, AUTO_ITEMS, ANUNCIOS } from "../data/data";
+
+const FILIALES = [
+  ["Seguros", "shield"],
+  ["AFI", "chart"],
+  ["Fiduciaria", "bank"],
+  ["ARS", "heart"],
+  ["Asistencia", "tool"],
+];
 
 export function HomeTab() {
   const {
     activeFilial, setFilial, products, asistenciaProducts, dependientes,
     openProduct, openCotizar, openFondo, openEstadoCuenta, openInfo, openStub,
   } = useApp();
-  const FILIALES = ["Seguros", "AFI", "Fiduciaria", "ARS", "Asistencia"];
 
   let content;
   if (activeFilial === "Seguros") {
@@ -76,7 +83,9 @@ export function HomeTab() {
       <div className="greeting-name" style={{ margin: "6px 0 12px" }}>Carlos Andrés Moreno Prieto</div>
       <AdsStrip ads={ANUNCIOS} onSelect={openStub} />
       <div className="toptabs">
-        {FILIALES.map((f) => <Pill key={f} label={f} on={f === activeFilial} onClick={() => setFilial(f)} />)}
+        {FILIALES.map(([label, icon]) => (
+          <FilialTab key={label} icon={icon} label={label} on={label === activeFilial} onClick={() => setFilial(label)} />
+        ))}
       </div>
       {content}
     </>
@@ -84,14 +93,16 @@ export function HomeTab() {
 }
 
 export function TramitesTab() {
-  const { openReembolsos, openAutorizaciones, openStub, openPago, openCoberturasDetalle } = useApp();
+  const { openReembolsos, openAutorizaciones, openStub, openPago, openCoberturasDetalle, openCambioPlan } = useApp();
   return (
     <>
       <div style={{ fontSize: 15, fontWeight: 600, marginBottom: 4 }}>Trámites por línea</div>
       <SectionLabel>Salud</SectionLabel>
       <Row icon="receipt" label="Reembolsos" onClick={openReembolsos} />
       <Row icon="stethoscope" label="Autorizaciones" onClick={openAutorizaciones} />
-      {SALUD_ITEMS.map((it) => <Row key={it[1]} icon={it[0]} label={it[1]} onClick={() => openStub(it[1])} />)}
+      {SALUD_ITEMS.map((it) => (
+        <Row key={it[1]} icon={it[0]} label={it[1]} onClick={() => (it[1] === "Cambio de plan" ? openCambioPlan() : openStub(it[1]))} />
+      ))}
       <SectionLabel>Auto</SectionLabel>
       {AUTO_ITEMS.map((it) => <Row key={it[1]} icon={it[0]} label={it[1]} onClick={() => openStub(it[1])} />)}
       <SectionLabel>Pago</SectionLabel>

@@ -5,11 +5,12 @@ import { CoberturasAccordion } from "../components/CoberturasAccordion";
 import { COBERTURAS_LABEL, COBERTURAS_DATA } from "../data/data";
 
 export function SaludScreen() {
-  const { dependientes, navigate, openCarnet, openAgregarCobertura, openStub, openAgregarDependiente } = useApp();
+  const { products, dependientes, navigate, openCarnet, openAgregarCobertura, openCambioPlan, openStub, openAgregarDependiente } = useApp();
+  const p = products.find((x) => x.key === "salud");
   return (
     <>
       <BackHeader title="Salud" />
-      <div style={{ fontSize: 17, fontWeight: 600 }}>Plan Alpha</div>
+      <div style={{ fontSize: 17, fontWeight: 600 }}>{p.plan}</div>
       <div className="badge-active">Activo</div>
       <div style={{ fontSize: 13, color: "var(--muted)", marginTop: 8 }}>{dependientes.length} dependientes afiliados</div>
       <div style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 4 }}>Contrato: 03003780-28817</div>
@@ -17,13 +18,14 @@ export function SaludScreen() {
       <QuickActionsRow items={[
         ["firstaid", "Guía médica", () => navigate({ view: "emergencia" })],
         ["creditcard", "Carnet", openCarnet],
+        ["replace", "Cambiar de plan", openCambioPlan],
         ["plus", "Agregar cobertura", openAgregarCobertura],
       ]} />
       <SectionLabel>Dependientes afiliados</SectionLabel>
       {dependientes.map((d) => <Row key={d} icon="user" label={d} onClick={() => openStub(d)} />)}
       <AddRow icon="userplus" label="Agregar dependiente" onClick={openAgregarDependiente} />
       <SectionLabel>Coberturas del plan</SectionLabel>
-      <CoberturasAccordion planKey="Plan Alpha" />
+      <CoberturasAccordion planKey={p.plan} />
     </>
   );
 }

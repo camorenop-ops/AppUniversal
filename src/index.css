@@ -410,20 +410,33 @@ input.u-input {
   position: sticky;
   top: 0;
   margin: 0 -16px 14px;
-  padding: 10px 16px;
+  padding: 12px 16px;
   background: #fff;
   z-index: 5;
   border-bottom: 1px solid var(--border);
   display: flex;
-  gap: 4px;
+  gap: 8px;
   overflow-x: auto;
 }
-.toptabs .pill {
-  border-radius: 8px;
+.filial-tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  flex: 0 0 auto;
+  min-width: 72px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  font-size: 12px;
   font-weight: 600;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  background: #fff;
+  cursor: pointer;
   white-space: nowrap;
 }
-.toptabs .pill.on {
+.filial-tab.on {
   background: var(--navy);
   color: #fff;
   border-color: var(--navy);
@@ -494,7 +507,7 @@ body.standalone #navbar { padding-bottom: env(safe-area-inset-bottom); }
   .greeting-name { font-size: 17px; }
   .section-label { font-size: 13px; }
   .pill, .chip { font-size: 13px; padding: 7px 13px; }
-  .toptabs .pill { padding: 8px 14px; }
+  .filial-tab { font-size: 13px; min-width: 80px; padding: 14px 16px; }
   .tile .l { font-size: 16px; }
   .tile .s { font-size: 13px; }
   .cotizar-row span { font-size: 11.5px; }
@@ -518,7 +531,7 @@ body.standalone {
 body.standalone .greeting-name { font-size: 17px; }
 body.standalone .section-label { font-size: 13px; }
 body.standalone .pill, body.standalone .chip { font-size: 13px; padding: 7px 13px; }
-body.standalone .toptabs .pill { padding: 8px 14px; }
+body.standalone .filial-tab { font-size: 13px; min-width: 80px; padding: 14px 16px; }
 body.standalone .tile .l { font-size: 16px; }
 body.standalone .tile .s { font-size: 13px; }
 body.standalone .cotizar-row span { font-size: 11.5px; }

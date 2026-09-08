@@ -38,6 +38,15 @@ export function Pill({ label, on, onClick }) {
   return <span onClick={onClick} className={"pill" + (on ? " on" : "")}>{label}</span>;
 }
 
+export function FilialTab({ icon, label, on, onClick }) {
+  return (
+    <div onClick={onClick} className={"filial-tab" + (on ? " on" : "")}>
+      <Icon name={icon} size={22} />
+      <span>{label}</span>
+    </div>
+  );
+}
+
 export function Chip({ label, on, onClick }) {
   return <span onClick={onClick} className={"chip" + (on ? " on" : "")}>{label}</span>;
 }

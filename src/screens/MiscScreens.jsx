@@ -1,6 +1,7 @@
+import { useState } from "react";
 import { useApp } from "../context/AppContext";
 import { Icon, LogoLockup } from "../components/Icon";
-import { BackHeader, SectionLabel, Row, Chip, MapMock, InfoCard } from "../components/UI";
+import { BackHeader, SectionLabel, Row, Chip, MapMock, InfoCard, CaptureCard } from "../components/UI";
 import {
   PRESTADORES, ESPECIALIDADES, SINTOMAS, CENTROS, FONDOS, PROYECTOS, ESTADO_CUENTA,
   MEMBERS, PRODUCT_TITLES, CARNET_BIEN,
@@ -99,12 +100,31 @@ export function AsistenciaAutoScreen() {
 
 export function FondoScreen({ kind }) {
   const { goBack } = useApp();
+  const [comprobante, setComprobante] = useState(false);
   const title = kind === "rescate" ? "Solicitar rescate" : "Notificar aporte al fondo";
   const actionLabel = kind === "rescate" ? "Confirmar rescate" : "Confirmar aporte";
   const f = FONDOS[0];
+
+  if (kind === "aporte" && !comprobante) {
+    return (
+      <>
+        <BackHeader title={title} />
+        <div style={{ fontSize: 13, color: "var(--muted)", marginBottom: 14 }}>
+          Primero sube una foto del comprobante de tu pago o transferencia.
+        </div>
+        <CaptureCard label="Foto del comprobante de pago" captured={false} onClick={() => setComprobante(true)} />
+      </>
+    );
+  }
+
   return (
     <>
       <BackHeader title={title} />
+      {kind === "aporte" && (
+        <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: "var(--success-text)", marginBottom: 12 }}>
+          <Icon name="circlecheck" size={15} /> Comprobante cargado
+        </div>
+      )}
       <div className="card" style={{ marginBottom: 14 }}>
         <div style={{ fontSize: 12, color: "var(--muted)" }}>{f.name}</div>
         <div style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 6 }}>Saldo disponible</div>

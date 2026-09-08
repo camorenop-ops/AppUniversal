@@ -38,6 +38,7 @@ export function AppProvider({ children }) {
   const [reembolsoForm, setReembolsoForm] = useState(null);
   const [autForm, setAutForm] = useState(null);
   const [depForm, setDepForm] = useState(null);
+  const [cambioPlanForm, setCambioPlanForm] = useState(null);
 
   // ---------- navegación ----------
   function navigate(v) {
@@ -103,6 +104,7 @@ export function AppProvider({ children }) {
       sexo: null,
       edad: null,
       parentesco: null,
+      personas: [],
       plan: null,
       tarifa: null,
       marca: "",
@@ -112,6 +114,19 @@ export function AppProvider({ children }) {
       matricula: false,
       precioPropiedad: "",
     });
+  }
+  function addPersonaCotizador() {
+    if (!(cot.sexo && cot.edad && cot.parentesco)) return;
+    setCot({
+      ...cot,
+      personas: [...cot.personas, { sexo: cot.sexo, edad: cot.edad, parentesco: cot.parentesco }],
+      sexo: null,
+      edad: null,
+      parentesco: null,
+    });
+  }
+  function removePersonaCotizador(index) {
+    setCot({ ...cot, personas: cot.personas.filter((_, i) => i !== index) });
   }
   function openCotizar(key) {
     if (key === "salud") {
@@ -192,10 +207,14 @@ export function AppProvider({ children }) {
     }
 
     if (key === "salud") {
+      const n = cot.personas.length || 1;
+      const label = cot.destino === "empleado"
+        ? (n > 1 ? "Salud (empleados domésticos)" : "Salud (empleado doméstico)")
+        : "Salud (nueva)";
       setProducts([...products, {
         key: "salud_" + Date.now(),
-        label: "Salud (empleado doméstico)",
-        sub: `${cot.plan || "Nueva"} · pendiente de emisión`,
+        label,
+        sub: `${cot.plan || "Nueva"} · ${n} asegurado${n > 1 ? "s" : ""} · pendiente de emisión`,
         icon: "stethoscope",
       }]);
       navigate({ view: "compraConfirmada", key });
@@ -291,16 +310,34 @@ export function AppProvider({ children }) {
   // ---------- coberturas detalle ----------
   const openCoberturasDetalle = (planKey) => navigate({ view: "coberturasDetalle", plan: planKey });
 
+  // ---------- cambio de plan (salud) ----------
+  function openCambioPlan() {
+    setCambioPlanForm({ nuevoPlan: null });
+    navigate({ view: "cambioPlan" });
+  }
+  function seleccionarNuevoPlan(plan) {
+    setCambioPlanForm({ nuevoPlan: plan });
+    navigate({ view: "cambioPlanConfirmar" });
+  }
+  function confirmarCambioPlan() {
+    const nuevoPlan = cambioPlanForm.nuevoPlan;
+    setProducts(products.map((p) => (
+      p.key === "salud" ? { ...p, plan: nuevoPlan, sub: `${nuevoPlan}, ${dependientes.length} dependientes` } : p
+    )));
+    navigate({ view: "cambioPlanHecho" });
+  }
+
   const value = {
     stack, current, activeTab, activeFilial, memberIdx,
     products, asistenciaProducts, dependientes, reembolsos, autorizaciones,
     especialidadFiltro, setEspecialidadFiltro,
-    cot, reembolsoForm, autForm, depForm,
+    cot, reembolsoForm, autForm, depForm, cambioPlanForm,
     navigate, goBack, goTab, setFilial, setMember, findProduct,
     openChat, openMapaCentros, openRedMedica, openAsistenciaAuto, openFondo,
     openEstadoCuenta, openCarnetBien, openProduct, openCarnet, openPago, openStub,
     openEmergencia, openInfo,
     resetCot, openCotizar, elegirSaludDestino, setCotField, nextCot, prevCot,
+    addPersonaCotizador, removePersonaCotizador,
     seleccionarPlan, capturarMatricula, validarAutoCaracteristicas, validarPropiedadDatos,
     comprarPoliza,
     openAgregarCobertura, agregarCobertura,
@@ -309,6 +346,7 @@ export function AppProvider({ children }) {
     openAutorizaciones, openSolicitarAutorizacion, capturarIndicacion, someterAutorizacion, volverAAutorizaciones,
     openAgregarDependiente, capturarDocumento, guardarDependiente, volverASalud,
     openCoberturasDetalle,
+    openCambioPlan, seleccionarNuevoPlan, confirmarCambioPlan,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

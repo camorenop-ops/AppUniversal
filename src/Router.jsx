@@ -3,6 +3,7 @@ import { HomeTab, TramitesTab, NotifTab, CuentaTab } from "./screens/TabScreens"
 import { ProductScreen } from "./screens/ProductScreens";
 import {
   CotizarScreen, SaludDestinoScreen, SaludFamiliaScreen, AutoLimiteScreen, CompraConfirmadaScreen,
+  CambioPlanScreen, CambioPlanConfirmarScreen, CambioPlanHechoScreen,
 } from "./screens/CotizarScreens";
 import { CoberturasDetalleScreen } from "./screens/CoberturasDetalleScreen";
 import {
@@ -83,6 +84,12 @@ export function Router() {
       return <FondoScreen kind={current.kind} />;
     case "estadoCuenta":
       return <EstadoCuentaScreen />;
+    case "cambioPlan":
+      return <CambioPlanScreen />;
+    case "cambioPlanConfirmar":
+      return <CambioPlanConfirmarScreen />;
+    case "cambioPlanHecho":
+      return <CambioPlanHechoScreen />;
     default:
       return null;
   }
