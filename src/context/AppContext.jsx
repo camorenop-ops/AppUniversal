@@ -53,6 +53,7 @@ export function AppProvider({ children }) {
   const [traspasoForm, setTraspasoForm] = useState(null);
   const [asistenciaSolicitudForm, setAsistenciaSolicitudForm] = useState(null);
   const [evaluacionForm, setEvaluacionForm] = useState(null);
+  const [telemedicinaForm, setTelemedicinaForm] = useState(null);
 
   // ---------- navegación ----------
   function navigate(v) {
@@ -88,6 +89,22 @@ export function AppProvider({ children }) {
   const openChat = () => navigate({ view: "chat" });
   const openMapaCentros = () => navigate({ view: "mapaCentros" });
   const openRedMedica = () => navigate({ view: "redMedica" });
+
+  // ---------- telemedicina ----------
+  function openTelemedicina() {
+    setTelemedicinaForm({ especialidad: null, emergencia: null, sintomas: "", fecha: null, hora: null });
+    navigate({ view: "telemedicina" });
+  }
+  function setTelemedicinaField(field, val) {
+    setTelemedicinaForm({ ...telemedicinaForm, [field]: val });
+  }
+  function seleccionarFechaTelemedicina(fecha) {
+    setTelemedicinaForm({ ...telemedicinaForm, fecha, hora: null });
+  }
+  function seleccionarHoraTelemedicina(hora) {
+    setTelemedicinaForm({ ...telemedicinaForm, hora });
+  }
+  const confirmarTelemedicina = () => navigate({ view: "telemedicinaConfirmada" });
   const openFondo = (kind, fondoKey) => navigate({ view: "fondo", kind, fondoKey });
   const openFondoDetalle = (fondoKey) => navigate({ view: "fondoDetalle", fondoKey });
   const openEstadoCuenta = () => navigate({ view: "estadoCuenta" });
@@ -95,7 +112,6 @@ export function AppProvider({ children }) {
   const openProduct = (key) => navigate({ view: "product", key });
   const openCarnet = () => navigate({ view: "carnet" });
   const openStub = (title) => navigate({ view: "stub", title });
-  const openEmergencia = () => navigate({ view: "emergencia" });
 
   function openInfo(section, keyOrName) {
     if (section === "Asistencia") {
@@ -588,11 +604,12 @@ export function AppProvider({ children }) {
     products, asistenciaProducts, dependientes, reembolsos, autorizaciones,
     especialidadFiltro, setEspecialidadFiltro,
     cot, reembolsoForm, autForm, depForm, cambioPlanForm, renovacionForm, endosoForm, pagoPolizasForm, reclamoForm, traspasoForm,
-    asistenciaSolicitudForm, evaluacionForm,
+    asistenciaSolicitudForm, evaluacionForm, telemedicinaForm,
     navigate, goBack, goTab, setFilial, setMember, findProduct,
     openChat, openMapaCentros, openRedMedica, openFondo, openFondoDetalle,
     openEstadoCuenta, openCarnetBien, openProduct, openCarnet, openStub,
-    openEmergencia, openInfo,
+    openInfo,
+    openTelemedicina, setTelemedicinaField, seleccionarFechaTelemedicina, seleccionarHoraTelemedicina, confirmarTelemedicina,
     resetCot, openCotizar, elegirSaludDestino, setCotField, responderCuestionario, nextCot, prevCot,
     addPersonaCotizador, removePersonaCotizador,
     capturarDocumentoPersona, setPersonaCampo, confirmarPersonaEmision, retrocederPersonaEmision,

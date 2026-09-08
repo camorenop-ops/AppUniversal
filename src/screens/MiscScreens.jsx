@@ -4,7 +4,7 @@ import { Icon, LogoLockup } from "../components/Icon";
 import { BackHeader, SectionLabel, Row, Chip, MapMock, InfoCard, CaptureCard, CoverageLine } from "../components/UI";
 import {
   PRESTADORES, ESPECIALIDADES, SINTOMAS, CENTROS, FONDOS, PROYECTOS, ESTADO_CUENTA,
-  MEMBERS, PRODUCT_TITLES, CARNET_BIEN,
+  MEMBERS, PRODUCT_TITLES, CARNET_BIEN, CITAS_DISPONIBLES,
 } from "../data/data";
 
 export function ChatScreen() {
@@ -27,19 +27,6 @@ export function ChatScreen() {
   );
 }
 
-export function EmergenciaScreen() {
-  const { openStub, openMapaCentros, openRedMedica } = useApp();
-  return (
-    <>
-      <BackHeader title="Guía médica" />
-      <div style={{ fontSize: 13, color: "var(--muted)", marginBottom: 12 }}>Elige cómo quieres recibir ayuda ahora mismo.</div>
-      <Row icon="video" label="Telemedicina" onClick={() => openStub("Telemedicina")} />
-      <Row icon="mappin" label="Centros médicos cercanos" onClick={openMapaCentros} />
-      <Row icon="network" label="Red Médica" onClick={openRedMedica} />
-    </>
-  );
-}
-
 export function MapaCentrosScreen() {
   const { openStub } = useApp();
   return (
@@ -54,11 +41,14 @@ export function MapaCentrosScreen() {
 }
 
 export function RedMedicaScreen() {
-  const { especialidadFiltro, setEspecialidadFiltro } = useApp();
+  const { especialidadFiltro, setEspecialidadFiltro, openMapaCentros, openTelemedicina } = useApp();
   const lista = PRESTADORES.filter((p) => especialidadFiltro === "Todas" || p.especialidad === especialidadFiltro);
   return (
     <>
       <BackHeader title="Red Médica" />
+      <SectionLabel>Accesos rápidos</SectionLabel>
+      <Row icon="video" label="Telemedicina" onClick={openTelemedicina} />
+      <Row icon="mappin" label="Centros médicos cercanos" onClick={openMapaCentros} />
       <div className="search-bar"><Icon name="search" size={15} /><span>Buscar por especialidad</span></div>
       <SectionLabel>Especialidades</SectionLabel>
       <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 6 }}>
@@ -81,6 +71,77 @@ export function RedMedicaScreen() {
         </div>
       ))}
     </>
+  );
+}
+
+export function TelemedicinaScreen() {
+  const {
+    telemedicinaForm: f, setTelemedicinaField, seleccionarFechaTelemedicina, seleccionarHoraTelemedicina, confirmarTelemedicina,
+  } = useApp();
+  const citaSeleccionada = CITAS_DISPONIBLES.find((c) => c.fecha === f.fecha);
+  const listo = !!(f.especialidad && f.emergencia !== null && f.sintomas && f.fecha && f.hora);
+
+  return (
+    <>
+      <BackHeader title="Telemedicina" />
+      <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 14 }}>
+        Agenda una videoconsulta con un médico de la red.
+      </div>
+      <SectionLabel>Especialidad</SectionLabel>
+      <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 6 }}>
+        {ESPECIALIDADES.map((e) => (
+          <Chip key={e} label={e} on={f.especialidad === e} onClick={() => setTelemedicinaField("especialidad", e)} />
+        ))}
+      </div>
+      <SectionLabel>¿Es una emergencia?</SectionLabel>
+      <div style={{ display: "flex", gap: 6, marginBottom: 6 }}>
+        <Chip label="Sí" on={f.emergencia === true} onClick={() => setTelemedicinaField("emergencia", true)} />
+        <Chip label="No" on={f.emergencia === false} onClick={() => setTelemedicinaField("emergencia", false)} />
+      </div>
+      <SectionLabel>Síntomas</SectionLabel>
+      <input
+        className="u-input"
+        placeholder="Describe brevemente tus síntomas"
+        value={f.sintomas}
+        onChange={(e) => setTelemedicinaField("sintomas", e.target.value)}
+      />
+      <SectionLabel>Día</SectionLabel>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 6 }}>
+        {CITAS_DISPONIBLES.map((c) => (
+          <Chip key={c.fecha} label={c.fecha} on={f.fecha === c.fecha} onClick={() => seleccionarFechaTelemedicina(c.fecha)} />
+        ))}
+      </div>
+      {citaSeleccionada && (
+        <>
+          <SectionLabel>Hora</SectionLabel>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 6 }}>
+            {citaSeleccionada.horas.map((h) => (
+              <Chip key={h} label={h} on={f.hora === h} onClick={() => seleccionarHoraTelemedicina(h)} />
+            ))}
+          </div>
+        </>
+      )}
+      <button className="solid" onClick={confirmarTelemedicina} disabled={!listo} style={{ width: "100%", marginTop: 14 }}>Agendar cita</button>
+    </>
+  );
+}
+
+export function TelemedicinaConfirmadaScreen() {
+  const { telemedicinaForm: f, goTab } = useApp();
+  return (
+    <div style={{ textAlign: "center", padding: "30px 10px" }}>
+      <Icon name="circlecheck" size={40} color="var(--success-text)" />
+      <div style={{ fontSize: 16, fontWeight: 600, marginTop: 14 }}>Cita de telemedicina agendada</div>
+      <div style={{ fontSize: 13, color: "var(--muted)", marginTop: 6 }}>
+        {f.especialidad} el {f.fecha} a las {f.hora}.
+      </div>
+      {f.emergencia && (
+        <div style={{ fontSize: 12.5, color: "var(--danger)", marginTop: 10 }}>
+          Marcaste esta consulta como emergencia: te contactaremos con prioridad antes de la hora agendada.
+        </div>
+      )}
+      <button className="solid" onClick={() => goTab("home")} style={{ width: "100%", marginTop: 24 }}>Ver en Inicio</button>
+    </div>
   );
 }
 
