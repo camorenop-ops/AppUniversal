@@ -485,3 +485,11 @@ export const AFILIADOS_ARS_USADO = {
   "Gabriel Eduardo Moreno Pereyra": { limiteUsado: 12000, medicamentosUsado: 1800 },
   "Isabel Sofia Moreno Pereyra": { limiteUsado: 5000, medicamentosUsado: 900 },
 };
+
+export const TRASPASO_ARS_PENDIENTE = {
+  numeroSolicitud: "TR-2026-04821",
+  fechaSolicitud: "28/08/2026",
+  estado: "En proceso de validación",
+  ultimaActualizacion: "02/09/2026",
+  siguientePaso: "Un asesor te contactará para completar la documentación requerida del traspaso.",
+};

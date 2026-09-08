@@ -27,6 +27,9 @@ import {
   ReclamoDocumentosScreen, ReclamoGenericoScreen, ReclamoSometidoScreen,
 } from "./screens/PagoReclamoScreens";
 import { AfiliadoDetalleScreen, AfiliadoCoberturaHistorialScreen } from "./screens/AfiliadosScreens";
+import {
+  ArsTraspasoMenuScreen, ArsTraspasoSolicitarScreen, ArsTraspasoEnviadoScreen, ArsTraspasoEstadoScreen,
+} from "./screens/ArsTraspasoScreens";
 
 export function Router() {
   const { current } = useApp();
@@ -142,6 +145,14 @@ export function Router() {
       return <AfiliadoDetalleScreen />;
     case "afiliadoCoberturaHistorial":
       return <AfiliadoCoberturaHistorialScreen />;
+    case "arsTraspaso":
+      return <ArsTraspasoMenuScreen />;
+    case "arsTraspasoSolicitar":
+      return <ArsTraspasoSolicitarScreen />;
+    case "arsTraspasoEnviado":
+      return <ArsTraspasoEnviadoScreen />;
+    case "arsTraspasoEstado":
+      return <ArsTraspasoEstadoScreen />;
     default:
       return null;
   }

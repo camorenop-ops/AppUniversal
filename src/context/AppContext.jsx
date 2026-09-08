@@ -9,6 +9,7 @@ import {
   CATEGORIA,
   ASISTENCIA_INFO,
   UBICACIONES_MUESTRA,
+  TITULAR_NOMBRE,
 } from "../data/data";
 
 function avanzarUnAnio(fecha) {
@@ -49,6 +50,7 @@ export function AppProvider({ children }) {
   const [endosoForm, setEndosoForm] = useState(null);
   const [pagoPolizasForm, setPagoPolizasForm] = useState(null);
   const [reclamoForm, setReclamoForm] = useState(null);
+  const [traspasoForm, setTraspasoForm] = useState(null);
 
   // ---------- navegación ----------
   function navigate(v) {
@@ -533,11 +535,23 @@ export function AppProvider({ children }) {
   }
   const someterReclamo = () => navigate({ view: "reclamoSometido" });
 
+  // ---------- traspaso de ARS ----------
+  const openArsTraspaso = () => navigate({ view: "arsTraspaso" });
+  function abrirArsTraspasoSolicitar() {
+    setTraspasoForm({ nombre: TITULAR_NOMBRE, telefono: "", correo: "" });
+    navigate({ view: "arsTraspasoSolicitar" });
+  }
+  function setTraspasoField(field, val) {
+    setTraspasoForm({ ...traspasoForm, [field]: val });
+  }
+  const enviarArsTraspaso = () => navigate({ view: "arsTraspasoEnviado" });
+  const abrirArsTraspasoEstado = () => navigate({ view: "arsTraspasoEstado" });
+
   const value = {
     stack, current, activeTab, activeFilial, memberIdx,
     products, asistenciaProducts, dependientes, reembolsos, autorizaciones,
     especialidadFiltro, setEspecialidadFiltro,
-    cot, reembolsoForm, autForm, depForm, cambioPlanForm, renovacionForm, endosoForm, pagoPolizasForm, reclamoForm,
+    cot, reembolsoForm, autForm, depForm, cambioPlanForm, renovacionForm, endosoForm, pagoPolizasForm, reclamoForm, traspasoForm,
     navigate, goBack, goTab, setFilial, setMember, findProduct,
     openChat, openMapaCentros, openRedMedica, openAsistenciaAuto, openFondo,
     openEstadoCuenta, openCarnetBien, openProduct, openCarnet, openStub,
@@ -562,6 +576,7 @@ export function AppProvider({ children }) {
     openPagoPolizas, toggleSeleccionPago, continuarPagoPolizas, setMetodoPagoPolizas, confirmarPagoPolizas,
     openReclamo, seleccionarPolizaReclamo, seleccionarTipoReclamoAuto, capturarFotoReclamo,
     setReclamoDescripcion, toggleDocumentoReclamo, someterReclamo,
+    openArsTraspaso, abrirArsTraspasoSolicitar, setTraspasoField, enviarArsTraspaso, abrirArsTraspasoEstado,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

@@ -16,6 +16,7 @@ export function HomeTab() {
     activeFilial, setFilial, products, asistenciaProducts, dependientes,
     openProduct, openCotizar, openFondo, openEstadoCuenta, openInfo, openStub,
     openRenovaciones, openEndosarPoliza, openPagoPolizas, openReclamo, openAfiliadoDetalle,
+    openCoberturasDetalle, openArsTraspaso,
   } = useApp();
 
   let content;
@@ -73,9 +74,19 @@ export function HomeTab() {
       </>
     );
   } else if (activeFilial === "ARS") {
-    content = [TITULAR_NOMBRE, ...dependientes].map((d) => (
-      <Row key={d} icon="user" label={d} onClick={() => openAfiliadoDetalle(d, "ars")} />
-    ));
+    content = (
+      <>
+        <SectionLabel>Accesos rápidos</SectionLabel>
+        <QuickActionsRow items={[
+          ["shieldplus", "Coberturas del PDSS", () => openCoberturasDetalle("PDSS")],
+          ["network", "Solicitar traspaso", openArsTraspaso],
+        ]} />
+        <SectionLabel>Consulta de afiliados</SectionLabel>
+        {[TITULAR_NOMBRE, ...dependientes].map((d) => (
+          <Row key={d} icon="user" label={d} onClick={() => openAfiliadoDetalle(d, "ars")} />
+        ))}
+      </>
+    );
   } else {
     content = (
       <div style={{ display: "grid", gridTemplateColumns: "repeat(2,minmax(0,1fr))", gap: 10 }}>
