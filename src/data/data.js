@@ -287,6 +287,17 @@ export function edadFactor(edad) {
   const e = Number(edad) || 0;
   return 1 + Math.max(0, e - 25) * 0.012 + Math.max(0, e - 60) * 0.02;
 }
+export const CUESTIONARIO_SALUD_VIDA = [
+  ["fuma", "¿Fumas o has fumado en el último año?"],
+  ["cronica", "¿Padeces alguna enfermedad crónica (diabetes, hipertensión, cardiopatía)?"],
+  ["hospitalizado", "¿Has sido hospitalizado(a) en los últimos 5 años?"],
+  ["deporteRiesgo", "¿Practicas deportes o actividades de alto riesgo?"],
+  ["antecedentes", "¿Tienes antecedentes familiares de enfermedades graves?"],
+];
+export function saludFactorVida(respuestas) {
+  const positivas = Object.values(respuestas || {}).filter((v) => v === true).length;
+  return 1 + positivas * 0.08;
+}
 export const AUTO_FACTOR = { "Básico": 0.012, "Pérdida Total": 0.025, "Full": 0.045, "Súper Full": 0.065 };
 export const PROPIEDAD_FACTOR = { "Básica": 0.0018, "Amplia": 0.0035 };
 export const ASISTENCIA_HOGAR_PRECIOS = { "Básica": 450, "Premium": 950 };

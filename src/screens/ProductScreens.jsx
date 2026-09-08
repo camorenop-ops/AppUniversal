@@ -4,6 +4,8 @@ import { BackHeader, SectionLabel, Row, AddRow, QuickActionsRow, CoverageLine } 
 import { CoberturasAccordion } from "../components/CoberturasAccordion";
 import { COBERTURAS_LABEL, COBERTURAS_DATA } from "../data/data";
 
+const PLANES_PROPIEDAD_DETALLE = ["hogar", "garantivilla"];
+
 export function SaludScreen() {
   const { products, dependientes, navigate, openCarnet, openAgregarCobertura, openCambioPlan, openStub, openAgregarDependiente } = useApp();
   const p = products.find((x) => x.key === "salud");
@@ -71,8 +73,10 @@ function GenericProductScreen({ productKey }) {
         <div style={{ fontWeight: 600, fontSize: 15, marginTop: 8 }}>{p.extra}</div>
         <div style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 6 }}>Contrato: 03003780-28817</div>
       </div>
-      <SectionLabel>{COBERTURAS_LABEL[productKey]}</SectionLabel>
-      {COBERTURAS_DATA[productKey].map((item, i) => <CoverageLine key={i} item={item} />)}
+      <SectionLabel>{COBERTURAS_LABEL[productKey] || "Coberturas del plan"}</SectionLabel>
+      {PLANES_PROPIEDAD_DETALLE.includes(productKey)
+        ? <CoberturasAccordion planKey="Amplia" initialOpenFirst />
+        : COBERTURAS_DATA[productKey].map((item, i) => <CoverageLine key={i} item={item} />)}
       <button className="solid" onClick={() => openCarnetBien(productKey)} style={{ width: "100%", marginTop: 14 }}>Ver carnet</button>
     </>
   );

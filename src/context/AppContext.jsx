@@ -105,6 +105,7 @@ export function AppProvider({ children }) {
       sexo: null,
       edad: null,
       parentesco: null,
+      cuestionarioSalud: {},
       personas: [],
       personaEmisionIdx: 0,
       plan: null,
@@ -204,6 +205,9 @@ export function AppProvider({ children }) {
   }
   function setCotField(field, val) {
     setCot({ ...cot, [field]: val });
+  }
+  function responderCuestionario(campo, val) {
+    setCot({ ...cot, cuestionarioSalud: { ...cot.cuestionarioSalud, [campo]: val } });
   }
   function nextCot() {
     setCot({ ...cot, step: cot.step + 1 });
@@ -402,7 +406,7 @@ export function AppProvider({ children }) {
     openChat, openMapaCentros, openRedMedica, openAsistenciaAuto, openFondo,
     openEstadoCuenta, openCarnetBien, openProduct, openCarnet, openPago, openStub,
     openEmergencia, openInfo,
-    resetCot, openCotizar, elegirSaludDestino, setCotField, nextCot, prevCot,
+    resetCot, openCotizar, elegirSaludDestino, setCotField, responderCuestionario, nextCot, prevCot,
     addPersonaCotizador, removePersonaCotizador,
     capturarDocumentoPersona, setPersonaCampo, confirmarPersonaEmision, retrocederPersonaEmision,
     seleccionarPlan, capturarMatricula, validarAutoCaracteristicas,

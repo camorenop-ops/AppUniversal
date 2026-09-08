@@ -3,7 +3,7 @@ import { Icon } from "../components/Icon";
 import { BackHeader, SectionLabel, Chip, Progress, StepNav, CaptureCard, Row, TablaComparativa, MapPicker } from "../components/UI";
 import {
   PRODUCT_TITLES, CATEGORIA, BASE_PERSONA, edadFactor, AUTO_FACTOR, PROPIEDAD_FACTOR,
-  ASISTENCIA_HOGAR_PRECIOS, COMPARATIVO_FILAS, MUEBLES_HOGAR,
+  ASISTENCIA_HOGAR_PRECIOS, COMPARATIVO_FILAS, MUEBLES_HOGAR, CUESTIONARIO_SALUD_VIDA, saludFactorVida,
 } from "../data/data";
 
 function ChipGroup({ options, current, field }) {
@@ -19,7 +19,8 @@ function PersonaDatosStep({ title }) {
   const { cot, prevCot, nextCot, setCotField, addPersonaCotizador, removePersonaCotizador } = useApp();
   const ctx = cot.key === "salud" && cot.destino === "empleado";
   const isSalud = cot.key === "salud";
-  const draftComplete = !!(cot.sexo && cot.edad && cot.parentesco);
+  const isVida = cot.key === "vida";
+  const draftComplete = isVida ? !!(cot.sexo && cot.edad) : !!(cot.sexo && cot.edad && cot.parentesco);
   const canContinue = isSalud ? cot.personas.length > 0 : draftComplete;
 
   return (
@@ -53,14 +54,46 @@ function PersonaDatosStep({ title }) {
         value={cot.edad || ""}
         onChange={(e) => setCotField("edad", e.target.value)}
       />
-      <SectionLabel>Parentesco</SectionLabel>
-      <ChipGroup options={["Titular", "Cónyuge", "Hijo/a", "Padre/Madre"]} current={cot.parentesco} field="parentesco" />
+      {!isVida && (
+        <>
+          <SectionLabel>Parentesco</SectionLabel>
+          <ChipGroup options={["Titular", "Cónyuge", "Hijo/a", "Padre/Madre"]} current={cot.parentesco} field="parentesco" />
+        </>
+      )}
       {isSalud && (
         <button onClick={addPersonaCotizador} disabled={!draftComplete} style={{ width: "100%", marginTop: 8 }}>
           + Agregar persona
         </button>
       )}
       <StepNav onBack={prevCot} onForward={nextCot} forwardLabel="Continuar" disabled={!canContinue} />
+    </>
+  );
+}
+
+function CuestionarioSaludStep({ title }) {
+  const { cot, prevCot, nextCot, responderCuestionario } = useApp();
+  const respuestas = cot.cuestionarioSalud || {};
+  const completo = CUESTIONARIO_SALUD_VIDA.every(([k]) => respuestas[k] === true || respuestas[k] === false);
+  return (
+    <>
+      <BackHeader title={`Cotizar ${title}`} />
+      <Progress pasoActual={Math.min(cot.step, 4)} />
+      <SectionLabel>Cuestionario de salud</SectionLabel>
+      <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 10 }}>
+        Responde con sinceridad; esto ayuda a calcular tu prima correctamente.
+      </div>
+      {CUESTIONARIO_SALUD_VIDA.map(([k, pregunta]) => (
+        <div key={k} style={{ marginBottom: 12 }}>
+          <div style={{ fontSize: 13.5, marginBottom: 6 }}>{pregunta}</div>
+          <span style={{ display: "inline-block", margin: "0 6px 6px 0" }}>
+            <Chip label="Sí" on={respuestas[k] === true} onClick={() => responderCuestionario(k, true)} />
+          </span>
+          <span style={{ display: "inline-block", margin: "0 6px 6px 0" }}>
+            <Chip label="No" on={respuestas[k] === false} onClick={() => responderCuestionario(k, false)} />
+          </span>
+        </div>
+      ))}
+      <StepNav onBack={prevCot} onForward={nextCot} forwardLabel="Continuar" disabled={!completo} />
     </>
   );
 }
@@ -147,7 +180,7 @@ function PersonaEmisionStep({ title }) {
   return (
     <>
       <BackHeader title={`Cotizar ${title}`} />
-      <Progress pasoActual={3} />
+      <Progress pasoActual={Math.min(cot.step, 4)} />
       <SectionLabel>Datos para emitir la póliza</SectionLabel>
       <input className="u-input" placeholder="Nombre completo" />
       <input className="u-input" placeholder="Cédula" />
@@ -317,6 +350,11 @@ function OfertaComparadaStep({ title }) {
     if (key === "salud" && cot.personas.length > 0) {
       calc = (c) => Math.round(cot.personas.reduce((sum, p) => sum + BASE_PERSONA[key][c] * edadFactor(p.edad), 0));
       intro = `Según los ${cot.personas.length} asegurado(s) que agregaste, así se comparan tus opciones:`;
+    } else if (key === "vida") {
+      const factor = edadFactor(cot.edad);
+      const sFactor = saludFactorVida(cot.cuestionarioSalud);
+      calc = (c) => Math.round(BASE_PERSONA[key][c] * factor * sFactor);
+      intro = "Según tu edad y tu cuestionario de salud, así se comparan tus opciones:";
     } else {
       const factor = edadFactor(cot.edad);
       calc = (c) => Math.round(BASE_PERSONA[key][c] * factor);
@@ -341,7 +379,7 @@ function OfertaComparadaStep({ title }) {
       ? `Con base en el valor de tu inmueble (RD$${precioProp.toLocaleString("es-DO")}) y tus muebles (RD$${valorMuebles.toLocaleString("es-DO")}):`
       : "Con base en el valor de tu propiedad:";
   }
-  const progIdx = cat === "vehiculo" ? 3 : cat === "propiedad" ? 4 : 2;
+  const progIdx = cat === "vehiculo" ? 3 : cat === "propiedad" ? 4 : key === "vida" ? 3 : 2;
   const filas = COMPARATIVO_FILAS[key];
 
   return (
@@ -399,6 +437,13 @@ export function CotizarScreen() {
     return <CotizarPagoStep />;
   }
   if (cat === "persona") {
+    if (cot.key === "vida") {
+      if (step === 1) return <PersonaDatosStep title={title} />;
+      if (step === 2) return <CuestionarioSaludStep title={title} />;
+      if (step === 3) return <OfertaComparadaStep title={title} />;
+      if (step === 4) return <PersonaEmisionStep title={title} />;
+      return <CotizarPagoStep />;
+    }
     if (step === 1) return <PersonaDatosStep title={title} />;
     if (step === 2) return <OfertaComparadaStep title={title} />;
     if (step === 3) return <PersonaEmisionStep title={title} />;
