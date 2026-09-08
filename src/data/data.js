@@ -404,6 +404,12 @@ export const TITULAR_NOMBRE = "Carlos Andrés Moreno Prieto";
 export const LIMITE_POR_CASO_PLAN = { "Plan Esencial": 600000, "Plan Alpha": 1200000, "Plan Exclusivo": 2500000 };
 export const COBERTURA_MEDICAMENTOS_PLAN = { "Plan Esencial": 30000, "Plan Alpha": 60000, "Plan Exclusivo": 120000 };
 
+export const PLAN_BASICO_SALUD = {
+  nombre: "Plan Básico de Salud (PBS)",
+  limitePorCaso: 470000,
+  coberturaMedicamentos: 25000,
+};
+
 export const AFILIADOS_SALUD_INFO = {
   [TITULAR_NOMBRE]: { parentesco: "Titular", limiteUsado: 185000, medicamentosUsado: 18500 },
   "Amy Carolina Pereyra García": {

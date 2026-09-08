@@ -409,8 +409,8 @@ export function AppProvider({ children }) {
   const openCoberturasDetalle = (planKey) => navigate({ view: "coberturasDetalle", plan: planKey });
 
   // ---------- consulta de afiliados (salud) ----------
-  const openAfiliadoDetalle = (nombre) => navigate({ view: "afiliadoDetalle", nombre });
-  const openAfiliadoCobertura = (nombre, tipo) => navigate({ view: "afiliadoCoberturaHistorial", nombre, tipo });
+  const openAfiliadoDetalle = (nombre, origen) => navigate({ view: "afiliadoDetalle", nombre, origen });
+  const openAfiliadoCobertura = (nombre, tipo, origen) => navigate({ view: "afiliadoCoberturaHistorial", nombre, tipo, origen });
 
   // ---------- cambio de plan (salud) ----------
   function openCambioPlan() {

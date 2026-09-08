@@ -2,12 +2,15 @@ import { useApp } from "../context/AppContext";
 import { Icon } from "../components/Icon";
 import { BackHeader, SectionLabel, Row, AddRow, QuickActionsRow, CoverageLine } from "../components/UI";
 import { CoberturasAccordion } from "../components/CoberturasAccordion";
-import { COBERTURAS_LABEL, COBERTURAS_DATA } from "../data/data";
+import { COBERTURAS_LABEL, COBERTURAS_DATA, TITULAR_NOMBRE } from "../data/data";
 
 const PLANES_PROPIEDAD_DETALLE = ["hogar", "garantivilla"];
 
 export function SaludScreen() {
-  const { products, dependientes, navigate, openCarnet, openAgregarCobertura, openCambioPlan, openStub, openAgregarDependiente } = useApp();
+  const {
+    products, dependientes, navigate, openCarnet, openAgregarCobertura, openCambioPlan,
+    openAgregarDependiente, openAfiliadoDetalle,
+  } = useApp();
   const p = products.find((x) => x.key === "salud");
   return (
     <>
@@ -23,8 +26,10 @@ export function SaludScreen() {
         ["replace", "Cambiar de plan", openCambioPlan],
         ["plus", "Agregar cobertura", openAgregarCobertura],
       ]} />
-      <SectionLabel>Dependientes afiliados</SectionLabel>
-      {dependientes.map((d) => <Row key={d} icon="user" label={d} onClick={() => openStub(d)} />)}
+      <SectionLabel>Consulta de afiliados</SectionLabel>
+      {[TITULAR_NOMBRE, ...dependientes].map((d) => (
+        <Row key={d} icon="user" label={d} onClick={() => openAfiliadoDetalle(d, "salud")} />
+      ))}
       <AddRow icon="userplus" label="Agregar dependiente" onClick={openAgregarDependiente} />
       <SectionLabel>Coberturas del plan</SectionLabel>
       <CoberturasAccordion planKey={p.plan} />

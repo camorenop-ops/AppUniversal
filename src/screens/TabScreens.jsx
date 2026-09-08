@@ -74,7 +74,7 @@ export function HomeTab() {
     );
   } else if (activeFilial === "ARS") {
     content = [TITULAR_NOMBRE, ...dependientes].map((d) => (
-      <Row key={d} icon="user" label={d} onClick={() => openAfiliadoDetalle(d)} />
+      <Row key={d} icon="user" label={d} onClick={() => openAfiliadoDetalle(d, "ars")} />
     ));
   } else {
     content = (
