@@ -130,13 +130,20 @@ export function AppProvider({ children }) {
     setCot({ ...cot, personas: cot.personas.filter((_, i) => i !== index) });
   }
   const DOCUMENTOS_MUESTRA = [
-    { nombre: "María Isabel", apellidos: "Ramírez Cruz", fechaNacimiento: "14/05/1990" },
-    { nombre: "Juan Carlos", apellidos: "Peña Gómez", fechaNacimiento: "22/11/1985" },
-    { nombre: "Ana Lucía", apellidos: "Fernández Solano", fechaNacimiento: "03/08/2012" },
-    { nombre: "Luis Miguel", apellidos: "Rodríguez Tejada", fechaNacimiento: "30/01/1978" },
+    { sexo: "Femenino", nombre: "María Isabel", apellidos: "Ramírez Cruz", fechaNacimiento: "14/05/1990" },
+    { sexo: "Masculino", nombre: "Juan Carlos", apellidos: "Peña Gómez", fechaNacimiento: "22/11/1985" },
+    { sexo: "Femenino", nombre: "Ana Lucía", apellidos: "Fernández Solano", fechaNacimiento: "03/08/2012" },
+    { sexo: "Masculino", nombre: "Luis Miguel", apellidos: "Rodríguez Tejada", fechaNacimiento: "30/01/1978" },
+    { sexo: "Femenino", nombre: "Carmen Rosa", apellidos: "Objío Vargas", fechaNacimiento: "19/09/1995" },
+    { sexo: "Masculino", nombre: "Pedro Antonio", apellidos: "Cabrera Núñez", fechaNacimiento: "05/02/1982" },
   ];
   function capturarDocumentoPersona(index) {
-    const m = DOCUMENTOS_MUESTRA[Math.floor(Math.random() * DOCUMENTOS_MUESTRA.length)];
+    const persona = cot.personas[index];
+    const nombresUsados = cot.personas.filter((p, i) => i !== index && p.nombre).map((p) => p.nombre);
+    const porSexo = DOCUMENTOS_MUESTRA.filter((d) => d.sexo === persona.sexo && !nombresUsados.includes(d.nombre));
+    const disponibles = DOCUMENTOS_MUESTRA.filter((d) => !nombresUsados.includes(d.nombre));
+    const pool = porSexo.length > 0 ? porSexo : (disponibles.length > 0 ? disponibles : DOCUMENTOS_MUESTRA);
+    const m = pool[Math.floor(Math.random() * pool.length)];
     setCot({
       ...cot,
       personas: cot.personas.map((p, i) => (i === index ? {
