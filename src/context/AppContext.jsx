@@ -8,6 +8,7 @@ import {
   PRODUCT_TITLES,
   CATEGORIA,
   ASISTENCIA_INFO,
+  UBICACIONES_MUESTRA,
 } from "../data/data";
 
 const AppContext = createContext(null);
@@ -113,6 +114,11 @@ export function AppProvider({ children }) {
       anio: "",
       precioVehiculo: "",
       matricula: false,
+      tipoInmueble: null,
+      ubicacion: null,
+      aseguraMuebles: null,
+      mueblesSeleccionados: [],
+      valorMuebles: "",
       precioPropiedad: "",
     });
   }
@@ -220,8 +226,24 @@ export function AppProvider({ children }) {
   function validarAutoCaracteristicas() {
     if (cot.precioVehiculo) nextCot();
   }
-  function validarPropiedadDatos() {
-    if (cot.precioPropiedad) nextCot();
+  function usarUbicacionActual() {
+    const label = UBICACIONES_MUESTRA[Math.floor(Math.random() * UBICACIONES_MUESTRA.length)];
+    setCot({ ...cot, ubicacion: { x: 50, y: 52, label } });
+  }
+  function marcarUbicacionMapa({ x, y }) {
+    setCot({ ...cot, ubicacion: { x, y, label: "Ubicación marcada en el mapa" } });
+  }
+  function toggleMueble(nombre) {
+    const ya = cot.mueblesSeleccionados.includes(nombre);
+    setCot({
+      ...cot,
+      mueblesSeleccionados: ya
+        ? cot.mueblesSeleccionados.filter((m) => m !== nombre)
+        : [...cot.mueblesSeleccionados, nombre],
+    });
+  }
+  function validarPropiedadValores() {
+    if (cot.precioPropiedad && (!cot.aseguraMuebles || cot.valorMuebles)) nextCot();
   }
 
   function comprarPoliza() {
@@ -383,7 +405,8 @@ export function AppProvider({ children }) {
     resetCot, openCotizar, elegirSaludDestino, setCotField, nextCot, prevCot,
     addPersonaCotizador, removePersonaCotizador,
     capturarDocumentoPersona, setPersonaCampo, confirmarPersonaEmision, retrocederPersonaEmision,
-    seleccionarPlan, capturarMatricula, validarAutoCaracteristicas, validarPropiedadDatos,
+    seleccionarPlan, capturarMatricula, validarAutoCaracteristicas,
+    usarUbicacionActual, marcarUbicacionMapa, toggleMueble, validarPropiedadValores,
     comprarPoliza,
     openAgregarCobertura, agregarCobertura,
     openReembolsos, openSolicitarReembolso, capturarFactura, capturarDocReembolso,

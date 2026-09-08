@@ -92,6 +92,25 @@ export function MapMock({ pins }) {
   );
 }
 
+export function MapPicker({ pin, onPick }) {
+  function handleClick(e) {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    onPick({ x, y });
+  }
+  return (
+    <div className="map-mock" onClick={handleClick} style={{ cursor: "crosshair" }}>
+      {pin && (
+        <div className="map-pin" style={{ left: `${pin.x}%`, top: `${pin.y}%` }}>
+          <Icon name="mappin" size={26} color="var(--accent)" />
+          <div className="tag">{pin.label || "Ubicación seleccionada"}</div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function AdsStrip({ ads, onSelect }) {
   return (
     <div className="ads-strip">

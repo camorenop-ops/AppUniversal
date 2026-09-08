@@ -137,6 +137,64 @@ export const COBERTURAS_DETALLE = {
   COBERTURAS_DETALLE[planKey][CAT_OPCIONALES_AUTO] = FILAS_OPCIONALES_AUTO;
 });
 
+COBERTURAS_DETALLE["Básica"] = {
+  "alerttriangle|Coberturas principales": [
+    ["Incendio y/o rayo", "Incluido"],
+    ["Explosión", "Incluido"],
+    ["Ciclón, huracán, tornado y manga de viento", "Incluido"],
+    ["Remoción de escombros", "Incluido"],
+    ["Colapso y/o daño a la estructura", "Incluido"],
+    ["Daños por humo", "Incluido"],
+    ["Granizo", "Incluido"],
+  ],
+  "shield|Coberturas adicionales": [
+    ["Daños por agua de lluvia (ciclón)", "No incluido"],
+    ["Inundación y/o ras de mar", "No incluido"],
+    ["Daños por agua accidental", "No incluido"],
+    ["Terremoto y/o temblor de tierra", "No incluido"],
+    ["Robo con escalamiento y/o violencia", "No incluido"],
+    ["Daños por naves aéreas y vehículos", "No incluido"],
+    ["Motín, huelga y daños maliciosos", "No incluido"],
+  ],
+  "listcheck|Beneficios incluidos": [
+    ["Responsabilidad civil", "No incluido"],
+    ["Inhabitabilidad del hogar", "No incluido"],
+    ["Pérdida de renta", "No incluido"],
+    ["Equipos electrónicos", "No incluido"],
+    ["Recuperación de documentos", "No incluido"],
+    ["Gold Assist", "No incluido"],
+    ["Últimos Gastos Plus", "No incluido"],
+  ],
+};
+COBERTURAS_DETALLE["Amplia"] = {
+  "alerttriangle|Coberturas principales": COBERTURAS_DETALLE["Básica"]["alerttriangle|Coberturas principales"],
+  "shield|Coberturas adicionales": [
+    ["Daños por agua de lluvia (ciclón)", "Incluido"],
+    ["Inundación y/o ras de mar", "Incluido"],
+    ["Daños por agua accidental", "Incluido"],
+    ["Terremoto y/o temblor de tierra", "Incluido"],
+    ["Robo con escalamiento y/o violencia", "Incluido"],
+    ["Daños por naves aéreas y vehículos", "Incluido"],
+    ["Motín, huelga y daños maliciosos", "Incluido"],
+  ],
+  "listcheck|Beneficios incluidos": [
+    ["Responsabilidad civil", "Incluido"],
+    ["Inhabitabilidad del hogar", "Hasta RD$150,000 por reembolso"],
+    ["Pérdida de renta", "Hasta RD$100,000"],
+    ["Equipos electrónicos", "10% del valor de tus muebles, hasta RD$500,000"],
+    ["Recuperación de documentos", "Hasta RD$50,000 por reembolso"],
+    ["Gold Assist", "Asistencia de emergencia para el hogar"],
+    ["Últimos Gastos Plus", "Servicio de asistencia funeral y exequial"],
+  ],
+  "plus|Coberturas opcionales": [
+    ["Paneles solares", "Disponible por cuota adicional"],
+    ["Rotura de cristales", "Disponible por cuota adicional"],
+    ["Avería de maquinaria", "Disponible por cuota adicional"],
+    ["Renta educativa", "Disponible por cuota adicional"],
+    ["Gastos médicos por accidente (empleados domésticos)", "Hasta RD$50,000 por reembolso"],
+  ],
+};
+
 export const PRESTADORES = [
   { nombre: "Dra. Carmen Reyes", especialidad: "Cardiología", telefono: "809-555-0142", direccion: "Av. Abraham Lincoln 504, Santo Domingo" },
   { nombre: "Dr. Luis Fernández", especialidad: "Cardiología", telefono: "809-555-0198", direccion: "Torre Médica Naco, piso 3" },
@@ -163,6 +221,26 @@ export const ASISTENCIA_INFO = {
   asistenciahogar: [["Estado", "Activo"], ["Cobertura", "Plomería, electricidad, cerrajería"]],
 };
 export const FILIALES = ["Seguros", "AFI", "Fiduciaria", "ARS", "Asistencia"];
+export const MUEBLES_HOGAR = [
+  "Sala (mueble, TV, decoración)",
+  "Comedor",
+  "Habitación principal",
+  "Habitaciones secundarias",
+  "Cocina y electrodomésticos",
+  "Nevera",
+  "Lavadora y secadora",
+  "Aire acondicionado",
+  "Equipos electrónicos (computadoras, consolas)",
+  "Ropa y efectos personales",
+];
+export const UBICACIONES_MUESTRA = [
+  "Piantini, Santo Domingo",
+  "Bella Vista, Santo Domingo",
+  "Naco, Santo Domingo",
+  "Los Prados, Santiago",
+  "Punta Cana, La Altagracia",
+  "Bávaro, La Altagracia",
+];
 export const ANUNCIOS = [
   { tag: "SEGUROS UNIVERSAL · AUTO", t: "Retoque Express gratis con tu Súper Full", img: adAuto },
   { tag: "SEGUROS UNIVERSAL · SALUD", t: "Plan Exclusivo: cobertura desde la gestación", img: adSalud },
@@ -241,17 +319,24 @@ export const COMPARATIVO_FILAS = {
     { label: "Retoque Express", valores: ["No", "No", "No", "Sí"] },
   ],
   hogar: [
-    { label: "Incendio", valores: ["Sí", "Sí"] },
-    { label: "Robo", valores: ["Sí", "Sí"] },
-    { label: "Daños por agua", valores: ["No", "Sí"] },
+    { label: "Incendio, rayo y explosión", valores: ["Sí", "Sí"] },
+    { label: "Ciclón, huracán y granizo", valores: ["Sí", "Sí"] },
+    { label: "Terremoto y/o temblor", valores: ["No", "Sí"] },
+    { label: "Robo con escalamiento", valores: ["No", "Sí"] },
+    { label: "Daños por agua e inundación", valores: ["No", "Sí"] },
     { label: "Responsabilidad civil", valores: ["No", "Sí"] },
-    { label: "Terremoto", valores: ["No", "Sí"] },
+    { label: "Equipos electrónicos", valores: ["No", "Sí"] },
+    { label: "Gold Assist", valores: ["No", "Sí"] },
   ],
   garantivilla: [
-    { label: "Incendio", valores: ["Sí", "Sí"] },
-    { label: "Robo", valores: ["Sí", "Sí"] },
-    { label: "Huracán o tormenta", valores: ["No", "Sí"] },
+    { label: "Incendio, rayo y explosión", valores: ["Sí", "Sí"] },
+    { label: "Ciclón, huracán y granizo", valores: ["Sí", "Sí"] },
+    { label: "Terremoto y/o temblor", valores: ["No", "Sí"] },
+    { label: "Robo con escalamiento", valores: ["No", "Sí"] },
+    { label: "Daños por agua e inundación", valores: ["No", "Sí"] },
     { label: "Responsabilidad civil", valores: ["No", "Sí"] },
+    { label: "Equipos electrónicos", valores: ["No", "Sí"] },
+    { label: "Gold Assist", valores: ["No", "Sí"] },
   ],
   asistenciahogar: [
     { label: "Plomería de emergencia", valores: ["Sí", "Sí"] },

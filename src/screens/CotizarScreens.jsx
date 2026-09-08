@@ -1,9 +1,9 @@
 import { useApp } from "../context/AppContext";
 import { Icon } from "../components/Icon";
-import { BackHeader, SectionLabel, Chip, Progress, StepNav, CaptureCard, Row, TablaComparativa } from "../components/UI";
+import { BackHeader, SectionLabel, Chip, Progress, StepNav, CaptureCard, Row, TablaComparativa, MapPicker } from "../components/UI";
 import {
   PRODUCT_TITLES, CATEGORIA, BASE_PERSONA, edadFactor, AUTO_FACTOR, PROPIEDAD_FACTOR,
-  ASISTENCIA_HOGAR_PRECIOS, COMPARATIVO_FILAS,
+  ASISTENCIA_HOGAR_PRECIOS, COMPARATIVO_FILAS, MUEBLES_HOGAR,
 } from "../data/data";
 
 function ChipGroup({ options, current, field }) {
@@ -193,15 +193,86 @@ function AutoCaracteristicasStep({ title }) {
   );
 }
 
-function PropiedadDatosStep({ title }) {
-  const { prevCot, validarPropiedadDatos, setCotField } = useApp();
+function PropiedadUbicacionStep({ title }) {
+  const { cot, prevCot, nextCot, usarUbicacionActual, marcarUbicacionMapa } = useApp();
+  const canContinue = !!(cot.tipoInmueble && cot.ubicacion);
   return (
     <>
       <BackHeader title={`Cotizar ${title}`} />
       <Progress pasoActual={1} />
-      <SectionLabel>Precio de la propiedad (RD$)</SectionLabel>
-      <input className="u-input" placeholder="Ej. 6,000,000" onChange={(e) => setCotField("precioPropiedad", e.target.value)} />
-      <StepNav onBack={prevCot} onForward={validarPropiedadDatos} forwardLabel="Continuar" disabled={false} />
+      <SectionLabel>Tipo de inmueble</SectionLabel>
+      <ChipGroup options={["Casa", "Apartamento"]} current={cot.tipoInmueble} field="tipoInmueble" />
+      <SectionLabel>Ubicación del inmueble</SectionLabel>
+      <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 10 }}>
+        Usa tu ubicación actual o toca el mapa para marcarla.
+      </div>
+      <button onClick={usarUbicacionActual} style={{ width: "100%", marginBottom: 10 }}>Usar mi ubicación actual</button>
+      <MapPicker pin={cot.ubicacion} onPick={marcarUbicacionMapa} />
+      {cot.ubicacion && (
+        <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: "var(--success-text)", margin: "10px 0 0" }}>
+          <Icon name="circlecheck" size={15} /> {cot.ubicacion.label}
+        </div>
+      )}
+      <StepNav onBack={prevCot} onForward={nextCot} forwardLabel="Continuar" disabled={!canContinue} />
+    </>
+  );
+}
+
+function PropiedadMueblesStep({ title }) {
+  const { cot, setCotField, toggleMueble, prevCot, nextCot } = useApp();
+  const decidido = cot.aseguraMuebles;
+  const canContinue = decidido === false || (decidido === true && cot.mueblesSeleccionados.length > 0);
+  return (
+    <>
+      <BackHeader title={`Cotizar ${title}`} />
+      <Progress pasoActual={2} />
+      <SectionLabel>¿Deseas asegurar los muebles y electrodomésticos?</SectionLabel>
+      <span style={{ display: "inline-block", margin: "0 6px 6px 0" }}>
+        <Chip label="Sí" on={decidido === true} onClick={() => setCotField("aseguraMuebles", true)} />
+      </span>
+      <span style={{ display: "inline-block", margin: "0 6px 6px 0" }}>
+        <Chip label="No" on={decidido === false} onClick={() => setCotField("aseguraMuebles", false)} />
+      </span>
+      {decidido === true && (
+        <>
+          <SectionLabel>Selecciona lo que tiene tu hogar</SectionLabel>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 6 }}>
+            {MUEBLES_HOGAR.map((m) => (
+              <Chip key={m} label={m} on={cot.mueblesSeleccionados.includes(m)} onClick={() => toggleMueble(m)} />
+            ))}
+          </div>
+        </>
+      )}
+      <StepNav onBack={prevCot} onForward={nextCot} forwardLabel="Continuar" disabled={!canContinue} />
+    </>
+  );
+}
+
+function PropiedadValoresStep({ title }) {
+  const { cot, setCotField, prevCot, validarPropiedadValores } = useApp();
+  return (
+    <>
+      <BackHeader title={`Cotizar ${title}`} />
+      <Progress pasoActual={3} />
+      <SectionLabel>Valor del inmueble (RD$)</SectionLabel>
+      <input
+        className="u-input"
+        placeholder="Ej. 6,000,000"
+        value={cot.precioPropiedad}
+        onChange={(e) => setCotField("precioPropiedad", e.target.value)}
+      />
+      {cot.aseguraMuebles && (
+        <>
+          <SectionLabel>Valor de los muebles y electrodomésticos (RD$)</SectionLabel>
+          <input
+            className="u-input"
+            placeholder="Ej. 800,000"
+            value={cot.valorMuebles}
+            onChange={(e) => setCotField("valorMuebles", e.target.value)}
+          />
+        </>
+      )}
+      <StepNav onBack={prevCot} onForward={validarPropiedadValores} forwardLabel="Continuar" disabled={!cot.precioPropiedad} />
     </>
   );
 }
@@ -211,8 +282,20 @@ function PropiedadConfirmarStep({ title }) {
   return (
     <>
       <BackHeader title={`Cotizar ${title}`} />
-      <Progress pasoActual={3} />
+      <Progress pasoActual={4} />
       <SectionLabel>Resumen</SectionLabel>
+      <div className="card" style={{ marginBottom: 10 }}>
+        <div style={{ fontSize: 12, color: "var(--muted)" }}>Inmueble</div>
+        <div style={{ fontSize: 14, fontWeight: 600, marginTop: 2 }}>{cot.tipoInmueble} · {cot.ubicacion?.label}</div>
+        <div style={{ fontSize: 12, color: "var(--muted)", marginTop: 10 }}>Valor del inmueble</div>
+        <div style={{ fontSize: 14, fontWeight: 600, marginTop: 2 }}>RD$ {(parseFloat((cot.precioPropiedad + "").replace(/[^0-9.]/g, "")) || 0).toLocaleString("es-DO")}</div>
+        {cot.aseguraMuebles && (
+          <>
+            <div style={{ fontSize: 12, color: "var(--muted)", marginTop: 10 }}>Muebles y electrodomésticos ({cot.mueblesSeleccionados.length})</div>
+            <div style={{ fontSize: 14, fontWeight: 600, marginTop: 2 }}>RD$ {(parseFloat((cot.valorMuebles + "").replace(/[^0-9.]/g, "")) || 0).toLocaleString("es-DO")}</div>
+          </>
+        )}
+      </div>
       <div className="card">
         <div style={{ fontSize: 12, color: "var(--muted)" }}>Plan seleccionado</div>
         <div style={{ fontSize: 14, fontWeight: 600, marginTop: 2 }}>{cot.plan}</div>
@@ -250,11 +333,15 @@ function OfertaComparadaStep({ title }) {
     intro = "Elige tu plan de asistencia para el hogar:";
   } else {
     const precioProp = parseFloat((cot.precioPropiedad + "").replace(/[^0-9.]/g, "")) || 3000000;
+    const valorMuebles = cot.aseguraMuebles ? (parseFloat((cot.valorMuebles + "").replace(/[^0-9.]/g, "")) || 0) : 0;
+    const sumaTotal = precioProp + valorMuebles;
     columnas = ["Básica", "Amplia"];
-    calc = (c) => Math.round(precioProp * PROPIEDAD_FACTOR[c]);
-    intro = "Con base en el valor de tu propiedad:";
+    calc = (c) => Math.round(sumaTotal * PROPIEDAD_FACTOR[c]);
+    intro = cot.aseguraMuebles
+      ? `Con base en el valor de tu inmueble (RD$${precioProp.toLocaleString("es-DO")}) y tus muebles (RD$${valorMuebles.toLocaleString("es-DO")}):`
+      : "Con base en el valor de tu propiedad:";
   }
-  const progIdx = cat === "vehiculo" ? 3 : 2;
+  const progIdx = cat === "vehiculo" ? 3 : cat === "propiedad" ? 4 : 2;
   const filas = COMPARATIVO_FILAS[key];
 
   return (
@@ -263,7 +350,7 @@ function OfertaComparadaStep({ title }) {
       <Progress pasoActual={progIdx} />
       <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 10 }}>{intro}</div>
       <TablaComparativa filas={filas} columnas={columnas} calcularPrecio={calc} plan={cot.plan} onSeleccionar={seleccionarPlan} />
-      {(key === "salud" || key === "auto") && (
+      {(key === "salud" || key === "auto" || cat === "propiedad") && (
         <>
           <div style={{ fontSize: 11, color: "var(--muted)", margin: "2px 0 10px" }}>Ver detalle completo:</div>
           <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 14 }}>
@@ -311,21 +398,24 @@ export function CotizarScreen() {
     if (step === 1) return <OfertaComparadaStep title={title} />;
     return <CotizarPagoStep />;
   }
-  if (step === 4) return <CotizarPagoStep />;
   if (cat === "persona") {
     if (step === 1) return <PersonaDatosStep title={title} />;
     if (step === 2) return <OfertaComparadaStep title={title} />;
     if (step === 3) return <PersonaEmisionStep title={title} />;
+    return <CotizarPagoStep />;
   }
   if (cat === "vehiculo") {
     if (step === 1) return <AutoMatriculaStep title={title} />;
     if (step === 2) return <AutoCaracteristicasStep title={title} />;
     if (step === 3) return <OfertaComparadaStep title={title} />;
+    return <CotizarPagoStep />;
   }
-  if (step === 1) return <PropiedadDatosStep title={title} />;
-  if (step === 2) return <OfertaComparadaStep title={title} />;
-  if (step === 3) return <PropiedadConfirmarStep title={title} />;
-  return null;
+  if (step === 1) return <PropiedadUbicacionStep title={title} />;
+  if (step === 2) return <PropiedadMueblesStep title={title} />;
+  if (step === 3) return <PropiedadValoresStep title={title} />;
+  if (step === 4) return <OfertaComparadaStep title={title} />;
+  if (step === 5) return <PropiedadConfirmarStep title={title} />;
+  return <CotizarPagoStep />;
 }
 
 export function SaludDestinoScreen() {
