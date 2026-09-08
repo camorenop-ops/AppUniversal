@@ -8,8 +8,8 @@ const PLANES_PROPIEDAD_DETALLE = ["hogar", "garantivilla"];
 
 export function SaludScreen() {
   const {
-    products, dependientes, navigate, openCarnet, openAgregarCobertura, openCambioPlan,
-    openAgregarDependiente, openAfiliadoDetalle,
+    products, dependientes, openCarnet, openAgregarCobertura, openCambioPlan,
+    openAgregarDependiente, openAfiliadoDetalle, openReembolsos, openRedMedica, openAutorizaciones,
   } = useApp();
   const p = products.find((x) => x.key === "salud");
   return (
@@ -21,7 +21,9 @@ export function SaludScreen() {
       <div style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 4 }}>Contrato: 03003780-28817</div>
       <SectionLabel>Accesos rápidos</SectionLabel>
       <QuickActionsRow items={[
-        ["firstaid", "Guía médica", () => navigate({ view: "emergencia" })],
+        ["receipt", "Reembolsos", openReembolsos],
+        ["network", "Red médica", openRedMedica],
+        ["stethoscope", "Autorizaciones", openAutorizaciones],
         ["creditcard", "Carnet", openCarnet],
         ["replace", "Cambiar de plan", openCambioPlan],
         ["plus", "Agregar cobertura", openAgregarCobertura],

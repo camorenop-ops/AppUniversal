@@ -352,12 +352,16 @@ input.u-input {
   display: flex;
   gap: 8px;
   margin-bottom: 4px;
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  padding-bottom: 2px;
 }
 .qa-item {
-  flex: 1;
+  flex: 0 0 66px;
   max-width: 88px;
   text-align: center;
   cursor: pointer;
+  scroll-snap-align: start;
 }
 .qa-icon {
   width: 44px;
