@@ -31,6 +31,7 @@ import {
   ArsTraspasoMenuScreen, ArsTraspasoSolicitarScreen, ArsTraspasoEnviadoScreen, ArsTraspasoEstadoScreen,
 } from "./screens/ArsTraspasoScreens";
 import { AsistenciaSolicitudScreen, AsistenciaSolicitudEnviadaScreen } from "./screens/AsistenciaSolicitudScreens";
+import { EvaluacionCuestionarioScreen, EvaluacionCitaScreen, EvaluacionConfirmadaScreen } from "./screens/EvaluacionProgramaScreens";
 
 export function Router() {
   const { current } = useApp();
@@ -148,6 +149,12 @@ export function Router() {
       return <AfiliadoCoberturaHistorialScreen />;
     case "programaSalud":
       return <ProgramaSaludDetalleScreen />;
+    case "evaluacionCuestionario":
+      return <EvaluacionCuestionarioScreen />;
+    case "evaluacionCita":
+      return <EvaluacionCitaScreen />;
+    case "evaluacionConfirmada":
+      return <EvaluacionConfirmadaScreen />;
     case "arsTraspaso":
       return <ArsTraspasoMenuScreen />;
     case "arsTraspasoSolicitar":

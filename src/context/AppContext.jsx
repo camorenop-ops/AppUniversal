@@ -52,6 +52,7 @@ export function AppProvider({ children }) {
   const [reclamoForm, setReclamoForm] = useState(null);
   const [traspasoForm, setTraspasoForm] = useState(null);
   const [asistenciaSolicitudForm, setAsistenciaSolicitudForm] = useState(null);
+  const [evaluacionForm, setEvaluacionForm] = useState(null);
 
   // ---------- navegación ----------
   function navigate(v) {
@@ -416,6 +417,23 @@ export function AppProvider({ children }) {
   const openAfiliadoCobertura = (nombre, tipo, origen) => navigate({ view: "afiliadoCoberturaHistorial", nombre, tipo, origen });
   const openProgramaSalud = (nombre, key) => navigate({ view: "programaSalud", nombre, key });
 
+  // ---------- solicitar evaluación de ingreso a programa de salud ----------
+  function openSolicitarEvaluacion(nombre, key) {
+    setEvaluacionForm({ programaKey: key, nombre, respuestas: {}, fecha: null, hora: null });
+    navigate({ view: "evaluacionCuestionario" });
+  }
+  function responderEvaluacion(campo, val) {
+    setEvaluacionForm({ ...evaluacionForm, respuestas: { ...evaluacionForm.respuestas, [campo]: val } });
+  }
+  const continuarEvaluacionCita = () => navigate({ view: "evaluacionCita" });
+  function seleccionarFechaEvaluacion(fecha) {
+    setEvaluacionForm({ ...evaluacionForm, fecha, hora: null });
+  }
+  function seleccionarHoraEvaluacion(hora) {
+    setEvaluacionForm({ ...evaluacionForm, hora });
+  }
+  const confirmarEvaluacion = () => navigate({ view: "evaluacionConfirmada" });
+
   // ---------- cambio de plan (salud) ----------
   function openCambioPlan() {
     setCambioPlanForm({ nuevoPlan: null });
@@ -570,7 +588,7 @@ export function AppProvider({ children }) {
     products, asistenciaProducts, dependientes, reembolsos, autorizaciones,
     especialidadFiltro, setEspecialidadFiltro,
     cot, reembolsoForm, autForm, depForm, cambioPlanForm, renovacionForm, endosoForm, pagoPolizasForm, reclamoForm, traspasoForm,
-    asistenciaSolicitudForm,
+    asistenciaSolicitudForm, evaluacionForm,
     navigate, goBack, goTab, setFilial, setMember, findProduct,
     openChat, openMapaCentros, openRedMedica, openFondo, openFondoDetalle,
     openEstadoCuenta, openCarnetBien, openProduct, openCarnet, openStub,
@@ -598,6 +616,8 @@ export function AppProvider({ children }) {
     openArsTraspaso, abrirArsTraspasoSolicitar, setTraspasoField, enviarArsTraspaso, abrirArsTraspasoEstado,
     openAsistenciaSolicitud, usarUbicacionActualAsistencia, marcarUbicacionAsistencia,
     setAsistenciaSolicitudField, enviarAsistenciaSolicitud,
+    openSolicitarEvaluacion, responderEvaluacion, continuarEvaluacionCita,
+    seleccionarFechaEvaluacion, seleccionarHoraEvaluacion, confirmarEvaluacion,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

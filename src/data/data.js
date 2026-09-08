@@ -606,6 +606,20 @@ export function elegiblePrograma(prog, edad) {
   return true;
 }
 
+export const CUESTIONARIO_EVALUACION_PROGRAMA = [
+  ["condicionDiagnosticada", "¿Tienes alguna condición médica diagnosticada relacionada con este programa?"],
+  ["tratamientoActual", "¿Estás actualmente bajo tratamiento médico?"],
+  ["hospitalizado", "¿Has sido hospitalizado(a) en el último año?"],
+  ["medicamentosRegulares", "¿Tomas medicamentos de forma regular?"],
+  ["alergias", "¿Tienes alguna alergia conocida?"],
+];
+
+export const CITAS_DISPONIBLES = [
+  { fecha: "10/09/2026", horas: ["9:00 am", "11:00 am", "2:00 pm"] },
+  { fecha: "11/09/2026", horas: ["10:00 am", "1:00 pm", "3:30 pm"] },
+  { fecha: "12/09/2026", horas: ["8:30 am", "12:00 pm", "4:00 pm"] },
+];
+
 export const AFILIADOS_ARS_USADO = {
   [TITULAR_NOMBRE]: { limiteUsado: 95000, medicamentosUsado: 4200 },
   "Amy Carolina Pereyra García": { limiteUsado: 30000, medicamentosUsado: 3100 },

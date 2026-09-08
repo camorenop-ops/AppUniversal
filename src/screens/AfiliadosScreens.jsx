@@ -83,7 +83,7 @@ export function AfiliadoDetalleScreen() {
 }
 
 export function ProgramaSaludDetalleScreen() {
-  const { current } = useApp();
+  const { current, openSolicitarEvaluacion } = useApp();
   const { nombre, key } = current;
   const prog = PROGRAMAS_SALUD[key];
   const info = AFILIADOS_SALUD_INFO[nombre] || INFO_POR_DEFECTO;
@@ -108,6 +108,11 @@ export function ProgramaSaludDetalleScreen() {
           <SectionLabel>Esquema de vacunación</SectionLabel>
           {prog.vacunas.map((r, i) => <CoverageLine key={i} item={r} />)}
         </>
+      )}
+      {elegible && (
+        <button className="solid" onClick={() => openSolicitarEvaluacion(nombre, key)} style={{ width: "100%", marginTop: 16 }}>
+          Solicitar evaluación
+        </button>
       )}
     </>
   );
