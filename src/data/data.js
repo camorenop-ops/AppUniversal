@@ -398,3 +398,40 @@ export const COMPARATIVO_FILAS = {
     { label: "Fumigación anual", valores: ["No", "Sí"] },
   ],
 };
+
+export const TITULAR_NOMBRE = "Carlos Andrés Moreno Prieto";
+
+export const LIMITE_POR_CASO_PLAN = { "Plan Esencial": 600000, "Plan Alpha": 1200000, "Plan Exclusivo": 2500000 };
+export const COBERTURA_MEDICAMENTOS_PLAN = { "Plan Esencial": 30000, "Plan Alpha": 60000, "Plan Exclusivo": 120000 };
+
+export const AFILIADOS_SALUD_INFO = {
+  [TITULAR_NOMBRE]: { parentesco: "Titular", limiteUsado: 185000, medicamentosUsado: 18500 },
+  "Amy Carolina Pereyra García": {
+    parentesco: "Cónyuge",
+    limiteUsado: 42000,
+    medicamentosUsado: 9800,
+    autorizaciones: [
+      { fecha: "02/06/2026", concepto: "Ecografía abdominal", estado: "Aprobada" },
+    ],
+    reembolsos: [
+      { fecha: "20/07/2026", concepto: "Laboratorio", monto: "850 pesos", estado: "Rechazado" },
+      { fecha: "02/08/2026", concepto: "Medicamentos", monto: "1,200 pesos", estado: "En revisión" },
+    ],
+  },
+  "Gabriel Eduardo Moreno Pereyra": {
+    parentesco: "Hijo",
+    limiteUsado: 15000,
+    medicamentosUsado: 3200,
+    autorizaciones: [],
+    reembolsos: [
+      { fecha: "05/05/2026", concepto: "Consulta pediatría", monto: "1,800 pesos", estado: "Aprobado" },
+    ],
+  },
+  "Isabel Sofia Moreno Pereyra": {
+    parentesco: "Hija",
+    limiteUsado: 8000,
+    medicamentosUsado: 1500,
+    autorizaciones: [],
+    reembolsos: [],
+  },
+};

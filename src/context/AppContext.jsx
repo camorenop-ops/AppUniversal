@@ -408,6 +408,10 @@ export function AppProvider({ children }) {
   // ---------- coberturas detalle ----------
   const openCoberturasDetalle = (planKey) => navigate({ view: "coberturasDetalle", plan: planKey });
 
+  // ---------- consulta de afiliados (salud) ----------
+  const openAfiliadoDetalle = (nombre) => navigate({ view: "afiliadoDetalle", nombre });
+  const openAfiliadoCobertura = (nombre, tipo) => navigate({ view: "afiliadoCoberturaHistorial", nombre, tipo });
+
   // ---------- cambio de plan (salud) ----------
   function openCambioPlan() {
     setCambioPlanForm({ nuevoPlan: null });
@@ -550,7 +554,7 @@ export function AppProvider({ children }) {
     setReembolsoMonto, nextReembolso, prevReembolso, someterReembolso, volverAReembolsos,
     openAutorizaciones, openSolicitarAutorizacion, capturarIndicacion, someterAutorizacion, volverAAutorizaciones,
     openAgregarDependiente, capturarDocumento, guardarDependiente, volverASalud,
-    openCoberturasDetalle,
+    openCoberturasDetalle, openAfiliadoDetalle, openAfiliadoCobertura,
     openCambioPlan, seleccionarNuevoPlan, confirmarCambioPlan,
     openRenovaciones, openRenovacionDetalle, aceptarRenovacion, confirmarPagoRenovacion,
     openEndosarPoliza, seleccionarPolizaEndoso, seleccionarTipoEndoso, setEndosoField,

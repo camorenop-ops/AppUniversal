@@ -1,7 +1,7 @@
 import { useApp } from "../context/AppContext";
 import { LogoLockup, Icon } from "../components/Icon";
 import { FilialTab, Row, SectionLabel, Tile, QuickActionsRow, AdsStrip } from "../components/UI";
-import { FONDOS, PROYECTOS, ANUNCIOS } from "../data/data";
+import { FONDOS, PROYECTOS, ANUNCIOS, TITULAR_NOMBRE } from "../data/data";
 
 const FILIALES = [
   ["Seguros", "shield"],
@@ -15,7 +15,7 @@ export function HomeTab() {
   const {
     activeFilial, setFilial, products, asistenciaProducts, dependientes,
     openProduct, openCotizar, openFondo, openEstadoCuenta, openInfo, openStub,
-    openRenovaciones, openEndosarPoliza, openPagoPolizas, openReclamo,
+    openRenovaciones, openEndosarPoliza, openPagoPolizas, openReclamo, openAfiliadoDetalle,
   } = useApp();
 
   let content;
@@ -73,7 +73,9 @@ export function HomeTab() {
       </>
     );
   } else if (activeFilial === "ARS") {
-    content = dependientes.map((d) => <Row key={d} icon="user" label={d} onClick={() => openStub(d)} />);
+    content = [TITULAR_NOMBRE, ...dependientes].map((d) => (
+      <Row key={d} icon="user" label={d} onClick={() => openAfiliadoDetalle(d)} />
+    ));
   } else {
     content = (
       <div style={{ display: "grid", gridTemplateColumns: "repeat(2,minmax(0,1fr))", gap: 10 }}>
@@ -91,7 +93,7 @@ export function HomeTab() {
   return (
     <>
       <LogoLockup size={28} className="home-logo" />
-      <div className="greeting-name" style={{ margin: "6px 0 12px" }}>Carlos Andrés Moreno Prieto</div>
+      <div className="greeting-name" style={{ margin: "6px 0 12px" }}>{TITULAR_NOMBRE}</div>
       <AdsStrip ads={ANUNCIOS} onSelect={openStub} />
       <div className="toptabs">
         {FILIALES.map(([label, icon]) => (
@@ -137,7 +139,7 @@ export function CuentaTab() {
     <>
       <div style={{ fontSize: 15, fontWeight: 600, marginBottom: 10 }}>Ficha del afiliado</div>
       <div className="card" style={{ marginBottom: 6 }}>
-        <div style={{ fontWeight: 600, fontSize: 14 }}>Carlos Andrés Moreno Prieto</div>
+        <div style={{ fontWeight: 600, fontSize: 14 }}>{TITULAR_NOMBRE}</div>
         <div style={{ fontSize: 12, color: "var(--muted)", marginTop: 4 }}>Contrato: 03003780-28817</div>
         <div style={{ fontSize: 12, color: "var(--muted)" }}>Afiliado desde: 01/02/2024</div>
       </div>

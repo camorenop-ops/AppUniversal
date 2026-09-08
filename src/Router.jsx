@@ -26,6 +26,7 @@ import {
   ReclamoSaludTipoScreen, ReclamoSeleccionarPolizaScreen, ReclamoAutoTipoScreen, ReclamoAutoFormScreen,
   ReclamoDocumentosScreen, ReclamoGenericoScreen, ReclamoSometidoScreen,
 } from "./screens/PagoReclamoScreens";
+import { AfiliadoDetalleScreen, AfiliadoCoberturaHistorialScreen } from "./screens/AfiliadosScreens";
 
 export function Router() {
   const { current } = useApp();
@@ -137,6 +138,10 @@ export function Router() {
       return <ReclamoGenericoScreen />;
     case "reclamoSometido":
       return <ReclamoSometidoScreen />;
+    case "afiliadoDetalle":
+      return <AfiliadoDetalleScreen />;
+    case "afiliadoCoberturaHistorial":
+      return <AfiliadoCoberturaHistorialScreen />;
     default:
       return null;
   }
