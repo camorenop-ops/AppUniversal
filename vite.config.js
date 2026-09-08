@@ -1,9 +1,18 @@
+import { fileURLToPath, URL } from 'node:url'
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 import { VitePWA } from 'vite-plugin-pwa'
 
 // https://vite.dev/config/
 export default defineConfig({
+  build: {
+    rollupOptions: {
+      input: {
+        main: fileURLToPath(new URL('./index.html', import.meta.url)),
+        desktop: fileURLToPath(new URL('./desktop.html', import.meta.url)),
+      },
+    },
+  },
   plugins: [
     react(),
     VitePWA({
