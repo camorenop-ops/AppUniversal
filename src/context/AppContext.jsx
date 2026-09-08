@@ -90,7 +90,6 @@ export function AppProvider({ children }) {
   const openCarnetBien = (key) => navigate({ view: "carnetBien", key });
   const openProduct = (key) => navigate({ view: "product", key });
   const openCarnet = () => navigate({ view: "carnet" });
-  const openPago = () => navigate({ view: "pago" });
   const openStub = (title) => navigate({ view: "stub", title });
   const openEmergencia = () => navigate({ view: "emergencia" });
 
@@ -364,7 +363,7 @@ export function AppProvider({ children }) {
   }
   function volverAReembolsos() {
     setStack([]);
-    setActiveTab("tramites");
+    setActiveTab("home");
     setCurrent({ view: "reembolsos" });
   }
 
@@ -381,7 +380,7 @@ export function AppProvider({ children }) {
   }
   function volverAAutorizaciones() {
     setStack([]);
-    setActiveTab("tramites");
+    setActiveTab("home");
     setCurrent({ view: "autorizaciones" });
   }
 
@@ -498,7 +497,7 @@ export function AppProvider({ children }) {
   function seleccionarPolizaReclamo(key) {
     setReclamoForm({ ...reclamoForm, productKey: key });
     if (key === "salud") {
-      openSolicitarReembolso();
+      navigate({ view: "reclamoSaludTipo" });
       return;
     }
     if (key === "auto") {
@@ -537,7 +536,7 @@ export function AppProvider({ children }) {
     cot, reembolsoForm, autForm, depForm, cambioPlanForm, renovacionForm, endosoForm, pagoPolizasForm, reclamoForm,
     navigate, goBack, goTab, setFilial, setMember, findProduct,
     openChat, openMapaCentros, openRedMedica, openAsistenciaAuto, openFondo,
-    openEstadoCuenta, openCarnetBien, openProduct, openCarnet, openPago, openStub,
+    openEstadoCuenta, openCarnetBien, openProduct, openCarnet, openStub,
     openEmergencia, openInfo,
     resetCot, openCotizar, elegirSaludDestino, setCotField, responderCuestionario, nextCot, prevCot,
     addPersonaCotizador, removePersonaCotizador,

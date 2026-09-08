@@ -1,7 +1,7 @@
 import { useApp } from "../context/AppContext";
 import { LogoLockup, Icon } from "../components/Icon";
 import { FilialTab, Row, SectionLabel, Tile, QuickActionsRow, AdsStrip } from "../components/UI";
-import { FONDOS, PROYECTOS, SALUD_ITEMS, AUTO_ITEMS, ANUNCIOS } from "../data/data";
+import { FONDOS, PROYECTOS, ANUNCIOS } from "../data/data";
 
 const FILIALES = [
   ["Seguros", "shield"],
@@ -99,27 +99,6 @@ export function HomeTab() {
         ))}
       </div>
       {content}
-    </>
-  );
-}
-
-export function TramitesTab() {
-  const { openReembolsos, openAutorizaciones, openStub, openPago, openCoberturasDetalle, openCambioPlan } = useApp();
-  return (
-    <>
-      <div style={{ fontSize: 15, fontWeight: 600, marginBottom: 4 }}>Trámites por línea</div>
-      <SectionLabel>Salud</SectionLabel>
-      <Row icon="receipt" label="Reembolsos" onClick={openReembolsos} />
-      <Row icon="stethoscope" label="Autorizaciones" onClick={openAutorizaciones} />
-      {SALUD_ITEMS.map((it) => (
-        <Row key={it[1]} icon={it[0]} label={it[1]} onClick={() => (it[1] === "Cambio de plan" ? openCambioPlan() : openStub(it[1]))} />
-      ))}
-      <SectionLabel>Auto</SectionLabel>
-      {AUTO_ITEMS.map((it) => <Row key={it[1]} icon={it[0]} label={it[1]} onClick={() => openStub(it[1])} />)}
-      <SectionLabel>Pago</SectionLabel>
-      <Row icon="creditcard" label="Pagar cualquier trámite" onClick={openPago} />
-      <SectionLabel>Consulta de coberturas</SectionLabel>
-      <Row icon="search" label="Consultar coberturas" onClick={() => openCoberturasDetalle("Plan Alpha")} />
     </>
   );
 }

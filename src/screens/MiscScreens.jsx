@@ -256,23 +256,6 @@ export function CarnetBienScreen({ productKey }) {
   );
 }
 
-export function PagoScreen() {
-  const { goBack } = useApp();
-  return (
-    <>
-      <BackHeader title="Pago" />
-      <div className="card" style={{ marginBottom: 14 }}>
-        <div style={{ fontSize: 12, color: "var(--muted)" }}>Monto a pagar</div>
-        <div style={{ fontSize: 22, fontWeight: 600, marginTop: 4 }}>3,450.00 pesos</div>
-      </div>
-      <div style={{ fontSize: 13, color: "var(--muted)", marginBottom: 8 }}>Método de pago</div>
-      <Row icon="creditcard" label="Tarjeta terminada en 4417" onClick={() => {}} />
-      <Row icon="bank" label="Cuenta bancaria" onClick={() => {}} />
-      <button className="solid" onClick={goBack} style={{ width: "100%", marginTop: 14 }}>Confirmar pago</button>
-    </>
-  );
-}
-
 export function StubScreen({ title }) {
   return (
     <>

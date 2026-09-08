@@ -5,7 +5,6 @@ import { Router } from "../Router";
 
 const TABS = [
   { key: "home", icon: "home", label: "Inicio" },
-  { key: "tramites", icon: "list", label: "Trámites" },
   { key: "notif", icon: "bell", label: "Alertas" },
   { key: "cuenta", icon: "user", label: "Cuenta" },
 ];

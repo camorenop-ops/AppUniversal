@@ -1,5 +1,5 @@
 import { useApp } from "./context/AppContext";
-import { HomeTab, TramitesTab, NotifTab, CuentaTab } from "./screens/TabScreens";
+import { HomeTab, NotifTab, CuentaTab } from "./screens/TabScreens";
 import { ProductScreen } from "./screens/ProductScreens";
 import {
   CotizarScreen, SaludDestinoScreen, SaludFamiliaScreen, AutoLimiteScreen, CompraConfirmadaScreen,
@@ -14,7 +14,7 @@ import {
 } from "./screens/TramitesFlows";
 import {
   ChatScreen, EmergenciaScreen, MapaCentrosScreen, RedMedicaScreen, AsistenciaAutoScreen,
-  FondoScreen, EstadoCuentaScreen, CarnetScreen, CarnetBienScreen, PagoScreen, StubScreen, InfoScreen,
+  FondoScreen, EstadoCuentaScreen, CarnetScreen, CarnetBienScreen, StubScreen, InfoScreen,
 } from "./screens/MiscScreens";
 import {
   RenovacionesListScreen, RenovacionDetalleScreen, RenovacionPagoScreen, RenovacionConfirmadaScreen,
@@ -23,7 +23,7 @@ import {
 } from "./screens/RenovacionEndosoScreens";
 import {
   PagoSeleccionScreen, PagoMetodoScreen, PagoConfirmadoScreen,
-  ReclamoSeleccionarPolizaScreen, ReclamoAutoTipoScreen, ReclamoAutoFormScreen,
+  ReclamoSaludTipoScreen, ReclamoSeleccionarPolizaScreen, ReclamoAutoTipoScreen, ReclamoAutoFormScreen,
   ReclamoDocumentosScreen, ReclamoGenericoScreen, ReclamoSometidoScreen,
 } from "./screens/PagoReclamoScreens";
 
@@ -33,7 +33,6 @@ export function Router() {
   switch (current.view) {
     case "tab":
       if (current.tab === "home") return <HomeTab />;
-      if (current.tab === "tramites") return <TramitesTab />;
       if (current.tab === "notif") return <NotifTab />;
       return <CuentaTab />;
     case "product":
@@ -74,8 +73,6 @@ export function Router() {
       return <CarnetScreen />;
     case "carnetBien":
       return <CarnetBienScreen productKey={current.key} />;
-    case "pago":
-      return <PagoScreen />;
     case "stub":
       return <StubScreen title={current.title} />;
     case "info":
@@ -126,6 +123,8 @@ export function Router() {
       return <PagoMetodoScreen />;
     case "pagoPolizasConfirmado":
       return <PagoConfirmadoScreen />;
+    case "reclamoSaludTipo":
+      return <ReclamoSaludTipoScreen />;
     case "reclamoSeleccionar":
       return <ReclamoSeleccionarPolizaScreen />;
     case "reclamoAutoTipo":

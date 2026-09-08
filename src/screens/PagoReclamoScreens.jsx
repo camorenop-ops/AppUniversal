@@ -89,6 +89,18 @@ export function PagoConfirmadoScreen() {
   );
 }
 
+export function ReclamoSaludTipoScreen() {
+  const { openAutorizaciones, openReembolsos } = useApp();
+  return (
+    <>
+      <BackHeader title="Reclamo · Salud" />
+      <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 14 }}>¿Qué deseas gestionar?</div>
+      <Row icon="stethoscope" label="Autorizaciones" onClick={openAutorizaciones} />
+      <Row icon="receipt" label="Reembolsos" onClick={openReembolsos} />
+    </>
+  );
+}
+
 export function ReclamoSeleccionarPolizaScreen() {
   const { products, seleccionarPolizaReclamo } = useApp();
   const activas = products.filter((p) => !p.noContratado);

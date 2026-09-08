@@ -304,8 +304,6 @@ export const SINTOMAS = [
   ["Erupciones en la piel", "Dermatología"],
 ];
 
-export const SALUD_ITEMS = [["refresh", "Renovación"], ["userplus", "Incluir beneficiario"], ["userminus", "Excluir beneficiario"], ["replace", "Cambio de plan"], ["plus", "Agregar coberturas"]];
-export const AUTO_ITEMS = [["refresh", "Renovación"], ["alerttriangle", "Reclamos"]];
 export const MEMBERS = ["Carlos A.", "Amy C.", "Gabriel E.", "Isabel S."];
 
 export function initialReembolsos() {
