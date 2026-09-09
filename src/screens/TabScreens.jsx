@@ -1,45 +1,26 @@
-import { useState } from "react";
 import { useApp } from "../context/AppContext";
 import { LogoLockup, Icon } from "../components/Icon";
-import { FilialTab, FilialSubTab, Row, SectionLabel, Tile, QuickActionsRow, AdsStrip } from "../components/UI";
-import {
-  FONDOS, PROYECTOS, ANUNCIOS, TITULAR_NOMBRE, PILARES, FILIALES_POR_PILAR, FILIALES_PROXIMAMENTE,
-} from "../data/data";
+import { FilialTab, Row, SectionLabel, Tile, QuickActionsRow, AdsStrip } from "../components/UI";
+import { FONDOS, PROYECTOS, ANUNCIOS, TITULAR_NOMBRE } from "../data/data";
 
-const PROXIMAMENTE_DESC = "Estamos preparando esta nueva solución de Grupo Universal. Muy pronto podrás acceder a sus servicios desde aquí.";
-
-function ProximamenteBloque({ nombre }) {
-  const [avisar, setAvisar] = useState(false);
-  return (
-    <div style={{ textAlign: "center", padding: "40px 12px" }}>
-      <Icon name="sparkles" size={30} color="var(--accent)" />
-      <div style={{ fontSize: 16, fontWeight: 600, marginTop: 14 }}>{nombre} llega pronto</div>
-      <div style={{ fontSize: 13, color: "var(--muted)", marginTop: 6, maxWidth: 280, marginLeft: "auto", marginRight: "auto" }}>{PROXIMAMENTE_DESC}</div>
-      <button
-        className={avisar ? "" : "solid"}
-        onClick={() => setAvisar(true)}
-        disabled={avisar}
-        style={{ marginTop: 20, width: "100%", maxWidth: 280 }}
-      >
-        {avisar ? "✓ Te avisaremos cuando esté disponible" : "Notificarme cuando esté disponible"}
-      </button>
-    </div>
-  );
-}
+const FILIALES = [
+  ["Seguros", "shield"],
+  ["AFI", "chart"],
+  ["Fiduciaria", "bank"],
+  ["ARS", "heart"],
+  ["Asistencia", "tool"],
+];
 
 export function HomeTab() {
   const {
-    activePilar, setPilar, activeFilial, setFilial, products, asistenciaProducts, dependientes,
+    activeFilial, setFilial, products, asistenciaProducts, dependientes,
     openProduct, openCotizar, openFondo, openFondoDetalle, openEstadoCuenta, openInfo, openStub,
     openRenovaciones, openEndosarPoliza, openPagoPolizas, openReclamo, openAfiliadoDetalle,
     openCoberturasDetalle, openArsTraspaso, openAsistenciaSolicitud,
   } = useApp();
-  const filialesDelPilar = FILIALES_POR_PILAR[activePilar];
 
   let content;
-  if (FILIALES_PROXIMAMENTE.includes(activeFilial)) {
-    content = <ProximamenteBloque nombre={activeFilial} />;
-  } else if (activeFilial === "Seguros") {
+  if (activeFilial === "Seguros") {
     content = (
       <>
         <SectionLabel>Accesos rápidos</SectionLabel>
@@ -135,23 +116,8 @@ export function HomeTab() {
       <div className="greeting-name" style={{ margin: "6px 0 12px" }}>{TITULAR_NOMBRE}</div>
       <AdsStrip ads={ANUNCIOS} onSelect={openStub} />
       <div className="toptabs">
-        {PILARES.map((p) => (
-          <FilialTab key={p.key} icon={p.icon} label={p.short} on={p.key === activePilar} onClick={() => setPilar(p.key)} />
-        ))}
-      </div>
-      <div style={{ fontSize: 13, fontWeight: 600, color: "var(--navy)", marginBottom: 8 }}>
-        {PILARES.find((p) => p.key === activePilar).label}
-      </div>
-      <div className="subfilial-row">
-        {filialesDelPilar.map(([label, icon]) => (
-          <FilialSubTab
-            key={label}
-            icon={icon}
-            label={label}
-            on={label === activeFilial}
-            soon={FILIALES_PROXIMAMENTE.includes(label)}
-            onClick={() => setFilial(label)}
-          />
+        {FILIALES.map(([label, icon]) => (
+          <FilialTab key={label} icon={icon} label={label} on={label === activeFilial} onClick={() => setFilial(label)} />
         ))}
       </div>
       {content}

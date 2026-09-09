@@ -10,8 +10,6 @@ import {
   ASISTENCIA_INFO,
   UBICACIONES_MUESTRA,
   TITULAR_NOMBRE,
-  FILIALES_POR_PILAR,
-  FILIALES_PROXIMAMENTE,
 } from "../data/data";
 
 function avanzarUnAnio(fecha) {
@@ -33,7 +31,6 @@ export function AppProvider({ children }) {
   const [stack, setStack] = useState([]);
   const [current, setCurrent] = useState({ view: "tab", tab: "home" });
   const [activeTab, setActiveTab] = useState("home");
-  const [activePilar, setActivePilar] = useState("seguros");
   const [activeFilial, setActiveFilial] = useState("Seguros");
   const [memberIdx, setMemberIdx] = useState(0);
 
@@ -80,12 +77,6 @@ export function AppProvider({ children }) {
   }
   function setFilial(f) {
     setActiveFilial(f);
-  }
-  function setPilar(key) {
-    setActivePilar(key);
-    const filiales = FILIALES_POR_PILAR[key];
-    const primera = filiales.find(([nombre]) => !FILIALES_PROXIMAMENTE.includes(nombre)) || filiales[0];
-    setActiveFilial(primera[0]);
   }
   function setMember(i) {
     setMemberIdx(i);
@@ -609,12 +600,12 @@ export function AppProvider({ children }) {
   const enviarAsistenciaSolicitud = () => navigate({ view: "asistenciaSolicitudEnviada" });
 
   const value = {
-    stack, current, activeTab, activePilar, activeFilial, memberIdx,
+    stack, current, activeTab, activeFilial, memberIdx,
     products, asistenciaProducts, dependientes, reembolsos, autorizaciones,
     especialidadFiltro, setEspecialidadFiltro,
     cot, reembolsoForm, autForm, depForm, cambioPlanForm, renovacionForm, endosoForm, pagoPolizasForm, reclamoForm, traspasoForm,
     asistenciaSolicitudForm, evaluacionForm, telemedicinaForm,
-    navigate, goBack, goTab, setFilial, setPilar, setMember, findProduct,
+    navigate, goBack, goTab, setFilial, setMember, findProduct,
     openChat, openMapaCentros, openRedMedica, openFondo, openFondoDetalle,
     openEstadoCuenta, openCarnetBien, openProduct, openCarnet, openStub,
     openInfo,
