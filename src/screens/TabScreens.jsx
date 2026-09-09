@@ -1,7 +1,7 @@
 import { useApp } from "../context/AppContext";
 import { LogoLockup, Icon } from "../components/Icon";
 import { FilialTab, Row, SectionLabel, Tile, QuickActionsRow, AdsStrip } from "../components/UI";
-import { FONDOS, PROYECTOS, ANUNCIOS, TITULAR_NOMBRE } from "../data/data";
+import { ANUNCIOS } from "../data/data";
 
 const FILIALES = [
   ["Seguros", "shield"],
@@ -13,7 +13,7 @@ const FILIALES = [
 
 export function HomeTab() {
   const {
-    activeFilial, setFilial, products, asistenciaProducts, dependientes,
+    activeFilial, setFilial, products, asistenciaProducts, dependientes, titular, fondos, proyectos,
     openProduct, openCotizar, openFondo, openFondoDetalle, openEstadoCuenta, openInfo, openStub,
     openRenovaciones, openEndosarPoliza, openPagoPolizas, openReclamo, openAfiliadoDetalle,
     openCoberturasDetalle, openArsTraspaso, openAsistenciaSolicitud,
@@ -53,7 +53,8 @@ export function HomeTab() {
         ]} />
         <SectionLabel>Fondos</SectionLabel>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(2,minmax(0,1fr))", gap: 10 }}>
-          {FONDOS.map((f) => (
+          {fondos.length === 0 && <div style={{ fontSize: 12.5, color: "var(--text-muted)", gridColumn: "1 / -1" }}>No tienes fondos AFI contratados.</div>}
+          {fondos.map((f) => (
             <div key={f.key} onClick={() => openFondoDetalle(f.key)} className={"tile" + (f.invertido ? "" : " off")}>
               <Icon name="chart" size={18} color={f.invertido ? "var(--accent)" : "var(--text-muted)"} />
               <div className="l">{f.name}</div>
@@ -69,7 +70,8 @@ export function HomeTab() {
         <SectionLabel>Accesos rápidos</SectionLabel>
         <QuickActionsRow items={[["receipt", "Estado de cuenta", openEstadoCuenta]]} />
         <SectionLabel>Mis proyectos</SectionLabel>
-        {PROYECTOS.map((p) => (
+        {proyectos.length === 0 && <div style={{ fontSize: 12.5, color: "var(--text-muted)" }}>No tienes proyectos con Fiduciaria.</div>}
+        {proyectos.map((p) => (
           <Row key={p.name} icon="building" label={p.name} onClick={() => openInfo("Fiduciaria", p.name)} />
         ))}
       </>
@@ -83,7 +85,7 @@ export function HomeTab() {
           ["network", "Solicitar traspaso", openArsTraspaso],
         ]} />
         <SectionLabel>Consulta de afiliados</SectionLabel>
-        {[TITULAR_NOMBRE, ...dependientes].map((d) => (
+        {[titular, ...dependientes].map((d) => (
           <Row key={d} icon="user" label={d} onClick={() => openAfiliadoDetalle(d, "ars")} />
         ))}
       </>
@@ -113,7 +115,7 @@ export function HomeTab() {
   return (
     <>
       <LogoLockup size={28} className="home-logo" />
-      <div className="greeting-name" style={{ margin: "6px 0 12px" }}>{TITULAR_NOMBRE}</div>
+      <div className="greeting-name" style={{ margin: "6px 0 12px" }}>{titular}</div>
       <AdsStrip ads={ANUNCIOS} onSelect={openStub} />
       <div className="toptabs">
         {FILIALES.map(([label, icon]) => (
@@ -154,14 +156,14 @@ export function NotifTab() {
 }
 
 export function CuentaTab() {
-  const { openCarnet, openStub } = useApp();
+  const { openCarnet, openStub, titular, contrato, afiliadoDesde } = useApp();
   return (
     <>
       <div style={{ fontSize: 15, fontWeight: 600, marginBottom: 10 }}>Ficha del afiliado</div>
       <div className="card" style={{ marginBottom: 6 }}>
-        <div style={{ fontWeight: 600, fontSize: 14 }}>{TITULAR_NOMBRE}</div>
-        <div style={{ fontSize: 12, color: "var(--muted)", marginTop: 4 }}>Contrato: 03003780-28817</div>
-        <div style={{ fontSize: 12, color: "var(--muted)" }}>Afiliado desde: 01/02/2024</div>
+        <div style={{ fontWeight: 600, fontSize: 14 }}>{titular}</div>
+        <div style={{ fontSize: 12, color: "var(--muted)", marginTop: 4 }}>Contrato: {contrato}</div>
+        <div style={{ fontSize: 12, color: "var(--muted)" }}>Afiliado desde: {afiliadoDesde}</div>
       </div>
       <Row icon="creditcard" label="Mis carnets" onClick={openCarnet} />
       <Row icon="user" label="Datos personales" onClick={() => openStub("Datos personales")} />

@@ -1,7 +1,6 @@
 import { useApp } from "../context/AppContext";
 import { Icon } from "../components/Icon";
 import { BackHeader, SectionLabel } from "../components/UI";
-import { TRASPASO_ARS_PENDIENTE } from "../data/data";
 
 export function ArsTraspasoMenuScreen() {
   const { abrirArsTraspasoSolicitar, abrirArsTraspasoEstado } = useApp();
@@ -79,7 +78,15 @@ export function ArsTraspasoEnviadoScreen() {
 }
 
 export function ArsTraspasoEstadoScreen() {
-  const t = TRASPASO_ARS_PENDIENTE;
+  const { traspasoArsPendiente: t } = useApp();
+  if (!t) {
+    return (
+      <>
+        <BackHeader title="Estado de mi traspaso" />
+        <div style={{ fontSize: 12.5, color: "var(--text-muted)", fontStyle: "italic" }}>No tienes ninguna solicitud de traspaso de ARS en curso.</div>
+      </>
+    );
+  }
   return (
     <>
       <BackHeader title="Estado de mi traspaso" />

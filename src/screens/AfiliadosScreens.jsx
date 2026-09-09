@@ -2,7 +2,7 @@ import { useApp } from "../context/AppContext";
 import { Icon } from "../components/Icon";
 import { BackHeader, SectionLabel, EstadoBadge, CoverageLine } from "../components/UI";
 import {
-  TITULAR_NOMBRE, AFILIADOS_SALUD_INFO, AFILIADOS_ARS_USADO, LIMITE_POR_CASO_PLAN, COBERTURA_MEDICAMENTOS_PLAN, PLAN_BASICO_SALUD,
+  LIMITE_POR_CASO_PLAN, COBERTURA_MEDICAMENTOS_PLAN, PLAN_BASICO_SALUD,
   PROGRAMAS_SALUD, elegiblePrograma,
 } from "../data/data";
 
@@ -11,16 +11,17 @@ const USO_ARS_POR_DEFECTO = { limiteUsado: 0, medicamentosUsado: 0 };
 const ES_MEDICAMENTO = (item) => item.concepto.toLowerCase().includes("medicamento");
 
 export function AfiliadoDetalleScreen() {
-  const { current, products, openAfiliadoCobertura, openProgramaSalud } = useApp();
+  const { current, products, titular, afiliadosSalud, afiliadosArsUsado, openAfiliadoCobertura, openProgramaSalud } = useApp();
   const { nombre, origen } = current;
-  const info = AFILIADOS_SALUD_INFO[nombre] || INFO_POR_DEFECTO;
+  const info = afiliadosSalud[nombre] || { ...INFO_POR_DEFECTO, parentesco: nombre === titular ? "Titular" : "Dependiente" };
   const esArs = origen === "ars";
-  const plan = products.find((p) => p.key === "salud").plan;
+  const saludProduct = products.find((p) => p.key === "salud" && !p.noContratado);
+  const plan = saludProduct ? saludProduct.plan : null;
   const nombrePlan = esArs ? PLAN_BASICO_SALUD.nombre : plan;
   const medicamentosTotal = esArs ? PLAN_BASICO_SALUD.coberturaMedicamentos : COBERTURA_MEDICAMENTOS_PLAN[plan];
 
   if (esArs) {
-    const uso = AFILIADOS_ARS_USADO[nombre] || USO_ARS_POR_DEFECTO;
+    const uso = afiliadosArsUsado[nombre] || USO_ARS_POR_DEFECTO;
     const medicamentosDisponible = medicamentosTotal - uso.medicamentosUsado;
     return (
       <>
@@ -83,10 +84,10 @@ export function AfiliadoDetalleScreen() {
 }
 
 export function ProgramaSaludDetalleScreen() {
-  const { current, openSolicitarEvaluacion } = useApp();
+  const { current, afiliadosSalud, openSolicitarEvaluacion } = useApp();
   const { nombre, key } = current;
   const prog = PROGRAMAS_SALUD[key];
-  const info = AFILIADOS_SALUD_INFO[nombre] || INFO_POR_DEFECTO;
+  const info = afiliadosSalud[nombre] || INFO_POR_DEFECTO;
   const elegible = elegiblePrograma(prog, info.edad);
 
   return (
@@ -119,10 +120,10 @@ export function ProgramaSaludDetalleScreen() {
 }
 
 export function AfiliadoCoberturaHistorialScreen() {
-  const { current, reembolsos, autorizaciones } = useApp();
+  const { current, reembolsos, autorizaciones, titular, afiliadosSalud } = useApp();
   const { nombre, tipo } = current;
-  const esTitular = nombre === TITULAR_NOMBRE;
-  const info = AFILIADOS_SALUD_INFO[nombre] || INFO_POR_DEFECTO;
+  const esTitular = nombre === titular;
+  const info = afiliadosSalud[nombre] || INFO_POR_DEFECTO;
   const todosReembolsos = esTitular ? reembolsos : info.reembolsos;
 
   if (tipo === "medicamentos") {

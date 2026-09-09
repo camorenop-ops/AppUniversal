@@ -10,6 +10,12 @@ import {
   ASISTENCIA_INFO,
   UBICACIONES_MUESTRA,
   TITULAR_NOMBRE,
+  AFILIADOS_SALUD_INFO,
+  AFILIADOS_ARS_USADO,
+  FONDOS,
+  PROYECTOS,
+  ESTADO_CUENTA,
+  TRASPASO_ARS_PENDIENTE,
 } from "../data/data";
 
 function avanzarUnAnio(fecha) {
@@ -27,18 +33,32 @@ function findIn(list, key) {
   return list.find((p) => p.key === key);
 }
 
-export function AppProvider({ children }) {
+function pick(val, fallback) {
+  return val !== undefined ? val : fallback;
+}
+
+export function AppProvider({ children, initialData }) {
+  const d = initialData || {};
   const [stack, setStack] = useState([]);
   const [current, setCurrent] = useState({ view: "tab", tab: "home" });
   const [activeTab, setActiveTab] = useState("home");
   const [activeFilial, setActiveFilial] = useState("Seguros");
   const [memberIdx, setMemberIdx] = useState(0);
 
-  const [products, setProducts] = useState(initialProducts);
-  const [asistenciaProducts, setAsistenciaProducts] = useState(initialAsistenciaProducts);
-  const [dependientes, setDependientes] = useState(INITIAL_DEPENDIENTES);
-  const [reembolsos, setReembolsos] = useState(initialReembolsos);
-  const [autorizaciones, setAutorizaciones] = useState(initialAutorizaciones);
+  const [titular] = useState(pick(d.titular, TITULAR_NOMBRE));
+  const [contrato] = useState(pick(d.contrato, "03003780-28817"));
+  const [afiliadoDesde] = useState(pick(d.afiliadoDesde, "01/02/2024"));
+  const [products, setProducts] = useState(pick(d.products, initialProducts()));
+  const [asistenciaProducts, setAsistenciaProducts] = useState(pick(d.asistenciaProducts, initialAsistenciaProducts()));
+  const [dependientes, setDependientes] = useState(pick(d.dependientes, INITIAL_DEPENDIENTES));
+  const [reembolsos, setReembolsos] = useState(pick(d.reembolsos, initialReembolsos()));
+  const [autorizaciones, setAutorizaciones] = useState(pick(d.autorizaciones, initialAutorizaciones()));
+  const [afiliadosSalud] = useState(pick(d.afiliadosSalud, AFILIADOS_SALUD_INFO));
+  const [afiliadosArsUsado] = useState(pick(d.afiliadosArsUsado, AFILIADOS_ARS_USADO));
+  const [fondos] = useState(pick(d.fondos, FONDOS));
+  const [proyectos] = useState(pick(d.proyectos, PROYECTOS));
+  const [estadoCuenta] = useState(pick(d.estadoCuenta, ESTADO_CUENTA));
+  const [traspasoArsPendiente, setTraspasoArsPendiente] = useState(pick(d.traspasoArs, TRASPASO_ARS_PENDIENTE));
   const [especialidadFiltro, setEspecialidadFiltro] = useState("Todas");
 
   const [cot, setCot] = useState(null);
@@ -574,13 +594,22 @@ export function AppProvider({ children }) {
   // ---------- traspaso de ARS ----------
   const openArsTraspaso = () => navigate({ view: "arsTraspaso" });
   function abrirArsTraspasoSolicitar() {
-    setTraspasoForm({ nombre: TITULAR_NOMBRE, telefono: "", correo: "" });
+    setTraspasoForm({ nombre: titular, telefono: "", correo: "" });
     navigate({ view: "arsTraspasoSolicitar" });
   }
   function setTraspasoField(field, val) {
     setTraspasoForm({ ...traspasoForm, [field]: val });
   }
-  const enviarArsTraspaso = () => navigate({ view: "arsTraspasoEnviado" });
+  function enviarArsTraspaso() {
+    setTraspasoArsPendiente({
+      numeroSolicitud: "TR-" + new Date().getFullYear() + "-" + Math.floor(1000 + Math.random() * 9000),
+      fechaSolicitud: "Hoy",
+      estado: "En proceso de validación",
+      ultimaActualizacion: "Hoy",
+      siguientePaso: "Un asesor te contactará para completar la documentación requerida del traspaso.",
+    });
+    navigate({ view: "arsTraspasoEnviado" });
+  }
   const abrirArsTraspasoEstado = () => navigate({ view: "arsTraspasoEstado" });
 
   // ---------- solicitar asistencia (vehicular / hogar) ----------
@@ -601,7 +630,9 @@ export function AppProvider({ children }) {
 
   const value = {
     stack, current, activeTab, activeFilial, memberIdx,
+    titular, contrato, afiliadoDesde,
     products, asistenciaProducts, dependientes, reembolsos, autorizaciones,
+    afiliadosSalud, afiliadosArsUsado, fondos, proyectos, estadoCuenta, traspasoArsPendiente,
     especialidadFiltro, setEspecialidadFiltro,
     cot, reembolsoForm, autForm, depForm, cambioPlanForm, renovacionForm, endosoForm, pagoPolizasForm, reclamoForm, traspasoForm,
     asistenciaSolicitudForm, evaluacionForm, telemedicinaForm,

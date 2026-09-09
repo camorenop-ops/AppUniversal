@@ -3,8 +3,8 @@ import { useApp } from "../context/AppContext";
 import { Icon, LogoLockup } from "../components/Icon";
 import { BackHeader, SectionLabel, Row, Chip, MapMock, InfoCard, CaptureCard, CoverageLine } from "../components/UI";
 import {
-  PRESTADORES, ESPECIALIDADES, SINTOMAS, CENTROS, FONDOS, PROYECTOS, ESTADO_CUENTA,
-  MEMBERS, PRODUCT_TITLES, CARNET_BIEN, CITAS_DISPONIBLES,
+  PRESTADORES, ESPECIALIDADES, SINTOMAS, CENTROS,
+  PRODUCT_TITLES, CITAS_DISPONIBLES,
 } from "../data/data";
 
 export function ChatScreen() {
@@ -146,11 +146,11 @@ export function TelemedicinaConfirmadaScreen() {
 }
 
 export function FondoScreen({ kind, fondoKey }) {
-  const { goBack } = useApp();
+  const { goBack, fondos } = useApp();
   const [comprobante, setComprobante] = useState(false);
   const title = kind === "rescate" ? "Solicitar rescate" : "Notificar aporte al fondo";
   const actionLabel = kind === "rescate" ? "Confirmar rescate" : "Confirmar aporte";
-  const f = FONDOS.find((x) => x.key === fondoKey) || FONDOS.find((x) => x.invertido) || FONDOS[0];
+  const f = fondos.find((x) => x.key === fondoKey) || fondos.find((x) => x.invertido) || fondos[0];
 
   if (kind === "aporte" && !comprobante) {
     return (
@@ -188,8 +188,8 @@ export function FondoScreen({ kind, fondoKey }) {
 }
 
 export function FondoDetalleScreen({ fondoKey }) {
-  const { openFondo } = useApp();
-  const f = FONDOS.find((x) => x.key === fondoKey);
+  const { openFondo, fondos } = useApp();
+  const f = fondos.find((x) => x.key === fondoKey);
 
   return (
     <>
@@ -226,16 +226,25 @@ export function FondoDetalleScreen({ fondoKey }) {
 }
 
 export function EstadoCuentaScreen() {
+  const { estadoCuenta } = useApp();
+  if (!estadoCuenta) {
+    return (
+      <>
+        <BackHeader title="Estado de cuenta" />
+        <div style={{ fontSize: 12.5, color: "var(--text-muted)", fontStyle: "italic" }}>No tienes proyectos con Fiduciaria.</div>
+      </>
+    );
+  }
   return (
     <>
       <BackHeader title="Estado de cuenta" />
-      <div style={{ fontSize: 13, color: "var(--muted)", marginBottom: 4 }}>{ESTADO_CUENTA.proyecto}</div>
+      <div style={{ fontSize: 13, color: "var(--muted)", marginBottom: 4 }}>{estadoCuenta.proyecto}</div>
       <div className="card" style={{ marginBottom: 14 }}>
         <div style={{ fontSize: 11, color: "var(--text-muted)" }}>Saldo pendiente</div>
-        <div style={{ fontSize: 22, fontWeight: 600, color: "var(--accent)" }}>{ESTADO_CUENTA.saldoPendiente}</div>
+        <div style={{ fontSize: 22, fontWeight: 600, color: "var(--accent)" }}>{estadoCuenta.saldoPendiente}</div>
       </div>
       <SectionLabel>Pagos realizados</SectionLabel>
-      {ESTADO_CUENTA.pagos.map((p, i) => (
+      {estadoCuenta.pagos.map((p, i) => (
         <div key={i} style={{ display: "flex", justifyContent: "space-between", padding: "8px 0", borderBottom: "1px solid var(--border)" }}>
           <div>
             <div style={{ fontSize: 13 }}>{p[1]}</div>
@@ -249,24 +258,26 @@ export function EstadoCuentaScreen() {
 }
 
 export function CarnetScreen() {
-  const { memberIdx, setMember } = useApp();
+  const { memberIdx, setMember, titular, dependientes, contrato, products } = useApp();
+  const members = [titular, ...dependientes];
+  const salud = products.find((p) => p.key === "salud" && !p.noContratado);
   return (
     <>
       <BackHeader title="Mis carnets" />
       <div style={{ display: "flex", gap: 6, overflowX: "auto", marginBottom: 14 }}>
-        {MEMBERS.map((m, i) => (
+        {members.map((m, i) => (
           <Chip key={m} label={m} on={i === memberIdx} onClick={() => setMember(i)} />
         ))}
       </div>
       <div className="cert" style={{ border: "1px solid var(--border-strong)", borderRadius: 12, overflow: "hidden" }}>
         <div style={{ padding: 14 }}>
           <LogoLockup size={16} />
-          <div style={{ fontWeight: 600, fontSize: 15, marginTop: 10 }}>{MEMBERS[memberIdx]}</div>
-          <div style={{ fontSize: 12, color: "var(--muted)", marginTop: 2 }}>Plan Alpha, salud local</div>
+          <div style={{ fontWeight: 600, fontSize: 15, marginTop: 10 }}>{members[memberIdx] || members[0]}</div>
+          <div style={{ fontSize: 12, color: "var(--muted)", marginTop: 2 }}>{salud ? `${salud.plan}, salud local` : "Sin plan de Salud activo"}</div>
         </div>
         <div style={{ borderTop: "1px dashed var(--border-strong)" }} />
         <div style={{ padding: 14, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <div style={{ fontSize: 11, color: "var(--text-muted)", lineHeight: 1.6 }}>No. afiliado: 1639169<br />Contrato: 03003780-28817</div>
+          <div style={{ fontSize: 11, color: "var(--text-muted)", lineHeight: 1.6 }}>No. afiliado: 1639169<br />Contrato: {contrato}</div>
           <Icon name="qrcode" size={28} color="var(--accent)" />
         </div>
       </div>
@@ -279,7 +290,7 @@ export function CarnetScreen() {
 }
 
 export function CarnetBienScreen({ productKey }) {
-  const { products } = useApp();
+  const { products, titular, contrato } = useApp();
   const title = PRODUCT_TITLES[productKey];
 
   if (productKey === "auto") {
@@ -302,7 +313,7 @@ export function CarnetBienScreen({ productKey }) {
                   {i + 1}. {v.marca} {v.modelo} {v.anio} — placa {v.placa}
                 </div>
               ))}
-              <div style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 6 }}>Contrato: 03003780-28817</div>
+              <div style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 6 }}>Contrato: {contrato}</div>
             </div>
             <Icon name="qrcode" size={28} color="var(--accent)" />
           </div>
@@ -315,20 +326,22 @@ export function CarnetBienScreen({ productKey }) {
     );
   }
 
-  const c = CARNET_BIEN[productKey];
+  const p = products.find((x) => x.key === productKey);
+  const label = productKey === "vida" ? "Asegurado" : "Bien asegurado";
+  const bien = productKey === "vida" ? `${titular} — ${p.extra}` : p.extra;
   return (
     <>
       <BackHeader title={`Carnet · ${title}`} />
       <div className="cert" style={{ border: "1px solid var(--border-strong)", borderRadius: 12, overflow: "hidden" }}>
         <div style={{ padding: 14 }}>
           <LogoLockup size={16} />
-          <div style={{ fontWeight: 600, fontSize: 15, marginTop: 10 }}>{c.plan}</div>
+          <div style={{ fontWeight: 600, fontSize: 15, marginTop: 10 }}>{p.plan}</div>
           <div style={{ fontSize: 12, color: "var(--muted)", marginTop: 2 }}>{title}</div>
         </div>
         <div style={{ borderTop: "1px dashed var(--border-strong)" }} />
         <div style={{ padding: 14, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
           <div style={{ fontSize: 11, color: "var(--text-muted)", lineHeight: 1.6 }}>
-            {c.label}:<br />{c.bien}<br />Contrato: 03003780-28817
+            {label}:<br />{bien}<br />Contrato: {contrato}
           </div>
           <Icon name="qrcode" size={28} color="var(--accent)" />
         </div>
@@ -354,9 +367,10 @@ export function StubScreen({ title }) {
 }
 
 export function InfoScreen({ title, icon, name, rows, sectionKind }) {
+  const { proyectos } = useApp();
   let finalRows = rows;
   if (!finalRows && sectionKind === "Fiduciaria") {
-    finalRows = PROYECTOS.find((p) => p.name === name)?.rows || [];
+    finalRows = proyectos.find((p) => p.name === name)?.rows || [];
   }
   return (
     <>

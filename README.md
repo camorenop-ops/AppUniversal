@@ -7,7 +7,7 @@ Todos los datos son simulados en memoria (sin backend): productos, coberturas, p
 Este repositorio contiene dos aplicaciones:
 
 1. **App móvil (cliente final)** — `index.html` / `src/main.jsx`. Es el prototipo original: un solo cliente (titular) navega sus propios productos dentro de un mockup de teléfono.
-2. **Consola interna de escritorio** — `desktop.html` / `src/main-desktop.jsx`. Pensada para las áreas de Servicio al Cliente, Calle, Sucursales y Backoffice: permite buscar **cualquier cliente** y ver sus productos/coberturas/trámites, o buscar **cualquier intermediario** (corredor/agente) y ver su cartera completa de clientes, con la misma información y componentes visuales que la app Universal.
+2. **Consola interna de escritorio** — `desktop.html` / `src/main-desktop.jsx`. Pensada para las áreas de Servicio al Cliente, Calle, Sucursales y Backoffice: permite buscar **cualquier cliente** o **cualquier intermediario** (corredor/agente) y su cartera. Al abrir un cliente, la consola incrusta la **misma app móvil** (mismo `AppContext`/`Router`/pantallas) inicializada con los datos de ese cliente, así que el asesor tiene exactamente las mismas consultas y puede ejecutar las mismas acciones que el cliente en su propia app (cotizar, comprar, reclamos, reembolsos, autorizaciones, renovaciones, endosos, pagos, telemedicina, traspaso de ARS, etc.), sin duplicar pantallas.
 
 ## Desarrollo
 
@@ -29,15 +29,11 @@ Genera ambos entry points (`dist/index.html` y `dist/desktop.html`).
 
 ## Estructura
 
-- `src/context/AppContext.jsx` — estado global de la app móvil (navegación tipo pila, productos contratados, formularios de los flujos de cotización/reembolsos/autorizaciones).
-- `src/data/data.js` — datos simulados de referencia (coberturas por plan, prestadores, fondos, programas de salud, etc.) y los datos del cliente único de la app móvil.
-- `src/data/clientes.js` — cartera simulada de clientes para la consola de escritorio (cada uno con sus propios productos, dependientes, reembolsos, autorizaciones, fondos AFI, etc.) y utilidades de búsqueda.
+- `src/context/AppContext.jsx` — estado global de la app (navegación tipo pila, productos contratados, formularios de los flujos de cotización/reembolsos/autorizaciones). Acepta un `initialData` opcional (titular, contrato, productos, afiliados, fondos, etc.) para inicializar el estado con los datos de un cliente distinto al de la app móvil; sin ese prop se comporta exactamente igual que antes.
+- `src/data/data.js` — datos simulados de referencia (coberturas por plan, prestadores, programas de salud, etc.) y los datos por defecto del cliente único de la app móvil.
+- `src/data/clientes.js` — cartera simulada de clientes para la consola de escritorio (cada uno con sus propios productos, dependientes, reembolsos, autorizaciones, afiliados de Salud/ARS, fondos AFI, proyectos de Fiduciaria, traspaso de ARS, etc.) y utilidades de búsqueda.
 - `src/data/intermediarios.js` — intermediarios (corredores/agentes) simulados y su cartera de clientes.
-- `src/components/` — componentes de UI compartidos (iconos, tarjetas, filas, acordeón de coberturas, tabla comparativa), reutilizados por ambas apps.
-- `src/screens/` — pantallas de la app móvil agrupadas por dominio (tabs principales, productos, cotizador, trámites, pantallas varias).
-- `src/Router.jsx` — despacha la vista activa de la app móvil a la pantalla correspondiente.
-- `src/desktop/` — consola de escritorio: selector de área/agente, buscador de clientes/intermediarios y la ficha 360° del cliente (pólizas, afiliados de Salud, ARS, reembolsos/autorizaciones, AFI, Fiduciaria, Asistencia, traspaso de ARS) e intermediario (datos y cartera de clientes).
-
-## Próximos pasos posibles
-
-La consola de escritorio es de solo consulta (lectura). Si se necesita que el personal interno también pueda **ejecutar** trámites en nombre del cliente (reclamos, reembolsos, endosos, cotizaciones), el siguiente paso natural es reutilizar `AppContext`/`Router` de la app móvil dentro de la ficha de cliente de escritorio, parametrizando su estado inicial con los datos del cliente seleccionado en `src/data/clientes.js`.
+- `src/components/` — componentes de UI compartidos (iconos, tarjetas, filas, acordeón de coberturas, tabla comparativa, `PhoneFrame`), reutilizados por ambas apps.
+- `src/screens/` — pantallas de la app agrupadas por dominio (tabs principales, productos, cotizador, trámites, pantallas varias). Todas leen los datos del cliente activo desde `useApp()`, nunca de constantes fijas, para poder mostrar cualquier cliente.
+- `src/Router.jsx` — despacha la vista activa a la pantalla correspondiente.
+- `src/desktop/` — consola de escritorio: selector de área/agente, buscador de clientes/intermediarios, la ficha del intermediario (datos y cartera de clientes) y la ficha del cliente (resumen con KPIs + la app móvil real incrustada, inicializada con los datos de ese cliente vía `AppProvider initialData`).
