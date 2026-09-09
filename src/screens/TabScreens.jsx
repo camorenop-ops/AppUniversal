@@ -1,7 +1,7 @@
 import { useApp } from "../context/AppContext";
 import { LogoLockup, Icon } from "../components/Icon";
 import { FilialTab, Row, SectionLabel, Tile, QuickActionsRow, AdsStrip } from "../components/UI";
-import { FONDOS, PROYECTOS, ANUNCIOS, TITULAR_NOMBRE } from "../data/data";
+import { FONDOS, PROYECTOS, ANUNCIOS, TITULAR_NOMBRE, GRUPOS_SOLUCION } from "../data/data";
 
 const FILIALES = [
   ["Seguros", "shield"],
@@ -13,11 +13,34 @@ const FILIALES = [
 
 export function HomeTab() {
   const {
-    activeFilial, setFilial, products, asistenciaProducts, dependientes,
+    activeFilial, setFilial, activeGrupo, elegirGrupo, volverASelectorGrupos,
+    products, asistenciaProducts, dependientes,
     openProduct, openCotizar, openFondo, openFondoDetalle, openEstadoCuenta, openInfo, openStub,
     openRenovaciones, openEndosarPoliza, openPagoPolizas, openReclamo, openAfiliadoDetalle,
     openCoberturasDetalle, openArsTraspaso, openAsistenciaSolicitud,
   } = useApp();
+
+  if (!activeGrupo) {
+    return (
+      <>
+        <LogoLockup size={28} className="home-logo" />
+        <div className="greeting-name" style={{ margin: "6px 0 12px" }}>{TITULAR_NOMBRE}</div>
+        <AdsStrip ads={ANUNCIOS} onSelect={openStub} />
+        <SectionLabel>Elige tu solución</SectionLabel>
+        <div className="grupo-grid">
+          {GRUPOS_SOLUCION.map((g) => (
+            <div key={g.key} className="grupo-card" onClick={() => elegirGrupo(g.key)}>
+              <div className="grupo-icon"><Icon name={g.icon} size={28} color="#fff" /></div>
+              <div className="grupo-label">{g.label}</div>
+            </div>
+          ))}
+        </div>
+      </>
+    );
+  }
+
+  const grupo = GRUPOS_SOLUCION.find((g) => g.key === activeGrupo);
+  const filialesGrupo = FILIALES.filter(([label]) => grupo.filiales.includes(label));
 
   let content;
   if (activeFilial === "Seguros") {
@@ -112,14 +135,17 @@ export function HomeTab() {
 
   return (
     <>
-      <LogoLockup size={28} className="home-logo" />
-      <div className="greeting-name" style={{ margin: "6px 0 12px" }}>{TITULAR_NOMBRE}</div>
-      <AdsStrip ads={ANUNCIOS} onSelect={openStub} />
-      <div className="toptabs">
-        {FILIALES.map(([label, icon]) => (
-          <FilialTab key={label} icon={icon} label={label} on={label === activeFilial} onClick={() => setFilial(label)} />
-        ))}
+      <div className="grupo-back-row" onClick={volverASelectorGrupos}>
+        <Icon name="arrowleft" size={16} />
+        <span>{grupo.label}</span>
       </div>
+      {filialesGrupo.length > 1 && (
+        <div className="toptabs">
+          {filialesGrupo.map(([label, icon]) => (
+            <FilialTab key={label} icon={icon} label={label} on={label === activeFilial} onClick={() => setFilial(label)} />
+          ))}
+        </div>
+      )}
       {content}
     </>
   );

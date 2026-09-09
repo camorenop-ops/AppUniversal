@@ -410,6 +410,47 @@ input.u-input {
   flex: 1;
 }
 
+.grupo-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 8px;
+}
+.grupo-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  text-align: center;
+}
+.grupo-icon {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 18px;
+  background: linear-gradient(135deg, var(--navy), var(--accent));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.grupo-label {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #1a1f2b;
+}
+.grupo-back-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  margin-bottom: 14px;
+  color: var(--muted);
+}
+.grupo-back-row span {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1a1f2b;
+}
 .toptabs {
   position: sticky;
   top: 0;

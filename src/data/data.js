@@ -315,6 +315,11 @@ export const ASISTENCIA_INFO = {
   asistenciahogar: [["Estado", "Activo"], ["Cobertura", "Plomería, electricidad, cerrajería"]],
 };
 export const FILIALES = ["Seguros", "AFI", "Fiduciaria", "ARS", "Asistencia"];
+export const GRUPOS_SOLUCION = [
+  { key: "seguros", label: "Seguros", icon: "shield", filiales: ["Seguros"] },
+  { key: "financieras", label: "Financieras", icon: "bank", filiales: ["AFI", "Fiduciaria"] },
+  { key: "servicios", label: "Servicios", icon: "tool", filiales: ["ARS", "Asistencia"] },
+];
 export const MUEBLES_HOGAR = [
   "Sala (mueble, TV, decoración)",
   "Comedor",
