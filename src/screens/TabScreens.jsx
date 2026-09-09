@@ -1,6 +1,7 @@
+import { useRef, useState } from "react";
 import { useApp } from "../context/AppContext";
 import { LogoLockup, Icon } from "../components/Icon";
-import { FilialTab, Row, SectionLabel, Tile, QuickActionsRow, AdsStrip } from "../components/UI";
+import { FilialTab, Row, SectionLabel, Tile, QuickActionsRow } from "../components/UI";
 import { FONDOS, PROYECTOS, ANUNCIOS, TITULAR_NOMBRE, GRUPOS_SOLUCION } from "../data/data";
 
 const FILIALES = [
@@ -9,7 +10,53 @@ const FILIALES = [
   ["Fiduciaria", "bank"],
   ["ARS", "heart"],
   ["Asistencia", "tool"],
+  ["UNIT", "network"],
+  ["Propartes", "car"],
+  ["Administraciones", "building"],
 ];
+
+function HeroSelector({ onSelect, onElegirGrupo }) {
+  const [idx, setIdx] = useState(0);
+  const trackRef = useRef(null);
+
+  function handleScroll(e) {
+    const w = e.currentTarget.clientWidth || 1;
+    setIdx(Math.round(e.currentTarget.scrollLeft / w));
+  }
+
+  return (
+    <div className="hero-selector">
+      <div className="hero-track" ref={trackRef} onScroll={handleScroll}>
+        {ANUNCIOS.map((a, i) => {
+          const style = a.img
+            ? { backgroundImage: `url(${a.img})` }
+            : { background: "linear-gradient(135deg,var(--navy),var(--accent))" };
+          return <div key={i} className="hero-slide" style={style} onClick={() => onSelect(a.t)} />;
+        })}
+      </div>
+      <div className="hero-scrim-top" />
+      <div className="hero-scrim-bottom" />
+      <div className="hero-top">
+        <LogoLockup size={26} className="home-logo" />
+        <div className="hero-greeting">{TITULAR_NOMBRE}</div>
+      </div>
+      <div className="hero-bottom">
+        <div className="hero-dots">
+          {ANUNCIOS.map((_, i) => <span key={i} className={"dot" + (i === idx ? " on" : "")} />)}
+        </div>
+        <div className="hero-label">Elige tu solución</div>
+        <div className="grupo-grid">
+          {GRUPOS_SOLUCION.map((g) => (
+            <div key={g.key} className="grupo-card" onClick={() => onElegirGrupo(g.key)}>
+              <div className="grupo-icon"><Icon name={g.icon} size={26} color="#fff" /></div>
+              <div className="grupo-label">{g.label}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export function HomeTab() {
   const {
@@ -21,22 +68,7 @@ export function HomeTab() {
   } = useApp();
 
   if (!activeGrupo) {
-    return (
-      <>
-        <LogoLockup size={28} className="home-logo" />
-        <div className="greeting-name" style={{ margin: "6px 0 12px" }}>{TITULAR_NOMBRE}</div>
-        <AdsStrip ads={ANUNCIOS} onSelect={openStub} />
-        <SectionLabel>Elige tu solución</SectionLabel>
-        <div className="grupo-grid">
-          {GRUPOS_SOLUCION.map((g) => (
-            <div key={g.key} className="grupo-card" onClick={() => elegirGrupo(g.key)}>
-              <div className="grupo-icon"><Icon name={g.icon} size={28} color="#fff" /></div>
-              <div className="grupo-label">{g.label}</div>
-            </div>
-          ))}
-        </div>
-      </>
-    );
+    return <HeroSelector onSelect={openStub} onElegirGrupo={elegirGrupo} />;
   }
 
   const grupo = GRUPOS_SOLUCION.find((g) => g.key === activeGrupo);
@@ -111,7 +143,7 @@ export function HomeTab() {
         ))}
       </>
     );
-  } else {
+  } else if (activeFilial === "Asistencia") {
     content = (
       <>
         <SectionLabel>Accesos rápidos</SectionLabel>
@@ -130,6 +162,16 @@ export function HomeTab() {
           ))}
         </div>
       </>
+    );
+  } else {
+    content = (
+      <div style={{ textAlign: "center", padding: "50px 16px" }}>
+        <Icon name="sparkles" size={34} color="var(--accent)" />
+        <div style={{ fontSize: 15, fontWeight: 700, marginTop: 14 }}>Próximamente</div>
+        <div style={{ fontSize: 13, color: "var(--muted)", marginTop: 8, maxWidth: 240, marginLeft: "auto", marginRight: "auto" }}>
+          Estamos preparando {activeFilial} para que pronto puedas acceder desde aquí.
+        </div>
+      </div>
     );
   }
 

@@ -316,9 +316,9 @@ export const ASISTENCIA_INFO = {
 };
 export const FILIALES = ["Seguros", "AFI", "Fiduciaria", "ARS", "Asistencia"];
 export const GRUPOS_SOLUCION = [
-  { key: "seguros", label: "Seguros", icon: "shield", filiales: ["Seguros"] },
+  { key: "seguros", label: "Seguros", icon: "shield", filiales: ["Seguros", "ARS", "UNIT"] },
   { key: "financieras", label: "Financieras", icon: "bank", filiales: ["AFI", "Fiduciaria"] },
-  { key: "servicios", label: "Servicios", icon: "tool", filiales: ["ARS", "Asistencia"] },
+  { key: "servicios", label: "Servicios", icon: "tool", filiales: ["Asistencia", "Propartes", "Administraciones"] },
 ];
 export const MUEBLES_HOGAR = [
   "Sala (mueble, TV, decoración)",
