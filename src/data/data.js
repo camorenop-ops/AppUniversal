@@ -315,9 +315,9 @@ export const ASISTENCIA_INFO = {
   asistenciahogar: [["Estado", "Activo"], ["Cobertura", "Plomería, electricidad, cerrajería"]],
 };
 export const PILARES = [
-  { key: "seguros", label: "Soluciones de Seguros", short: "Seguros", icon: "shield" },
-  { key: "financieras", label: "Soluciones Financieras", short: "Financieras", icon: "bank" },
-  { key: "servicios", label: "Soluciones de Servicios", short: "Servicios", icon: "tool" },
+  { key: "seguros", label: "Soluciones de Seguros", misLabel: "Mis Seguros", icon: "shield" },
+  { key: "financieras", label: "Soluciones Financieras", misLabel: "Mis Finanzas", icon: "bank" },
+  { key: "servicios", label: "Soluciones de Servicios", misLabel: "Mis Servicios", icon: "tool" },
 ];
 
 export const FILIALES_POR_PILAR = {
