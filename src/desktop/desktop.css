@@ -253,10 +253,63 @@
   padding: 10px 0;
 }
 
-.agent-phone-stage {
+.agent-actions {
   display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+.agent-action {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 14px;
+  border-radius: 999px;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--accent);
+  border: 1.5px solid var(--accent);
+  background: #fff;
+}
+.agent-action:hover { background: var(--ice); }
+.agent-action:active { transform: scale(0.97); }
+
+.agent-flow-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 14, 28, .45);
+  display: flex;
+  align-items: flex-start;
   justify-content: center;
-  padding: 12px 0 40px;
+  padding: 5vh 20px;
+  z-index: 50;
+  overflow-y: auto;
+}
+.agent-flow-panel {
+  background: #fff;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 440px;
+  box-shadow: 0 30px 60px -20px rgba(10, 14, 28, .45);
+  overflow: hidden;
+}
+.agent-flow-close {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.agent-flow-close:hover { color: var(--accent); }
+.agent-flow-body {
+  padding: 18px 16px 24px;
+  max-height: 82vh;
+  overflow-y: auto;
 }
 
 @media (max-width: 720px) {
