@@ -47,6 +47,16 @@ export function FilialTab({ icon, label, on, onClick }) {
   );
 }
 
+export function FilialSubTab({ icon, label, on, soon, onClick }) {
+  return (
+    <div onClick={onClick} className={"subfilial-tab" + (on ? " on" : "") + (soon ? " soon" : "")}>
+      <Icon name={icon} size={14} />
+      <span>{label}</span>
+      {soon && <span className="soon-tag">Próximamente</span>}
+    </div>
+  );
+}
+
 export function Chip({ label, on, onClick }) {
   return <span onClick={onClick} className={"chip" + (on ? " on" : "")}>{label}</span>;
 }

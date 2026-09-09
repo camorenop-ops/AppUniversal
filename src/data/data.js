@@ -314,7 +314,19 @@ export const ASISTENCIA_INFO = {
   goldassist: [["Estado", "Activo"], ["Cobertura", "Vial, hogar y viajes"], ["Vigencia", "01/2026 a 12/2026"]],
   asistenciahogar: [["Estado", "Activo"], ["Cobertura", "Plomería, electricidad, cerrajería"]],
 };
-export const FILIALES = ["Seguros", "AFI", "Fiduciaria", "ARS", "Asistencia"];
+export const PILARES = [
+  { key: "seguros", label: "Soluciones de Seguros", short: "Seguros", icon: "shield" },
+  { key: "financieras", label: "Soluciones Financieras", short: "Financieras", icon: "bank" },
+  { key: "servicios", label: "Soluciones de Servicios", short: "Servicios", icon: "tool" },
+];
+
+export const FILIALES_POR_PILAR = {
+  seguros: [["ARS", "heart"], ["UNIT", "shieldplus"], ["Seguros", "shield"]],
+  financieras: [["AFI", "chart"], ["Fiduciaria", "bank"]],
+  servicios: [["Autonovo", "car"], ["Asistencia", "tool"]],
+};
+
+export const FILIALES_PROXIMAMENTE = ["UNIT", "Autonovo"];
 export const MUEBLES_HOGAR = [
   "Sala (mueble, TV, decoración)",
   "Comedor",

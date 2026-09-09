@@ -445,6 +445,46 @@ input.u-input {
   color: #fff;
   border-color: var(--navy);
 }
+.subfilial-row {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  margin: 0 0 14px;
+  padding-bottom: 2px;
+}
+.subfilial-tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 0 0 auto;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  background: #fff;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.subfilial-tab.on {
+  background: var(--ice);
+  color: var(--accent);
+  border-color: var(--accent);
+}
+.subfilial-tab.soon {
+  color: var(--text-muted);
+}
+.subfilial-tab .soon-tag {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .03em;
+  color: var(--text-faint);
+  background: var(--bg-page);
+  border-radius: 5px;
+  padding: 2px 5px;
+}
 .ads-strip {
   display: flex;
   gap: 10px;
