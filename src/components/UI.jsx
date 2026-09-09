@@ -38,40 +38,21 @@ export function Pill({ label, on, onClick }) {
   return <span onClick={onClick} className={"pill" + (on ? " on" : "")}>{label}</span>;
 }
 
-export function SegmentedTabs({ items, activeKey, onChange, size = "normal" }) {
+export function FilialTab({ icon, label, on, onClick }) {
   return (
-    <div className={"segmented" + (size === "small" ? " small" : "")}>
-      {items.map((it) => (
-        <div key={it.key} onClick={() => onChange(it.key)} className={"segment" + (it.key === activeKey ? " on" : "")}>
-          {it.label}
-        </div>
-      ))}
+    <div onClick={onClick} className={"filial-tab" + (on ? " on" : "")}>
+      <Icon name={icon} size={22} />
+      <span>{label}</span>
     </div>
   );
 }
 
-export function ProductCard({ icon, title, sub, badge, lines, onClick }) {
+export function FilialSubTab({ icon, label, on, soon, onClick }) {
   return (
-    <div className="prod-card" onClick={onClick}>
-      <div className="prod-card-head">
-        <Icon name={icon} size={20} color="var(--accent)" />
-        <div className="prod-card-titles">
-          <div className="prod-card-title">{title}</div>
-          {sub && <div className="prod-card-sub">{sub}</div>}
-        </div>
-        {badge}
-        <Icon name="chevronright" size={16} color="var(--text-muted)" />
-      </div>
-      {lines && lines.length > 0 && (
-        <div className="prod-card-lines">
-          {lines.map((l, i) => (
-            <div className="prod-card-line" key={i}>
-              <span className="k">{l[0]}</span>
-              <span className="v">{l[1]}</span>
-            </div>
-          ))}
-        </div>
-      )}
+    <div onClick={onClick} className={"subfilial-tab" + (on ? " on" : "") + (soon ? " soon" : "")}>
+      <Icon name={icon} size={14} />
+      <span>{label}</span>
+      {soon && <span className="soon-tag">Próximamente</span>}
     </div>
   );
 }
@@ -245,10 +226,6 @@ const ESTADO_COLORS = {
   "En revisión": ["#EEF1F6", "var(--muted)"],
   "Rechazado": ["rgba(140,47,29,0.12)", "var(--danger)"],
   "Rechazada": ["rgba(140,47,29,0.12)", "var(--danger)"],
-  "Activo": ["var(--success-bg)", "var(--success-text)"],
-  "No contratado": ["#EEF1F6", "var(--text-muted)"],
-  "Sin inversión": ["#EEF1F6", "var(--text-muted)"],
-  "Próximamente": ["var(--ice)", "var(--accent)"],
 };
 
 export function EstadoBadge({ estado }) {

@@ -1,167 +1,160 @@
+import { useState } from "react";
 import { useApp } from "../context/AppContext";
-import { Icon } from "../components/Icon";
-import { Row, SectionLabel, QuickActionsRow, AdsStrip, SegmentedTabs, ProductCard, EstadoBadge } from "../components/UI";
+import { LogoLockup, Icon } from "../components/Icon";
+import { FilialTab, FilialSubTab, Row, SectionLabel, Tile, QuickActionsRow, AdsStrip } from "../components/UI";
 import {
-  FONDOS, PROYECTOS, ANUNCIOS, TITULAR_NOMBRE, PILARES, ASISTENCIA_INFO, PLAN_BASICO_SALUD, AFILIADOS_ARS_USADO,
+  FONDOS, PROYECTOS, ANUNCIOS, TITULAR_NOMBRE, PILARES, FILIALES_POR_PILAR, FILIALES_PROXIMAMENTE,
 } from "../data/data";
+
+const PROXIMAMENTE_DESC = "Estamos preparando esta nueva solución de Grupo Universal. Muy pronto podrás acceder a sus servicios desde aquí.";
+
+function ProximamenteBloque({ nombre }) {
+  const [avisar, setAvisar] = useState(false);
+  return (
+    <div style={{ textAlign: "center", padding: "40px 12px" }}>
+      <Icon name="sparkles" size={30} color="var(--accent)" />
+      <div style={{ fontSize: 16, fontWeight: 600, marginTop: 14 }}>{nombre} llega pronto</div>
+      <div style={{ fontSize: 13, color: "var(--muted)", marginTop: 6, maxWidth: 280, marginLeft: "auto", marginRight: "auto" }}>{PROXIMAMENTE_DESC}</div>
+      <button
+        className={avisar ? "" : "solid"}
+        onClick={() => setAvisar(true)}
+        disabled={avisar}
+        style={{ marginTop: 20, width: "100%", maxWidth: 280 }}
+      >
+        {avisar ? "✓ Te avisaremos cuando esté disponible" : "Notificarme cuando esté disponible"}
+      </button>
+    </div>
+  );
+}
 
 export function HomeTab() {
   const {
-    activePilar, setPilar, products, asistenciaProducts, goTab,
-    openProduct, openCotizar, openFondo, openFondoDetalle, openEstadoCuenta, openInfo, openStub, openProximamente,
+    activePilar, setPilar, activeFilial, setFilial, products, asistenciaProducts, dependientes,
+    openProduct, openCotizar, openFondo, openFondoDetalle, openEstadoCuenta, openInfo, openStub,
     openRenovaciones, openEndosarPoliza, openPagoPolizas, openReclamo, openAfiliadoDetalle,
-    openCoberturasDetalle, openArsTraspaso, openAsistenciaSolicitud, openReembolsos, openAutorizaciones,
+    openCoberturasDetalle, openArsTraspaso, openAsistenciaSolicitud,
   } = useApp();
+  const filialesDelPilar = FILIALES_POR_PILAR[activePilar];
 
   let content;
-  if (activePilar === "seguros") {
-    const arsUso = AFILIADOS_ARS_USADO[TITULAR_NOMBRE];
-    const arsDisponible = PLAN_BASICO_SALUD.coberturaMedicamentos - arsUso.medicamentosUsado;
+  if (FILIALES_PROXIMAMENTE.includes(activeFilial)) {
+    content = <ProximamenteBloque nombre={activeFilial} />;
+  } else if (activeFilial === "Seguros") {
     content = (
       <>
-        {products.map((p) => (
-          <ProductCard
-            key={p.key}
-            icon={p.icon}
-            title={p.label}
-            sub={p.plan}
-            badge={<EstadoBadge estado={p.noContratado ? "No contratado" : "Activo"} />}
-            lines={p.noContratado ? [] : [
-              ["Vigencia", p.renovacion || "—"],
-              ["Balance pendiente", `RD$${(p.montoPendiente || 0).toLocaleString("es-DO")}`],
-            ]}
-            onClick={() => (p.noContratado ? openCotizar(p.key) : openProduct(p.key))}
-          />
-        ))}
-        <ProductCard
-          icon="heart"
-          title="ARS"
-          sub={PLAN_BASICO_SALUD.nombre}
-          badge={<EstadoBadge estado="Activo" />}
-          lines={[["Disponible medicamentos", `RD$${arsDisponible.toLocaleString("es-DO")} de RD$${PLAN_BASICO_SALUD.coberturaMedicamentos.toLocaleString("es-DO")}`]]}
-          onClick={() => openAfiliadoDetalle(TITULAR_NOMBRE, "ars")}
-        />
-        <ProductCard
-          icon="shieldplus"
-          title="UNIT"
-          sub="Nueva solución de Grupo Universal"
-          badge={<EstadoBadge estado="Próximamente" />}
-          lines={[]}
-          onClick={() => openProximamente("UNIT")}
-        />
+        <SectionLabel>Accesos rápidos</SectionLabel>
+        <QuickActionsRow items={[
+          ["refresh", "Renovación", openRenovaciones],
+          ["filedesc", "Endosar póliza", openEndosarPoliza],
+          ["creditcard", "Pago", openPagoPolizas],
+          ["alerttriangle", "Reclamo", openReclamo],
+        ]} />
+        <SectionLabel>Mis pólizas</SectionLabel>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(2,minmax(0,1fr))", gap: 10 }}>
+          {products.map((p) => (
+            <Tile
+              key={p.key}
+              product={p}
+              onClick={() => (p.noContratado ? openCotizar(p.key) : openProduct(p.key))}
+              onCotizar={openCotizar}
+            />
+          ))}
+        </div>
       </>
     );
-  } else if (activePilar === "financieras") {
+  } else if (activeFilial === "AFI") {
     content = (
       <>
-        {FONDOS.map((f) => (
-          <ProductCard
-            key={f.key}
-            icon="chart"
-            title={f.name}
-            sub={f.perfilRiesgo}
-            badge={<EstadoBadge estado={f.invertido ? "Activo" : "Sin inversión"} />}
-            lines={f.invertido
-              ? [["Saldo", `RD$${f.saldo.toLocaleString("es-DO")}`], ["Rendimiento anual", f.rendimientoAnual]]
-              : [["Rendimiento anual", f.rendimientoAnual], ["Monto mínimo", `RD$${f.montoMinimo.toLocaleString("es-DO")}`]]}
-            onClick={() => openFondoDetalle(f.key)}
-          />
-        ))}
+        <SectionLabel>Accesos rápidos</SectionLabel>
+        <QuickActionsRow items={[
+          ["arrowdown", "Solicitar rescate", () => openFondo("rescate")],
+          ["arrowup", "Notificar aporte", () => openFondo("aporte")],
+        ]} />
+        <SectionLabel>Fondos</SectionLabel>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(2,minmax(0,1fr))", gap: 10 }}>
+          {FONDOS.map((f) => (
+            <div key={f.key} onClick={() => openFondoDetalle(f.key)} className={"tile" + (f.invertido ? "" : " off")}>
+              <Icon name="chart" size={18} color={f.invertido ? "var(--accent)" : "var(--text-muted)"} />
+              <div className="l">{f.name}</div>
+              <div className="s">{f.invertido ? `Saldo: RD$ ${f.saldo.toLocaleString("es-DO")}` : "Sin inversión"}</div>
+            </div>
+          ))}
+        </div>
+      </>
+    );
+  } else if (activeFilial === "Fiduciaria") {
+    content = (
+      <>
+        <SectionLabel>Accesos rápidos</SectionLabel>
+        <QuickActionsRow items={[["receipt", "Estado de cuenta", openEstadoCuenta]]} />
+        <SectionLabel>Mis proyectos</SectionLabel>
         {PROYECTOS.map((p) => (
-          <ProductCard
-            key={p.name}
-            icon="building"
-            title={p.name}
-            sub="Fiduciaria"
-            lines={p.rows}
-            onClick={() => openInfo("Fiduciaria", p.name)}
-          />
+          <Row key={p.name} icon="building" label={p.name} onClick={() => openInfo("Fiduciaria", p.name)} />
+        ))}
+      </>
+    );
+  } else if (activeFilial === "ARS") {
+    content = (
+      <>
+        <SectionLabel>Accesos rápidos</SectionLabel>
+        <QuickActionsRow items={[
+          ["shieldplus", "Coberturas del PDSS", () => openCoberturasDetalle("PDSS")],
+          ["network", "Solicitar traspaso", openArsTraspaso],
+        ]} />
+        <SectionLabel>Consulta de afiliados</SectionLabel>
+        {[TITULAR_NOMBRE, ...dependientes].map((d) => (
+          <Row key={d} icon="user" label={d} onClick={() => openAfiliadoDetalle(d, "ars")} />
         ))}
       </>
     );
   } else {
     content = (
       <>
-        {asistenciaProducts.map((p) => (
-          <ProductCard
-            key={p.key}
-            icon={p.icon}
-            title={p.label}
-            sub={p.noContratado ? undefined : "Asistencia"}
-            badge={<EstadoBadge estado={p.noContratado ? "No contratado" : "Activo"} />}
-            lines={p.noContratado ? [] : (ASISTENCIA_INFO[p.key] || []).filter(([k]) => k !== "Estado")}
-            onClick={() => (p.noContratado ? openCotizar(p.key) : openInfo("Asistencia", p.key))}
-          />
-        ))}
-        <ProductCard
-          icon="car"
-          title="Autonovo"
-          sub="Nueva solución de Grupo Universal"
-          badge={<EstadoBadge estado="Próximamente" />}
-          lines={[]}
-          onClick={() => openProximamente("Autonovo")}
-        />
+        <SectionLabel>Accesos rápidos</SectionLabel>
+        <QuickActionsRow items={[
+          ["car", "Asistencia vehicular", () => openAsistenciaSolicitud("vehicular")],
+          ["home", "Asistencia de hogar", () => openAsistenciaSolicitud("hogar")],
+        ]} />
+        <SectionLabel>Mis asistencias</SectionLabel>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(2,minmax(0,1fr))", gap: 10 }}>
+          {asistenciaProducts.map((p) => (
+            <Tile
+              key={p.key}
+              product={p}
+              onClick={() => (p.noContratado ? openCotizar(p.key) : openInfo("Asistencia", p.key))}
+            />
+          ))}
+        </div>
       </>
     );
   }
 
-  const destacados = [
-    ["car", "Asistencia vehicular", () => openAsistenciaSolicitud("vehicular")],
-    ["search", "Mercado digital", () => openStub("Mercado digital")],
-    ["arrowup", "Aporte a fondo", () => openFondo("aporte")],
-    ["arrowdown", "Retiro de fondo", () => openFondo("rescate")],
-    ["receipt", "Reembolsos", openReembolsos],
-    ["stethoscope", "Autorizaciones médicas", openAutorizaciones],
-    ["refresh", "Renovación", openRenovaciones],
-    ["filedesc", "Endosar póliza", openEndosarPoliza],
-    ["creditcard", "Pago de pólizas", openPagoPolizas],
-    ["alerttriangle", "Reclamo", openReclamo],
-    ["shieldplus", "Coberturas del PDSS", () => openCoberturasDetalle("PDSS")],
-    ["network", "Traspaso de ARS", openArsTraspaso],
-    ["home", "Asistencia de hogar", () => openAsistenciaSolicitud("hogar")],
-    ["bank", "Estado de cuenta", openEstadoCuenta],
-  ];
-
   return (
     <>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", margin: "2px 0 12px" }}>
-        <span className="greeting-name">¡Hola {TITULAR_NOMBRE.split(" ")[0]}!</span>
-        <span onClick={() => goTab("cuenta")} style={{ cursor: "pointer", color: "var(--navy)" }}>
-          <Icon name="list" size={22} />
-        </span>
-      </div>
-
-      <div className="pilar-tabs-wrap">
-        <SegmentedTabs
-          items={PILARES.map((p) => ({ key: p.key, label: p.label }))}
-          activeKey={activePilar}
-          onChange={setPilar}
-        />
-      </div>
-
-      <SectionLabel>Novedades</SectionLabel>
+      <LogoLockup size={28} className="home-logo" />
+      <div className="greeting-name" style={{ margin: "6px 0 12px" }}>{TITULAR_NOMBRE}</div>
       <AdsStrip ads={ANUNCIOS} onSelect={openStub} />
-
-      <SectionLabel>Mis productos</SectionLabel>
-      <SegmentedTabs
-        items={PILARES.map((p) => ({ key: p.key, label: p.misLabel }))}
-        activeKey={activePilar}
-        onChange={setPilar}
-        size="small"
-      />
-      {content}
-
-      <SectionLabel>Destacados</SectionLabel>
-      <QuickActionsRow items={destacados} />
-
-      <SectionLabel>Tienda en línea</SectionLabel>
-      <div className="card">
-        <div style={{ fontWeight: 600, fontSize: 14 }}>Solicitar productos</div>
-        <div style={{ fontSize: 12.5, color: "var(--muted)", marginTop: 6 }}>
-          Nuestros especialistas están listos para ayudarte a encontrar el producto que necesitas.
-        </div>
-        <button className="solid" onClick={() => openStub("Tienda en línea")} style={{ width: "100%", marginTop: 12 }}>Ir a la tienda</button>
+      <div className="toptabs">
+        {PILARES.map((p) => (
+          <FilialTab key={p.key} icon={p.icon} label={p.short} on={p.key === activePilar} onClick={() => setPilar(p.key)} />
+        ))}
       </div>
+      <div style={{ fontSize: 13, fontWeight: 600, color: "var(--navy)", marginBottom: 8 }}>
+        {PILARES.find((p) => p.key === activePilar).label}
+      </div>
+      <div className="subfilial-row">
+        {filialesDelPilar.map(([label, icon]) => (
+          <FilialSubTab
+            key={label}
+            icon={icon}
+            label={label}
+            on={label === activeFilial}
+            soon={FILIALES_PROXIMAMENTE.includes(label)}
+            onClick={() => setFilial(label)}
+          />
+        ))}
+      </div>
+      {content}
     </>
   );
 }

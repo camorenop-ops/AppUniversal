@@ -13,7 +13,7 @@ import {
   AgregarCoberturaScreen, CoberturaAgregadaScreen,
 } from "./screens/TramitesFlows";
 import {
-  ChatScreen, ProximamenteScreen, MapaCentrosScreen, RedMedicaScreen, TelemedicinaScreen, TelemedicinaConfirmadaScreen,
+  ChatScreen, MapaCentrosScreen, RedMedicaScreen, TelemedicinaScreen, TelemedicinaConfirmadaScreen,
   FondoScreen, FondoDetalleScreen, EstadoCuentaScreen, CarnetScreen, CarnetBienScreen, StubScreen, InfoScreen,
 } from "./screens/MiscScreens";
 import {
@@ -81,8 +81,6 @@ export function Router() {
       return <CarnetBienScreen productKey={current.key} />;
     case "stub":
       return <StubScreen title={current.title} />;
-    case "proximamente":
-      return <ProximamenteScreen nombre={current.nombre} />;
     case "info":
       return <InfoScreen title={current.title} icon={current.icon} name={current.name} rows={current.rows} sectionKind={current.sectionKind} />;
     case "chat":

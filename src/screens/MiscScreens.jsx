@@ -27,30 +27,6 @@ export function ChatScreen() {
   );
 }
 
-export function ProximamenteScreen({ nombre }) {
-  const [avisar, setAvisar] = useState(false);
-  return (
-    <>
-      <BackHeader title={nombre} />
-      <div style={{ textAlign: "center", padding: "40px 12px" }}>
-        <Icon name="sparkles" size={30} color="var(--accent)" />
-        <div style={{ fontSize: 16, fontWeight: 600, marginTop: 14 }}>{nombre} llega pronto</div>
-        <div style={{ fontSize: 13, color: "var(--muted)", marginTop: 6, maxWidth: 280, marginLeft: "auto", marginRight: "auto" }}>
-          Estamos preparando esta nueva solución de Grupo Universal. Muy pronto podrás acceder a sus servicios desde aquí.
-        </div>
-        <button
-          className={avisar ? "" : "solid"}
-          onClick={() => setAvisar(true)}
-          disabled={avisar}
-          style={{ marginTop: 20, width: "100%", maxWidth: 280 }}
-        >
-          {avisar ? "✓ Te avisaremos cuando esté disponible" : "Notificarme cuando esté disponible"}
-        </button>
-      </div>
-    </>
-  );
-}
-
 export function MapaCentrosScreen() {
   const { openStub } = useApp();
   return (
