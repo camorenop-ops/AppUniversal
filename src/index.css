@@ -261,11 +261,6 @@ button.solid {
   align-items: center;
   justify-content: space-between;
 }
-.tile-top-actions {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-}
 .tile-cart {
   display: flex;
   cursor: pointer;

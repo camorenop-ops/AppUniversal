@@ -137,14 +137,12 @@ export function Tile({ product, onClick, onCotizar }) {
     <div onClick={onClick} className={"tile" + (off ? " off" : "")}>
       <div className="tile-top">
         <Icon name={product.icon} size={20} color={off ? "var(--text-muted)" : "var(--accent)"} />
-        <div className="tile-top-actions">
-          {onCotizar && (
-            <span onClick={(e) => { e.stopPropagation(); onCotizar(product.key); }} className="tile-cart">
-              <Icon name="cart" size={15} color="var(--text-muted)" />
-            </span>
-          )}
-          <Icon name="chevronright" size={14} color="var(--text-muted)" />
-        </div>
+        <Icon name="chevronright" size={18} color="var(--text-muted)" />
+        {onCotizar && (
+          <span onClick={(e) => { e.stopPropagation(); onCotizar(product.key); }} className="tile-cart">
+            <Icon name="cart" size={15} color="var(--text-muted)" />
+          </span>
+        )}
       </div>
       <div className="l">{product.label}</div>
       <div className="s">{product.sub}</div>
