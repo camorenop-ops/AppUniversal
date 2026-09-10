@@ -23,7 +23,7 @@ export function PagoSeleccionScreen() {
             key={p.key}
             onClick={() => toggleSeleccionPago(p.key)}
             className="card"
-            style={{ marginBottom: 8, cursor: "pointer", display: "flex", alignItems: "center", gap: 10, background: on ? "var(--ice)" : "#fff", borderColor: on ? "var(--accent)" : "var(--border)" }}
+            style={{ marginBottom: 8, cursor: "pointer", display: "flex", alignItems: "center", gap: 10, background: on ? "var(--ice)" : "var(--surface)", borderColor: on ? "var(--accent)" : "var(--border)" }}
           >
             <Icon name={on ? "circlecheck" : "circle"} size={20} color={on ? "var(--accent)" : "var(--text-muted)"} />
             <div style={{ flex: 1 }}>

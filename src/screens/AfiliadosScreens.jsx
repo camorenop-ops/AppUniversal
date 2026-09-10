@@ -94,7 +94,7 @@ export function ProgramaSaludDetalleScreen() {
       <BackHeader title={prog.nombre} />
       <div style={{ fontSize: 13, color: "var(--muted)", marginBottom: 14 }}>{prog.resumen}</div>
       {!elegible && (
-        <div className="card" style={{ marginBottom: 14, background: "#EEF1F6" }}>
+        <div className="card" style={{ marginBottom: 14, background: "var(--surface-alt)" }}>
           <div style={{ fontSize: 12.5, color: "var(--muted)" }}>
             {prog.elegibilidad.edadMinima != null && `Este programa aplica a partir de los ${prog.elegibilidad.edadMinima} años. `}
             {prog.elegibilidad.edadMaxima != null && `Este programa aplica hasta los ${prog.elegibilidad.edadMaxima} años.`}
