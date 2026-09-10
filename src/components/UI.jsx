@@ -137,27 +137,25 @@ export function Tile({ product, onClick, onCotizar }) {
     <div onClick={onClick} className={"tile" + (off ? " off" : "")}>
       <div className="tile-top">
         <Icon name={product.icon} size={20} color={off ? "var(--text-muted)" : "var(--accent)"} />
-        <Icon name="chevronright" size={14} color="var(--text-muted)" />
+        <Icon name="chevronright" size={18} color="var(--text-muted)" />
+        {onCotizar && (
+          <span onClick={(e) => { e.stopPropagation(); onCotizar(product.key); }} className="tile-cart">
+            <Icon name="cart" size={15} color="var(--text-muted)" />
+          </span>
+        )}
       </div>
       <div className="l">{product.label}</div>
       <div className="s">{product.sub}</div>
-      {onCotizar && (
-        <div
-          onClick={(e) => { e.stopPropagation(); onCotizar(product.key); }}
-          className="cotizar-row"
-        >
-          <Icon name="cart" size={13} color="var(--accent)" />
-          <span>Cotizar</span>
-        </div>
-      )}
     </div>
   );
 }
 
-export function QuickAction({ icon, label, onClick }) {
+export function QuickAction({ icon, label, onClick, color }) {
   return (
     <div onClick={onClick} className="qa-item">
-      <div className="qa-icon"><Icon name={icon} size={19} color="var(--accent)" /></div>
+      <div className="qa-icon" style={color ? { background: color + "1F" } : undefined}>
+        <Icon name={icon} size={19} color={color || "var(--accent)"} />
+      </div>
       <div className="qa-label">{label}</div>
     </div>
   );
@@ -166,7 +164,7 @@ export function QuickAction({ icon, label, onClick }) {
 export function QuickActionsRow({ items }) {
   return (
     <div className="qa-row">
-      {items.map((it, i) => <QuickAction key={i} icon={it[0]} label={it[1]} onClick={it[2]} />)}
+      {items.map((it, i) => <QuickAction key={i} icon={it[0]} label={it[1]} onClick={it[2]} color={it[3]} />)}
     </div>
   );
 }

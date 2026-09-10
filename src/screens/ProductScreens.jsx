@@ -21,12 +21,12 @@ export function SaludScreen() {
       <div style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 4 }}>Contrato: {contrato}</div>
       <SectionLabel>Accesos rápidos</SectionLabel>
       <QuickActionsRow items={[
-        ["receipt", "Reembolsos", openReembolsos],
-        ["network", "Red médica", openRedMedica],
-        ["stethoscope", "Autorizaciones", openAutorizaciones],
-        ["creditcard", "Carnet", openCarnet],
-        ["replace", "Cambiar de plan", openCambioPlan],
-        ["plus", "Agregar cobertura", openAgregarCobertura],
+        ["receipt", "Reembolsos", openReembolsos, "#2F6FE4"],
+        ["network", "Red médica", openRedMedica, "#0EA5A5"],
+        ["stethoscope", "Autorizaciones", openAutorizaciones, "#7C5CFC"],
+        ["creditcard", "Carnet", openCarnet, "#1F9254"],
+        ["replace", "Cambiar de plan", openCambioPlan, "#E8871E"],
+        ["plus", "Agregar cobertura", openAgregarCobertura, "#0EA5A5"],
       ]} />
       <SectionLabel>Consulta de afiliados</SectionLabel>
       {[titular, ...dependientes].map((d) => (
@@ -50,8 +50,8 @@ export function AutoScreen() {
       <div style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 8 }}>Contrato: {contrato}</div>
       <SectionLabel>Accesos rápidos</SectionLabel>
       <QuickActionsRow items={[
-        ["phone", "Solicitar asistencia", () => openAsistenciaSolicitud("vehicular")],
-        ["creditcard", "Carnet", () => openCarnetBien("auto")],
+        ["phone", "Solicitar asistencia", () => openAsistenciaSolicitud("vehicular"), "#E5484D"],
+        ["creditcard", "Carnet", () => openCarnetBien("auto"), "#1F9254"],
       ]} />
       <SectionLabel>Vehículos asegurados</SectionLabel>
       {ap.vehiculos.map((v, i) => (

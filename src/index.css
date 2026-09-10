@@ -261,6 +261,10 @@ button.solid {
   align-items: center;
   justify-content: space-between;
 }
+.tile-cart {
+  display: flex;
+  cursor: pointer;
+}
 .tile .l {
   font-weight: 600;
   font-size: 14px;
@@ -272,21 +276,6 @@ button.solid {
 }
 .tile.off .s {
   font-style: italic;
-}
-.cotizar-row {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  margin: 8px -12px -12px;
-  padding: 7px 12px;
-  border-top: 1px solid var(--border);
-  background: var(--ice);
-  border-radius: 0 0 11px 11px;
-}
-.cotizar-row span {
-  font-size: 10.5px;
-  font-weight: 700;
-  color: var(--accent);
 }
 .card {
   background: var(--surface);
@@ -727,7 +716,6 @@ body.standalone #navbar { padding-bottom: env(safe-area-inset-bottom); }
   .filial-tab { font-size: 13px; min-width: 80px; padding: 14px 16px; }
   .tile .l { font-size: 16px; }
   .tile .s { font-size: 13px; }
-  .cotizar-row span { font-size: 11.5px; }
   .badge-active { font-size: 12px; padding: 4px 11px; }
   button { font-size: 15px; padding: 13px; }
   .ad-card .tag { font-size: 10.5px; }
@@ -751,7 +739,6 @@ body.standalone .pill, body.standalone .chip { font-size: 13px; padding: 7px 13p
 body.standalone .filial-tab { font-size: 13px; min-width: 80px; padding: 14px 16px; }
 body.standalone .tile .l { font-size: 16px; }
 body.standalone .tile .s { font-size: 13px; }
-body.standalone .cotizar-row span { font-size: 11.5px; }
 body.standalone .badge-active { font-size: 12px; padding: 4px 11px; }
 body.standalone button { font-size: 15px; padding: 13px; }
 body.standalone .ad-card .tag { font-size: 10.5px; }

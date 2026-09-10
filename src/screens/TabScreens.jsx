@@ -31,10 +31,12 @@ export function HomeTab() {
       <>
         <SectionLabel>Accesos rápidos</SectionLabel>
         <QuickActionsRow items={[
-          ["refresh", "Renovación", openRenovaciones],
-          ["filedesc", "Endosar póliza", openEndosarPoliza],
-          ["creditcard", "Pago", openPagoPolizas],
-          ["alerttriangle", "Reclamo", openReclamo],
+          ["car", "Grúa 24/7", () => openAsistenciaSolicitud("vehicular"), "#E5484D"],
+          ["network", "Red médica", openRedMedica, "#0EA5A5"],
+          ["refresh", "Renovación", openRenovaciones, "#2F6FE4"],
+          ["filedesc", "Endosar póliza", openEndosarPoliza, "#7C5CFC"],
+          ["creditcard", "Pago", openPagoPolizas, "#1F9254"],
+          ["alerttriangle", "Reclamo", openReclamo, "#E5484D"],
         ]} />
         <SectionLabel>Mis pólizas</SectionLabel>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(2,minmax(0,1fr))", gap: 10 }}>
@@ -54,8 +56,8 @@ export function HomeTab() {
       <>
         <SectionLabel>Accesos rápidos</SectionLabel>
         <QuickActionsRow items={[
-          ["arrowdown", "Solicitar rescate", () => openFondo("rescate")],
-          ["arrowup", "Notificar aporte", () => openFondo("aporte")],
+          ["arrowdown", "Solicitar rescate", () => openFondo("rescate"), "#E8871E"],
+          ["arrowup", "Notificar aporte", () => openFondo("aporte"), "#1F9254"],
         ]} />
         <SectionLabel>Fondos</SectionLabel>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(2,minmax(0,1fr))", gap: 10 }}>
@@ -74,7 +76,7 @@ export function HomeTab() {
     content = (
       <>
         <SectionLabel>Accesos rápidos</SectionLabel>
-        <QuickActionsRow items={[["receipt", "Estado de cuenta", openEstadoCuenta]]} />
+        <QuickActionsRow items={[["receipt", "Estado de cuenta", openEstadoCuenta, "#2F6FE4"]]} />
         <SectionLabel>Mis proyectos</SectionLabel>
         {proyectos.length === 0 && <div style={{ fontSize: 12.5, color: "var(--text-muted)" }}>No tienes proyectos con Fiduciaria.</div>}
         {proyectos.map((p) => (
@@ -87,8 +89,8 @@ export function HomeTab() {
       <>
         <SectionLabel>Accesos rápidos</SectionLabel>
         <QuickActionsRow items={[
-          ["shieldplus", "Coberturas del PDSS", () => openCoberturasDetalle("PDSS")],
-          ["network", "Solicitar traspaso", openArsTraspaso],
+          ["shieldplus", "Coberturas del PDSS", () => openCoberturasDetalle("PDSS"), "#0EA5A5"],
+          ["network", "Solicitar traspaso", openArsTraspaso, "#7C5CFC"],
         ]} />
         <SectionLabel>Consulta de afiliados</SectionLabel>
         {[titular, ...dependientes].map((d) => (
@@ -101,8 +103,8 @@ export function HomeTab() {
       <>
         <SectionLabel>Accesos rápidos</SectionLabel>
         <QuickActionsRow items={[
-          ["car", "Asistencia vehicular", () => openAsistenciaSolicitud("vehicular")],
-          ["home", "Asistencia de hogar", () => openAsistenciaSolicitud("hogar")],
+          ["car", "Asistencia vehicular", () => openAsistenciaSolicitud("vehicular"), "#E5484D"],
+          ["home", "Asistencia de hogar", () => openAsistenciaSolicitud("hogar"), "#E8871E"],
         ]} />
         <SectionLabel>Mis asistencias</SectionLabel>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(2,minmax(0,1fr))", gap: 10 }}>
@@ -143,13 +145,6 @@ export function HomeTab() {
           <span onClick={() => openAsistenciaSolicitud("vehicular")} className="home-header-sos">SOS</span>
         </div>
       </div>
-      <SectionLabel>Accesos rápidos</SectionLabel>
-      <QuickActionsRow items={[
-        ["car", "Grúa 24/7", () => openAsistenciaSolicitud("vehicular")],
-        ["network", "Red médica", openRedMedica],
-        ["alerttriangle", "Reclamos", openReclamo],
-        ["creditcard", "Pagar", openPagoPolizas],
-      ]} />
       <div className="toptabs">
         {FILIALES.map(([label, icon]) => (
           <FilialTab key={label} icon={icon} label={label} on={label === activeFilial} onClick={() => setFilial(label)} />
