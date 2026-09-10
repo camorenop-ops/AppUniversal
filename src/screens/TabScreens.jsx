@@ -1,5 +1,5 @@
 import { useApp } from "../context/AppContext";
-import { LogoLockup, Icon } from "../components/Icon";
+import { Icon } from "../components/Icon";
 import { FilialTab, Row, SectionLabel, Tile, QuickActionsRow } from "../components/UI";
 import { FONDOS, PROYECTOS, TITULAR_NOMBRE } from "../data/data";
 
@@ -14,13 +14,16 @@ const FILIALES = [
   ["Administraciones", "building"],
 ];
 
+const NOMBRE_CORTO = TITULAR_NOMBRE.split(" ").filter((_, i) => i === 0 || i === 2).join(" ");
+const INICIALES = NOMBRE_CORTO.split(" ").map((w) => w[0]).join("");
+
 export function HomeTab() {
   const {
-    activeFilial, setFilial,
+    activeFilial, setFilial, goTab,
     products, asistenciaProducts, dependientes,
     openProduct, openCotizar, openFondo, openFondoDetalle, openEstadoCuenta, openInfo,
     openRenovaciones, openEndosarPoliza, openPagoPolizas, openReclamo, openAfiliadoDetalle,
-    openCoberturasDetalle, openArsTraspaso, openAsistenciaSolicitud,
+    openCoberturasDetalle, openArsTraspaso, openAsistenciaSolicitud, openRedMedica,
   } = useApp();
 
   let content;
@@ -126,8 +129,26 @@ export function HomeTab() {
 
   return (
     <>
-      <LogoLockup size={28} className="home-logo" />
-      <div className="greeting-name" style={{ margin: "6px 0 12px" }}>{TITULAR_NOMBRE}</div>
+      <div className="home-header">
+        <div className="home-header-user">
+          <div className="home-avatar">{INICIALES}</div>
+          <div>
+            <div className="home-header-hello">Bienvenido</div>
+            <div className="home-header-name">{NOMBRE_CORTO}</div>
+          </div>
+        </div>
+        <div className="home-header-actions">
+          <span onClick={() => goTab("notif")} className="home-header-bell"><Icon name="bell" size={18} color="#fff" /></span>
+          <span onClick={() => openAsistenciaSolicitud("vehicular")} className="home-header-sos">SOS</span>
+        </div>
+      </div>
+      <SectionLabel>Accesos rápidos</SectionLabel>
+      <QuickActionsRow items={[
+        ["car", "Grúa 24/7", () => openAsistenciaSolicitud("vehicular")],
+        ["alerttriangle", "Reclamos", openReclamo],
+        ["creditcard", "Pagar", openPagoPolizas],
+        ["network", "Red médica", openRedMedica],
+      ]} />
       <div className="toptabs">
         {FILIALES.map(([label, icon]) => (
           <FilialTab key={label} icon={icon} label={label} on={label === activeFilial} onClick={() => setFilial(label)} />
