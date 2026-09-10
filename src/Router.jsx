@@ -32,6 +32,10 @@ import {
 } from "./screens/ArsTraspasoScreens";
 import { AsistenciaSolicitudScreen, AsistenciaSolicitudEnviadaScreen } from "./screens/AsistenciaSolicitudScreens";
 import { EvaluacionCuestionarioScreen, EvaluacionCitaScreen, EvaluacionConfirmadaScreen } from "./screens/EvaluacionProgramaScreens";
+import {
+  MetodosPagoScreen, AgregarTarjetaScreen, TarjetaAgregadaScreen,
+  AgregarDebitoDestinoScreen, AgregarDebitoDetalleScreen, DebitoRegistradoScreen,
+} from "./screens/MetodosPagoScreens";
 
 export function Router() {
   const { current } = useApp();
@@ -169,6 +173,18 @@ export function Router() {
       return <AsistenciaSolicitudScreen />;
     case "asistenciaSolicitudEnviada":
       return <AsistenciaSolicitudEnviadaScreen />;
+    case "metodosPago":
+      return <MetodosPagoScreen />;
+    case "agregarTarjeta":
+      return <AgregarTarjetaScreen />;
+    case "tarjetaAgregada":
+      return <TarjetaAgregadaScreen />;
+    case "agregarDebito":
+      return <AgregarDebitoDestinoScreen />;
+    case "agregarDebitoDetalle":
+      return <AgregarDebitoDetalleScreen />;
+    case "debitoRegistrado":
+      return <DebitoRegistradoScreen />;
     default:
       return null;
   }

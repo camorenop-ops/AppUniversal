@@ -53,7 +53,7 @@ export function AutoScreen() {
         ["phone", "Solicitar asistencia", () => openAsistenciaSolicitud("vehicular")],
         ["creditcard", "Carnet", () => openCarnetBien("auto")],
       ]} />
-      <SectionLabel>Vehículos asegurados ({ap.vehiculos.length} de 4)</SectionLabel>
+      <SectionLabel>Vehículos asegurados</SectionLabel>
       {ap.vehiculos.map((v, i) => (
         <div className="card" style={{ marginBottom: 8 }} key={i}>
           <Icon name="car" size={22} color="var(--accent)" />

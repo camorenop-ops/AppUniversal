@@ -46,7 +46,7 @@ export function PagoSeleccionScreen() {
 }
 
 export function PagoMetodoScreen() {
-  const { products, pagoPolizasForm, setMetodoPagoPolizas, confirmarPagoPolizas } = useApp();
+  const { products, pagoPolizasForm, tarjetas, setMetodoPagoPolizas, confirmarPagoPolizas } = useApp();
   const seleccionadas = products.filter((p) => pagoPolizasForm.seleccion.includes(p.key));
   const total = seleccionadas.reduce((sum, p) => sum + p.montoPendiente, 0);
   const metodo = pagoPolizasForm.metodo;
@@ -59,7 +59,15 @@ export function PagoMetodoScreen() {
         <div style={{ fontSize: 22, fontWeight: 600, color: "var(--accent)" }}>RD$ {total.toLocaleString("es-DO")}</div>
       </div>
       <div style={{ fontSize: 13, color: "var(--muted)", marginBottom: 8 }}>Selecciona tu método de pago</div>
-      <MetodoPagoRow icon="creditcard" label="Tarjeta terminada en 4417" on={metodo === "tarjeta"} onClick={() => setMetodoPagoPolizas("tarjeta")} />
+      {tarjetas.map((t) => (
+        <MetodoPagoRow
+          key={t.id}
+          icon="creditcard"
+          label={`${t.marca} terminada en ${t.ultimos4}`}
+          on={metodo === "tarjeta:" + t.id}
+          onClick={() => setMetodoPagoPolizas("tarjeta:" + t.id)}
+        />
+      ))}
       <MetodoPagoRow icon="bank" label="Transferencia bancaria" on={metodo === "transferencia"} onClick={() => setMetodoPagoPolizas("transferencia")} />
       {metodo === "transferencia" && (
         <div className="card" style={{ marginTop: 8, fontSize: 12, color: "var(--muted)", lineHeight: 1.6 }}>
@@ -67,7 +75,7 @@ export function PagoMetodoScreen() {
         </div>
       )}
       <button className="solid" onClick={confirmarPagoPolizas} disabled={!metodo} style={{ width: "100%", marginTop: 14 }}>
-        {metodo === "tarjeta" ? "Confirmar tarjeta y pagar" : metodo === "transferencia" ? "Confirmar transferencia" : "Confirmar y pagar"}
+        {metodo?.startsWith("tarjeta") ? "Confirmar tarjeta y pagar" : metodo === "transferencia" ? "Confirmar transferencia" : "Confirmar y pagar"}
       </button>
     </>
   );

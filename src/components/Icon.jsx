@@ -55,6 +55,7 @@ export const ICONS = {
   mail: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M4 7l8 6 8-6"/>',
   close: '<path d="M6 6l12 12M18 6L6 18"/>',
   cart: '<circle cx="9" cy="21" r="1.4"/><circle cx="18" cy="21" r="1.4"/><path d="M1 1h3l2.4 13.2a2 2 0 0 0 2 1.6h9a2 2 0 0 0 2-1.6L21 6H6"/>',
+  trash: '<path d="M4 7h16"/><path d="M9 7V4h6v3"/><path d="M6 7l1 13a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-13"/><path d="M10 11v6M14 11v6"/>',
 };
 
 export function Icon({ name, size = 18, color = "currentColor", style }) {

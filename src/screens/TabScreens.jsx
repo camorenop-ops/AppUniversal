@@ -233,7 +233,7 @@ export function NotifTab() {
 }
 
 export function CuentaTab() {
-  const { openCarnet, openStub, titular, contrato, afiliadoDesde } = useApp();
+  const { openCarnet, openMetodosPago, openStub, titular, contrato, afiliadoDesde } = useApp();
   return (
     <>
       <div style={{ fontSize: 15, fontWeight: 600, marginBottom: 10 }}>Ficha del afiliado</div>
@@ -243,6 +243,7 @@ export function CuentaTab() {
         <div style={{ fontSize: 12, color: "var(--muted)" }}>Afiliado desde: {afiliadoDesde}</div>
       </div>
       <Row icon="creditcard" label="Mis carnets" onClick={openCarnet} />
+      <Row icon="cash" label="Métodos de pago" onClick={openMetodosPago} />
       <Row icon="user" label="Datos personales" onClick={() => openStub("Datos personales")} />
       <Row icon="lock" label="Seguridad" onClick={() => openStub("Seguridad")} />
       <Row icon="bell" label="Preferencias de notificación" onClick={() => openStub("Preferencias de notificación")} />
