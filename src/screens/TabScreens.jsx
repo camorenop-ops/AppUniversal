@@ -1,8 +1,7 @@
-import { useRef, useState } from "react";
 import { useApp } from "../context/AppContext";
 import { LogoLockup, Icon } from "../components/Icon";
 import { FilialTab, Row, SectionLabel, Tile, QuickActionsRow } from "../components/UI";
-import { FONDOS, PROYECTOS, ANUNCIOS, TITULAR_NOMBRE, GRUPOS_SOLUCION } from "../data/data";
+import { FONDOS, PROYECTOS, TITULAR_NOMBRE } from "../data/data";
 
 const FILIALES = [
   ["Seguros", "shield"],
@@ -15,73 +14,14 @@ const FILIALES = [
   ["Administraciones", "building"],
 ];
 
-function HeroSelector({ onSelect, onElegirGrupo }) {
-  const [idx, setIdx] = useState(0);
-  const trackRef = useRef(null);
-
-  function handleScroll(e) {
-    const w = e.currentTarget.clientWidth || 1;
-    setIdx(Math.round(e.currentTarget.scrollLeft / w));
-  }
-
-  return (
-    <div className="hero-selector">
-      <div className="hero-track" ref={trackRef} onScroll={handleScroll}>
-        {ANUNCIOS.map((a, i) => (
-          <div key={i} className="hero-slide" onClick={() => onSelect(a.t)}>
-            {a.img && a.fit === "contain" ? (
-              <>
-                <div className="hero-slide-bg" style={{ backgroundImage: `url(${a.img})` }} />
-                <div className="hero-slide-fg" style={{ backgroundImage: `url(${a.img})` }} />
-              </>
-            ) : (
-              <div
-                className="hero-slide-cover"
-                style={a.img ? { backgroundImage: `url(${a.img})` } : { background: "linear-gradient(135deg,var(--navy),var(--accent))" }}
-              />
-            )}
-          </div>
-        ))}
-      </div>
-      <div className="hero-scrim-top" />
-      <div className="hero-scrim-bottom" />
-      <div className="hero-top">
-        <LogoLockup size={26} className="home-logo" />
-        <div className="hero-greeting">{TITULAR_NOMBRE}</div>
-      </div>
-      <div className="hero-bottom">
-        <div className="hero-dots">
-          {ANUNCIOS.map((_, i) => <span key={i} className={"dot" + (i === idx ? " on" : "")} />)}
-        </div>
-        <div className="hero-label">Elige tu solución</div>
-        <div className="grupo-grid">
-          {GRUPOS_SOLUCION.map((g) => (
-            <div key={g.key} className="grupo-card" onClick={() => onElegirGrupo(g.key)}>
-              <div className="grupo-icon"><Icon name={g.icon} size={42} color="#fff" /></div>
-              <div className="grupo-label">{g.label}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
 export function HomeTab() {
   const {
-    activeFilial, setFilial, activeGrupo, elegirGrupo, volverASelectorGrupos,
+    activeFilial, setFilial,
     products, asistenciaProducts, dependientes,
-    openProduct, openCotizar, openFondo, openFondoDetalle, openEstadoCuenta, openInfo, openStub,
+    openProduct, openCotizar, openFondo, openFondoDetalle, openEstadoCuenta, openInfo,
     openRenovaciones, openEndosarPoliza, openPagoPolizas, openReclamo, openAfiliadoDetalle,
     openCoberturasDetalle, openArsTraspaso, openAsistenciaSolicitud,
   } = useApp();
-
-  if (!activeGrupo) {
-    return <HeroSelector onSelect={openStub} onElegirGrupo={elegirGrupo} />;
-  }
-
-  const grupo = GRUPOS_SOLUCION.find((g) => g.key === activeGrupo);
-  const filialesGrupo = FILIALES.filter(([label]) => grupo.filiales.includes(label));
 
   let content;
   if (activeFilial === "Seguros") {
@@ -186,17 +126,13 @@ export function HomeTab() {
 
   return (
     <>
-      <div className="grupo-back-row" onClick={volverASelectorGrupos}>
-        <Icon name="arrowleft" size={16} />
-        <span>{grupo.label}</span>
+      <LogoLockup size={28} className="home-logo" />
+      <div className="greeting-name" style={{ margin: "6px 0 12px" }}>{TITULAR_NOMBRE}</div>
+      <div className="toptabs">
+        {FILIALES.map(([label, icon]) => (
+          <FilialTab key={label} icon={icon} label={label} on={label === activeFilial} onClick={() => setFilial(label)} />
+        ))}
       </div>
-      {filialesGrupo.length > 1 && (
-        <div className="toptabs">
-          {filialesGrupo.map(([label, icon]) => (
-            <FilialTab key={label} icon={icon} label={label} on={label === activeFilial} onClick={() => setFilial(label)} />
-          ))}
-        </div>
-      )}
       {content}
     </>
   );
