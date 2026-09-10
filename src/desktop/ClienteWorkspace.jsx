@@ -290,7 +290,7 @@ function PolizasTab() {
               {p.vehiculos && (
                 <div style={{ marginTop: 10 }}>
                   {p.vehiculos.map((v, i) => (
-                    <div key={i} style={{ fontSize: 13, color: "#1a1f2b", marginTop: i > 0 ? 4 : 0 }}>
+                    <div key={i} style={{ fontSize: 13, color: "var(--text)", marginTop: i > 0 ? 4 : 0 }}>
                       {v.marca} {v.modelo} {v.anio} — placa {v.placa}, color {v.color}
                     </div>
                   ))}
@@ -298,9 +298,9 @@ function PolizasTab() {
               )}
               {(p.renovacion || p.primaActual != null) && (
                 <div style={{ display: "flex", gap: 22, flexWrap: "wrap", marginTop: 12, fontSize: 12.5 }}>
-                  {p.renovacion && <span style={{ color: "var(--muted)" }}>Renovación: <strong style={{ color: "#1a1f2b" }}>{p.renovacion}</strong></span>}
-                  {p.primaActual != null && <span style={{ color: "var(--muted)" }}>Prima vigente: <strong style={{ color: "#1a1f2b" }}>{money(p.primaActual)}</strong></span>}
-                  {p.primaRenovacion != null && <span style={{ color: "var(--muted)" }}>Prima renovación: <strong style={{ color: "#1a1f2b" }}>{money(p.primaRenovacion)}</strong></span>}
+                  {p.renovacion && <span style={{ color: "var(--muted)" }}>Renovación: <strong style={{ color: "var(--text)" }}>{p.renovacion}</strong></span>}
+                  {p.primaActual != null && <span style={{ color: "var(--muted)" }}>Prima vigente: <strong style={{ color: "var(--text)" }}>{money(p.primaActual)}</strong></span>}
+                  {p.primaRenovacion != null && <span style={{ color: "var(--muted)" }}>Prima renovación: <strong style={{ color: "var(--text)" }}>{money(p.primaRenovacion)}</strong></span>}
                   {!!p.montoPendiente && <span style={{ color: "var(--danger)" }}>Pendiente: <strong>{money(p.montoPendiente)}</strong></span>}
                 </div>
               )}

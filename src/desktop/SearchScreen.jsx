@@ -26,7 +26,7 @@ export function SearchScreen({ modo, setModo, query, setQuery, onAbrirCliente, o
         <div className={"agent-tab" + (modo === "intermediario" ? " on" : "")} onClick={() => setModo("intermediario")}>Intermediario</div>
       </div>
 
-      <div style={{ display: "flex", alignItems: "center", gap: 8, border: "1px solid var(--border-strong)", borderRadius: 10, padding: "10px 14px", marginBottom: 20, background: "#fff" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 8, border: "1px solid var(--border-strong)", borderRadius: 10, padding: "10px 14px", marginBottom: 20, background: "var(--surface)" }}>
         <Icon name="search" size={16} color="var(--text-muted)" />
         <input
           autoFocus
