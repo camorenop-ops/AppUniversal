@@ -5,7 +5,7 @@ import { SectionLabel } from "../components/UI";
 import { SearchScreen } from "./SearchScreen";
 import { ClienteWorkspace } from "./ClienteWorkspace";
 import { IntermediarioWorkspace } from "./IntermediarioWorkspace";
-import { PrestadorConsultaView } from "./PrestadorConsultaView";
+import { IdentificarPrestadorForm, PrestadorConsultaView } from "./PrestadorConsultaView";
 import { getClientePorId } from "../data/clientes";
 import { getIntermediarioPorId } from "../data/intermediarios";
 
@@ -87,6 +87,7 @@ export default function DesktopApp() {
   const [modo, setModo] = useState("cliente");
   const [query, setQuery] = useState("");
   const [vista, setVista] = useState({ view: "buscar" });
+  const [prestadorIdentificado, setPrestadorIdentificado] = useState(null);
 
   if (!sesion) {
     return (
@@ -113,6 +114,13 @@ export default function DesktopApp() {
   function abrirIntermediario(id) {
     setVista({ view: "intermediario", id });
   }
+  function cambiarModo(m) {
+    setModo(m);
+    setVista({ view: "buscar" });
+    if (m !== "prestador") {
+      setPrestadorIdentificado(null);
+    }
+  }
 
   const cliente = vista.view === "cliente" ? getClientePorId(vista.id) : null;
   const intermediario = vista.view === "intermediario" ? getIntermediarioPorId(vista.id) : null;
@@ -128,9 +136,9 @@ export default function DesktopApp() {
         <span className="area-badge">{sesion.area}</span>
         <div className="agent-searchbar">
           <div className="agent-scope">
-            <span className={modo === "cliente" ? "on" : ""} onClick={() => setModo("cliente")}>Cliente</span>
-            <span className={modo === "intermediario" ? "on" : ""} onClick={() => setModo("intermediario")}>Intermediario</span>
-            <span className={modo === "prestador" ? "on" : ""} onClick={() => setModo("prestador")}>Prestador</span>
+            <span className={modo === "cliente" ? "on" : ""} onClick={() => cambiarModo("cliente")}>Cliente</span>
+            <span className={modo === "intermediario" ? "on" : ""} onClick={() => cambiarModo("intermediario")}>Intermediario</span>
+            <span className={modo === "prestador" ? "on" : ""} onClick={() => cambiarModo("prestador")}>Prestador</span>
           </div>
           <Icon name="search" size={14} color="rgba(255,255,255,.8)" />
           <input
@@ -153,10 +161,13 @@ export default function DesktopApp() {
       </div>
 
       <div className="agent-main">
-        {vista.view === "buscar" && (
+        {vista.view === "buscar" && modo === "prestador" && !prestadorIdentificado && (
+          <IdentificarPrestadorForm onIdentificar={setPrestadorIdentificado} />
+        )}
+        {vista.view === "buscar" && (modo !== "prestador" || prestadorIdentificado) && (
           <SearchScreen
             modo={modo}
-            setModo={setModo}
+            setModo={cambiarModo}
             query={query}
             setQuery={setQuery}
             onAbrirCliente={abrirCliente}
@@ -169,8 +180,13 @@ export default function DesktopApp() {
         {vista.view === "intermediario" && intermediario && (
           <IntermediarioWorkspace intermediario={intermediario} onAbrirCliente={abrirCliente} onVolver={irABusqueda} />
         )}
-        {vista.view === "prestador" && clientePrestador && (
-          <PrestadorConsultaView cliente={clientePrestador} onVolver={irABusqueda} />
+        {vista.view === "prestador" && clientePrestador && prestadorIdentificado && (
+          <PrestadorConsultaView
+            prestador={prestadorIdentificado}
+            cliente={clientePrestador}
+            onVolver={irABusqueda}
+            onCambiarPrestador={() => { setPrestadorIdentificado(null); setVista({ view: "buscar" }); }}
+          />
         )}
       </div>
     </div>

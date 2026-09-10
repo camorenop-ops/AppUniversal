@@ -275,6 +275,46 @@ export const CLIENTES = [
     estadoCuenta: null,
     traspasoArs: null,
   },
+  {
+    id: "CLI-1009",
+    cedula: "001-1425156-4",
+    nombre: "Nelly Cruceta Feliz",
+    telefono: "809-555-0919",
+    correo: "nelly.cruceta@correo.com",
+    contrato: "03011678-88106",
+    afiliadoDesde: "14/04/2023",
+    intermediarioId: "INT-03",
+    products: [
+      { key: "salud", label: "Salud", plan: "Plan Exclusivo", sub: "Plan Exclusivo, 0 dependientes", icon: "stethoscope", renovacion: "20/02/2027", primaActual: 39500, primaRenovacion: 43500, montoPendiente: 3300 },
+      { key: "auto", label: "Auto", sub: "Súper Full, Mercedes-Benz S600 2026", icon: "car", plan: "Súper Full", vehiculos: [{ marca: "Mercedes-Benz", modelo: "Clase S600", anio: "2026", placa: "A778899", color: "Negro" }], renovacion: "05/07/2027", primaActual: 210000, primaRenovacion: 226000, montoPendiente: 17500 },
+    ],
+    asistenciaProducts: [
+      { key: "goldassist", label: "Gold Assist", sub: "No contratado", icon: "shield", noContratado: true },
+      { key: "asistenciahogar", label: "Asistencia Hogar", sub: "No contratado", icon: "home", noContratado: true },
+    ],
+    dependientes: [],
+    reembolsos: [],
+    autorizaciones: [],
+    afiliadosSalud: {
+      "Nelly Cruceta Feliz": { parentesco: "Titular", edad: 52, limiteUsado: 85000, medicamentosUsado: 9500 },
+    },
+    afiliadosArsUsado: {
+      "Nelly Cruceta Feliz": { limiteUsado: 40000, medicamentosUsado: 3500 },
+    },
+    fondos: [
+      { key: "renta-fija", name: "Fondo Renta Fija Universal", invertido: true, saldo: 15000000, fechaInicio: "03/2020", rendimientoAnual: "6.2%", perfilRiesgo: "Conservador", montoMinimo: 5000, comision: "1.5% anual sobre saldo administrado", descripcion: "Invierte en instrumentos de renta fija dominicanos (certificados y bonos) buscando estabilidad y liquidez.", rendimientoHistorico: [["2023", "5.8%"], ["2024", "6.0%"], ["2025", "6.2%"]] },
+      { key: "crecimiento", name: "Fondo Crecimiento Universal", invertido: true, saldo: 50000000, fechaInicio: "01/2018", rendimientoAnual: "11.4%", perfilRiesgo: "Agresivo", montoMinimo: 25000, comision: "2.5% anual sobre saldo administrado", descripcion: "Enfocado en renta variable con mayor potencial de crecimiento a largo plazo y mayor volatilidad.", rendimientoHistorico: [["2023", "9.8%"], ["2024", "10.6%"], ["2025", "11.4%"]] },
+    ],
+    proyectos: [
+      { name: "Villa Punta Espada, Cap Cana", rows: [["Estado", "En construcción"], ["Entrega estimada", "2027"], ["Contrato", "FID-2022-0356"]] },
+    ],
+    estadoCuenta: {
+      proyecto: "Villa Punta Espada, Cap Cana",
+      saldoPendiente: "12,500,000 pesos",
+      pagos: [["15/03/2022", "Inicial", "20,000,000 pesos"], ["10/01/2025", "Avance de obra", "15,000,000 pesos"]],
+    },
+    traspasoArs: null,
+  },
 ];
 
 function normalizar(texto) {
