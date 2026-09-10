@@ -1,9 +1,11 @@
 import { useState } from "react";
 import "./desktop.css";
 import { Icon, LogoLockup } from "../components/Icon";
+import { SectionLabel } from "../components/UI";
 import { SearchScreen } from "./SearchScreen";
 import { ClienteWorkspace } from "./ClienteWorkspace";
 import { IntermediarioWorkspace } from "./IntermediarioWorkspace";
+import { PrestadorConsultaView } from "./PrestadorConsultaView";
 import { getClientePorId } from "../data/clientes";
 import { getIntermediarioPorId } from "../data/intermediarios";
 
@@ -12,6 +14,13 @@ const AREAS = [
   ["Calle", "car"],
   ["Sucursales", "building"],
   ["Backoffice", "filedesc"],
+];
+
+const NOVEDADES = [
+  { icon: "sparkles", titulo: "Nueva cobertura de Telemedicina 24/7", detalle: "Los planes Alpha y Exclusivo ahora incluyen consultas de telemedicina sin límite mensual." },
+  { icon: "creditcard", titulo: "Carnet Digital desde la consola", detalle: "Ya puedes generar y enviar el carnet digital de cualquier cliente directamente por WhatsApp desde la ficha de póliza." },
+  { icon: "clock", titulo: "Nuevo plazo de reembolsos", detalle: "El plazo máximo para solicitar un reembolso se redujo de 30 a 15 días desde la fecha del servicio." },
+  { icon: "shieldplus", titulo: "Promoción Asistencia Vehicular", detalle: "2 meses gratis de Gold Assist para clientes que renueven su póliza de Auto este mes." },
 ];
 
 function AreaLogin({ onEntrar }) {
@@ -44,8 +53,37 @@ function AreaLogin({ onEntrar }) {
   );
 }
 
+function Briefing({ sesion, onContinuar }) {
+  return (
+    <div className="agent-login" style={{ maxWidth: 520 }}>
+      <LogoLockup size={28} />
+      <h1>Hola, {sesion.nombre}</h1>
+      <p>
+        Ingresaste por el canal <strong style={{ color: "var(--accent)" }}>{sesion.area}</strong>.
+        Antes de continuar, revisa las novedades de esta semana.
+      </p>
+      <div style={{ textAlign: "left" }}>
+        <SectionLabel>Novedades para tu canal</SectionLabel>
+        {NOVEDADES.map((n, i) => (
+          <div key={i} className="card" style={{ marginBottom: 10 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <Icon name={n.icon} size={17} color="var(--accent)" />
+              <div style={{ fontWeight: 700, fontSize: 13.5 }}>{n.titulo}</div>
+            </div>
+            <div style={{ fontSize: 12.5, color: "var(--muted)", marginTop: 4 }}>{n.detalle}</div>
+          </div>
+        ))}
+      </div>
+      <button className="solid" style={{ width: "100%", marginTop: 6 }} onClick={onContinuar}>
+        Continuar a la consola
+      </button>
+    </div>
+  );
+}
+
 export default function DesktopApp() {
   const [sesion, setSesion] = useState(null);
+  const [mostrarBriefing, setMostrarBriefing] = useState(false);
   const [modo, setModo] = useState("cliente");
   const [query, setQuery] = useState("");
   const [vista, setVista] = useState({ view: "buscar" });
@@ -53,7 +91,15 @@ export default function DesktopApp() {
   if (!sesion) {
     return (
       <div className="agent-app">
-        <AreaLogin onEntrar={setSesion} />
+        <AreaLogin onEntrar={(s) => { setSesion(s); setMostrarBriefing(true); }} />
+      </div>
+    );
+  }
+
+  if (mostrarBriefing) {
+    return (
+      <div className="agent-app">
+        <Briefing sesion={sesion} onContinuar={() => setMostrarBriefing(false)} />
       </div>
     );
   }
@@ -62,7 +108,7 @@ export default function DesktopApp() {
     setVista({ view: "buscar" });
   }
   function abrirCliente(id) {
-    setVista({ view: "cliente", id });
+    setVista(modo === "prestador" ? { view: "prestador", id } : { view: "cliente", id });
   }
   function abrirIntermediario(id) {
     setVista({ view: "intermediario", id });
@@ -70,6 +116,7 @@ export default function DesktopApp() {
 
   const cliente = vista.view === "cliente" ? getClientePorId(vista.id) : null;
   const intermediario = vista.view === "intermediario" ? getIntermediarioPorId(vista.id) : null;
+  const clientePrestador = vista.view === "prestador" ? getClientePorId(vista.id) : null;
 
   return (
     <div className="agent-app">
@@ -83,13 +130,14 @@ export default function DesktopApp() {
           <div className="agent-scope">
             <span className={modo === "cliente" ? "on" : ""} onClick={() => setModo("cliente")}>Cliente</span>
             <span className={modo === "intermediario" ? "on" : ""} onClick={() => setModo("intermediario")}>Intermediario</span>
+            <span className={modo === "prestador" ? "on" : ""} onClick={() => setModo("prestador")}>Prestador</span>
           </div>
           <Icon name="search" size={14} color="rgba(255,255,255,.8)" />
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={(e) => { if (e.key === "Enter") setVista({ view: "buscar" }); }}
-            placeholder={modo === "cliente" ? "Buscar cliente…" : "Buscar intermediario…"}
+            placeholder={modo === "cliente" ? "Buscar cliente…" : modo === "intermediario" ? "Buscar intermediario…" : "Buscar cliente para consulta de prestador…"}
           />
         </div>
         <span className="agent-name">{sesion.nombre}</span>
@@ -101,6 +149,7 @@ export default function DesktopApp() {
         <span className="link" onClick={irABusqueda}>Inicio</span>
         {cliente && <> {" › "} {cliente.nombre}</>}
         {intermediario && <> {" › "} {intermediario.nombre}</>}
+        {clientePrestador && <> {" › "} Consulta de prestador · {clientePrestador.nombre}</>}
       </div>
 
       <div className="agent-main">
@@ -119,6 +168,9 @@ export default function DesktopApp() {
         )}
         {vista.view === "intermediario" && intermediario && (
           <IntermediarioWorkspace intermediario={intermediario} onAbrirCliente={abrirCliente} onVolver={irABusqueda} />
+        )}
+        {vista.view === "prestador" && clientePrestador && (
+          <PrestadorConsultaView cliente={clientePrestador} onVolver={irABusqueda} />
         )}
       </div>
     </div>

@@ -5,7 +5,7 @@ import { Icon } from "../components/Icon";
 import { SectionLabel, EstadoBadge, CoverageLine, Row } from "../components/UI";
 import { CoberturasAccordion } from "../components/CoberturasAccordion";
 import { COBERTURAS_LABEL, COBERTURAS_DATA, PLAN_BASICO_SALUD, LIMITE_POR_CASO_PLAN, COBERTURA_MEDICAMENTOS_PLAN } from "../data/data";
-import { polizasActivas } from "../data/clientes";
+import { polizasActivas, getFacturas, getPagos, getPreguntasVerificacion } from "../data/clientes";
 import { getIntermediarioPorId } from "../data/intermediarios";
 
 const PLANES_PROPIEDAD_DETALLE = ["hogar", "garantivilla"];
@@ -50,6 +50,7 @@ function ClienteWorkspaceInner({ cliente, onAbrirIntermediario, onVolver }) {
   const { current, products, reembolsos, autorizaciones, fondos, proyectos, estadoCuenta, traspasoArsPendiente, goTab } = app;
   const [tab, setTab] = useState("resumen");
   const [polizaSeleccionada, setPolizaSeleccionada] = useState(null);
+  const [verificacionAbierta, setVerificacionAbierta] = useState(false);
   const intermediario = cliente.intermediarioId ? getIntermediarioPorId(cliente.intermediarioId) : null;
   const enFlujo = current.view !== "tab";
 
@@ -59,6 +60,7 @@ function ClienteWorkspaceInner({ cliente, onAbrirIntermediario, onVolver }) {
     ["afiliados", "Afiliados de Salud"],
     ["ars", "ARS"],
     ...(reembolsos.length || autorizaciones.length ? [["tramites", "Reembolsos y autorizaciones"]] : []),
+    ["facturacion", "Facturas y pagos"],
     ...(fondos.length ? [["afi", "AFI"]] : []),
     ...(proyectos.length || estadoCuenta ? [["fiduciaria", "Fiduciaria"]] : []),
     ["asistencia", "Asistencia"],
@@ -93,7 +95,12 @@ function ClienteWorkspaceInner({ cliente, onAbrirIntermediario, onVolver }) {
             </span>
           </div>
         </div>
-        <button onClick={onVolver}>Nueva búsqueda</button>
+        <div style={{ display: "flex", gap: 8, flexShrink: 0 }}>
+          <button onClick={() => setVerificacionAbierta(true)} style={{ display: "inline-flex", alignItems: "center", gap: 6, whiteSpace: "nowrap" }}>
+            <Icon name="lock" size={14} /> Verificar identidad
+          </button>
+          <button onClick={onVolver}>Nueva búsqueda</button>
+        </div>
       </div>
 
       <div className="agent-kpis">
@@ -114,6 +121,7 @@ function ClienteWorkspaceInner({ cliente, onAbrirIntermediario, onVolver }) {
       {tab === "afiliados" && <AfiliadosSaludTab titular={cliente.nombre} />}
       {tab === "ars" && <ArsTab titular={cliente.nombre} />}
       {tab === "tramites" && <TramitesTab />}
+      {tab === "facturacion" && <FacturacionTab cliente={cliente} />}
       {tab === "afi" && <AfiTab />}
       {tab === "fiduciaria" && <FiduciariaTab />}
       {tab === "asistencia" && <AsistenciaTab />}
@@ -141,6 +149,57 @@ function ClienteWorkspaceInner({ cliente, onAbrirIntermediario, onVolver }) {
           onClose={() => setPolizaSeleccionada(null)}
         />
       )}
+
+      {verificacionAbierta && (
+        <VerificacionPanel cliente={cliente} onClose={() => setVerificacionAbierta(false)} />
+      )}
+    </div>
+  );
+}
+
+function VerificacionPanel({ cliente, onClose }) {
+  const [reveladas, setReveladas] = useState({});
+  const preguntas = getPreguntasVerificacion(cliente);
+
+  function toggle(i) {
+    setReveladas((r) => ({ ...r, [i]: !r[i] }));
+  }
+
+  return (
+    <div className="poliza-panel-overlay" onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
+      <div className="poliza-panel">
+        <div className="poliza-panel-header">
+          <div className="poliza-panel-close" onClick={onClose}><Icon name="close" size={18} color="#fff" /></div>
+          <div className="poliza-panel-eyebrow">Verificación de identidad</div>
+          <div className="poliza-panel-title">{cliente.nombre}</div>
+          <div className="poliza-panel-id">Hazle estas preguntas antes de compartir información sensible</div>
+        </div>
+
+        <div className="poliza-panel-body">
+          {preguntas.map((p, i) => (
+            <div className="card" key={i} style={{ marginBottom: 10 }}>
+              <div style={{ fontSize: 13, fontWeight: 600 }}>{p.pregunta}</div>
+              {reveladas[i] ? (
+                <div style={{ fontSize: 13.5, color: "var(--accent)", fontWeight: 700, marginTop: 8 }}>{p.respuesta}</div>
+              ) : (
+                <div
+                  onClick={() => toggle(i)}
+                  style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12, color: "var(--muted)", marginTop: 8, cursor: "pointer" }}
+                >
+                  <Icon name="lock" size={13} /> Mostrar respuesta registrada
+                </div>
+              )}
+            </div>
+          ))}
+          <div className="agent-empty">
+            Formula la pregunta primero y compara la respuesta del cliente antes de revelarla en pantalla.
+          </div>
+        </div>
+
+        <div className="poliza-panel-footer">
+          <button className="solid" style={{ flex: "1 1 100%" }} onClick={onClose}>Cerrar</button>
+        </div>
+      </div>
     </div>
   );
 }
@@ -443,6 +502,67 @@ function TramitesTab() {
       <SectionLabel>Reembolsos</SectionLabel>
       {reembolsos.length === 0 && <div className="agent-empty">Sin reembolsos registrados.</div>}
       {reembolsos.map((r, i) => <EstadoRow key={i} item={r} />)}
+    </>
+  );
+}
+
+function FacturacionTab({ cliente }) {
+  const facturas = getFacturas(cliente);
+  const pagos = getPagos(cliente);
+  const saldoTotal = facturas.reduce((s, f) => s + f.saldo, 0);
+
+  return (
+    <>
+      <SectionLabel>Facturas</SectionLabel>
+      {facturas.length === 0 ? (
+        <div className="agent-empty">Este cliente no tiene facturas registradas.</div>
+      ) : (
+        <>
+          <div style={{ fontSize: 12.5, color: "var(--muted)", marginBottom: 10 }}>
+            Saldo total pendiente: <strong style={{ color: saldoTotal > 0 ? "var(--danger)" : "var(--success-text)" }}>{money(saldoTotal)}</strong>
+          </div>
+          <table className="agent-table" style={{ marginBottom: 22 }}>
+            <thead>
+              <tr><th>Factura</th><th>Producto</th><th>Emisión</th><th>Vencimiento</th><th>Monto</th><th>Saldo</th><th>Estado</th></tr>
+            </thead>
+            <tbody>
+              {facturas.map((f) => (
+                <tr key={f.numero}>
+                  <td>{f.numero}</td>
+                  <td>{f.producto}</td>
+                  <td>{f.fechaEmision}</td>
+                  <td>{f.fechaVencimiento}</td>
+                  <td>{money(f.monto)}</td>
+                  <td>{money(f.saldo)}</td>
+                  <td><EstadoBadge estado={f.estado} /></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </>
+      )}
+
+      <SectionLabel>Historial de pagos</SectionLabel>
+      {pagos.length === 0 ? (
+        <div className="agent-empty">Este cliente no tiene pagos registrados.</div>
+      ) : (
+        <table className="agent-table">
+          <thead>
+            <tr><th>Fecha</th><th>Monto</th><th>Método</th><th>Factura</th><th>Referencia</th></tr>
+          </thead>
+          <tbody>
+            {pagos.map((p) => (
+              <tr key={p.referencia}>
+                <td>{p.fecha}</td>
+                <td>{money(p.monto)}</td>
+                <td>{p.metodo}</td>
+                <td>{p.factura}</td>
+                <td>{p.referencia}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
     </>
   );
 }

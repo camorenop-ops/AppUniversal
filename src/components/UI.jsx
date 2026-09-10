@@ -217,6 +217,10 @@ const ESTADO_COLORS = {
   "En revisión": ["var(--surface-alt)", "var(--muted)"],
   "Rechazado": ["rgba(140,47,29,0.12)", "var(--danger)"],
   "Rechazada": ["rgba(140,47,29,0.12)", "var(--danger)"],
+  "Pagada": ["var(--success-bg)", "var(--success-text)"],
+  "Pendiente": ["rgba(217,157,15,0.16)", "#B8860B"],
+  "Vencida": ["rgba(140,47,29,0.12)", "var(--danger)"],
+  "Pago parcial": ["rgba(217,157,15,0.16)", "#B8860B"],
 };
 
 export function EstadoBadge({ estado }) {

@@ -4,26 +4,40 @@ import { SectionLabel } from "../components/UI";
 import { buscarClientes, polizasActivas } from "../data/clientes";
 import { buscarIntermediarios } from "../data/intermediarios";
 
+const COPY = {
+  cliente: {
+    titulo: "Buscar cliente",
+    descripcion: "Busca por nombre, cédula, número de contrato, teléfono o póliza para ver toda la información y accesos del cliente.",
+    placeholder: "Nombre, cédula, contrato o póliza…",
+  },
+  intermediario: {
+    titulo: "Buscar intermediario",
+    descripcion: "Busca por nombre o código de corredor/agente para ver su cartera completa de clientes.",
+    placeholder: "Nombre o código…",
+  },
+  prestador: {
+    titulo: "Consulta de prestador de salud",
+    descripcion: "Busca al cliente por nombre, cédula o contrato para validar su cobertura de Salud o registrar una solicitud de autorización.",
+    placeholder: "Nombre, cédula o contrato del cliente…",
+  },
+};
+
 export function SearchScreen({ modo, setModo, query, setQuery, onAbrirCliente, onAbrirIntermediario }) {
   const [tocado, setTocado] = useState(false);
-  const clientes = modo === "cliente" ? buscarClientes(query) : [];
+  const clientes = (modo === "cliente" || modo === "prestador") ? buscarClientes(query) : [];
   const intermediarios = modo === "intermediario" ? buscarIntermediarios(query) : [];
+  const copy = COPY[modo];
 
   return (
     <div>
       <SectionLabel>Consulta interna</SectionLabel>
-      <h1 style={{ fontSize: 20, color: "var(--navy)", margin: "2px 0 4px" }}>
-        {modo === "cliente" ? "Buscar cliente" : "Buscar intermediario"}
-      </h1>
-      <p style={{ fontSize: 13, color: "var(--muted)", margin: "0 0 16px" }}>
-        {modo === "cliente"
-          ? "Busca por nombre, cédula, número de contrato, teléfono o póliza para ver toda la información y accesos del cliente."
-          : "Busca por nombre o código de corredor/agente para ver su cartera completa de clientes."}
-      </p>
+      <h1 style={{ fontSize: 20, color: "var(--navy)", margin: "2px 0 4px" }}>{copy.titulo}</h1>
+      <p style={{ fontSize: 13, color: "var(--muted)", margin: "0 0 16px" }}>{copy.descripcion}</p>
 
       <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
         <div className={"agent-tab" + (modo === "cliente" ? " on" : "")} onClick={() => setModo("cliente")}>Cliente</div>
         <div className={"agent-tab" + (modo === "intermediario" ? " on" : "")} onClick={() => setModo("intermediario")}>Intermediario</div>
+        <div className={"agent-tab" + (modo === "prestador" ? " on" : "")} onClick={() => setModo("prestador")}>Prestador de salud</div>
       </div>
 
       <div style={{ display: "flex", alignItems: "center", gap: 8, border: "1px solid var(--border-strong)", borderRadius: 10, padding: "10px 14px", marginBottom: 20, background: "var(--surface)" }}>
@@ -32,12 +46,12 @@ export function SearchScreen({ modo, setModo, query, setQuery, onAbrirCliente, o
           autoFocus
           value={query}
           onChange={(e) => { setQuery(e.target.value); setTocado(true); }}
-          placeholder={modo === "cliente" ? "Nombre, cédula, contrato o póliza…" : "Nombre o código…"}
+          placeholder={copy.placeholder}
           style={{ flex: 1, border: "none", outline: "none", fontSize: 14 }}
         />
       </div>
 
-      {modo === "cliente" && query.trim() && (
+      {(modo === "cliente" || modo === "prestador") && query.trim() && (
         clientes.length === 0 ? (
           <div className="agent-empty">No se encontraron clientes para "{query}".</div>
         ) : (

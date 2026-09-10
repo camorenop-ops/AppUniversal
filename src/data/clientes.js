@@ -305,3 +305,86 @@ export function buscarClientes(query) {
 export function polizasActivas(cliente) {
   return cliente.products.filter((p) => !p.noContratado).length;
 }
+
+// ---------- Facturación, pagos y verificación de identidad ----------
+// Derivados en tiempo real a partir de los productos de cada cliente (prima
+// vigente / monto pendiente), sin necesidad de datos adicionales por cliente.
+
+const HOY = new Date(2026, 8, 10);
+
+function formatearFecha(date) {
+  const d = String(date.getDate()).padStart(2, "0");
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  return `${d}/${m}/${date.getFullYear()}`;
+}
+function sumarDias(date, dias) {
+  const d = new Date(date);
+  d.setDate(d.getDate() + dias);
+  return d;
+}
+function parsearFecha(str) {
+  const [d, m, y] = str.split("/").map(Number);
+  return new Date(y, m - 1, d);
+}
+
+export function getFacturas(cliente) {
+  const digitos = (cliente.contrato || "").replace(/\D/g, "").slice(-6) || "000000";
+  const items = [...cliente.products, ...(cliente.asistenciaProducts || [])]
+    .filter((p) => !p.noContratado && p.primaActual != null);
+
+  return items.map((p, i) => {
+    const emision = sumarDias(HOY, -10 - i * 10);
+    const vencimiento = sumarDias(emision, 30);
+    const saldo = p.montoPendiente || 0;
+    let estado;
+    if (saldo === 0) estado = "Pagada";
+    else if (vencimiento < HOY) estado = "Vencida";
+    else estado = "Pendiente";
+    return {
+      numero: `FAC-${digitos}-${String(i + 1).padStart(3, "0")}`,
+      producto: p.label,
+      fechaEmision: formatearFecha(emision),
+      fechaVencimiento: formatearFecha(vencimiento),
+      monto: p.primaActual,
+      saldo,
+      estado,
+    };
+  });
+}
+
+const METODOS_PAGO = ["Tarjeta de crédito", "Débito bancario automático", "Transferencia bancaria"];
+
+export function getPagos(cliente) {
+  const idNum = (cliente.id || "").replace(/\D/g, "");
+  return getFacturas(cliente)
+    .map((f, i) => {
+      const pagado = f.monto - f.saldo;
+      if (pagado <= 0) return null;
+      const fechaPago = sumarDias(parsearFecha(f.fechaEmision), 6);
+      return {
+        fecha: formatearFecha(fechaPago),
+        monto: pagado,
+        metodo: METODOS_PAGO[i % METODOS_PAGO.length],
+        factura: f.numero,
+        referencia: `REF-${idNum}${1000 + i}`,
+      };
+    })
+    .filter(Boolean)
+    .sort((a, b) => parsearFecha(b.fecha) - parsearFecha(a.fecha));
+}
+
+const MESES = [
+  "enero", "febrero", "marzo", "abril", "mayo", "junio",
+  "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre",
+];
+
+export function getPreguntasVerificacion(cliente) {
+  const [, mes, anio] = (cliente.afiliadoDesde || "").split("/");
+  const mesNombre = mes ? MESES[Number(mes) - 1] : null;
+  return [
+    { pregunta: "¿Cuáles son los últimos 4 dígitos de su cédula?", respuesta: cliente.cedula.replace(/\D/g, "").slice(-4) },
+    { pregunta: "¿Cuál es el correo electrónico registrado en su cuenta?", respuesta: cliente.correo },
+    { pregunta: "¿En qué mes y año se afilió a Universal?", respuesta: mesNombre ? `${mesNombre} ${anio}` : cliente.afiliadoDesde },
+    { pregunta: "¿Cuál es el número de teléfono registrado?", respuesta: cliente.telefono },
+  ];
+}
