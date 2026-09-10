@@ -154,10 +154,12 @@ export function Tile({ product, onClick, onCotizar }) {
   );
 }
 
-export function QuickAction({ icon, label, onClick }) {
+export function QuickAction({ icon, label, onClick, color }) {
   return (
     <div onClick={onClick} className="qa-item">
-      <div className="qa-icon"><Icon name={icon} size={19} color="var(--accent)" /></div>
+      <div className="qa-icon" style={color ? { background: color + "1F" } : undefined}>
+        <Icon name={icon} size={19} color={color || "var(--accent)"} />
+      </div>
       <div className="qa-label">{label}</div>
     </div>
   );
@@ -166,7 +168,7 @@ export function QuickAction({ icon, label, onClick }) {
 export function QuickActionsRow({ items }) {
   return (
     <div className="qa-row">
-      {items.map((it, i) => <QuickAction key={i} icon={it[0]} label={it[1]} onClick={it[2]} />)}
+      {items.map((it, i) => <QuickAction key={i} icon={it[0]} label={it[1]} onClick={it[2]} color={it[3]} />)}
     </div>
   );
 }
