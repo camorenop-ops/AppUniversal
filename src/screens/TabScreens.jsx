@@ -34,10 +34,10 @@ export function HomeTab() {
         <QuickActionsRow items={[
           ["car", "Grúa 24/7", () => openAsistenciaSolicitud("vehicular"), "#E5484D"],
           ["network", "Red médica", openRedMedica, "#0EA5A5"],
-          ["refresh", "Renovación", openRenovaciones, "#2F6FE4"],
+          ["alerttriangle", "Reclamo", openReclamo, "#E5484D"],
           ["filedesc", "Endosar póliza", openEndosarPoliza, "#7C5CFC"],
           ["creditcard", "Pago", openPagoPolizas, "#1F9254"],
-          ["alerttriangle", "Reclamo", openReclamo, "#E5484D"],
+          ["refresh", "Renovación", openRenovaciones, "#2F6FE4"],
         ]} />
         <SectionLabel>Mis pólizas</SectionLabel>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(2,minmax(0,1fr))", gap: 10 }}>
