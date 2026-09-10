@@ -145,9 +145,9 @@ export function HomeTab() {
       <SectionLabel>Accesos rápidos</SectionLabel>
       <QuickActionsRow items={[
         ["car", "Grúa 24/7", () => openAsistenciaSolicitud("vehicular")],
+        ["network", "Red médica", openRedMedica],
         ["alerttriangle", "Reclamos", openReclamo],
         ["creditcard", "Pagar", openPagoPolizas],
-        ["network", "Red médica", openRedMedica],
       ]} />
       <div className="toptabs">
         {FILIALES.map(([label, icon]) => (
