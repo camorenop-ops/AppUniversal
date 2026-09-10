@@ -135,7 +135,10 @@ export function Tile({ product, onClick, onCotizar }) {
   const off = product.noContratado;
   return (
     <div onClick={onClick} className={"tile" + (off ? " off" : "")}>
-      <Icon name={product.icon} size={20} color={off ? "var(--text-muted)" : "var(--accent)"} />
+      <div className="tile-top">
+        <Icon name={product.icon} size={20} color={off ? "var(--text-muted)" : "var(--accent)"} />
+        <Icon name="chevronright" size={14} color="var(--text-muted)" />
+      </div>
       <div className="l">{product.label}</div>
       <div className="s">{product.sub}</div>
       {onCotizar && (
@@ -143,7 +146,7 @@ export function Tile({ product, onClick, onCotizar }) {
           onClick={(e) => { e.stopPropagation(); onCotizar(product.key); }}
           className="cotizar-row"
         >
-          <Icon name="plus" size={12} color="var(--accent)" />
+          <Icon name="cart" size={13} color="var(--accent)" />
           <span>Cotizar</span>
         </div>
       )}

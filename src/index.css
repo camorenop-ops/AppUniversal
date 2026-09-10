@@ -256,6 +256,11 @@ button.solid {
 .tile.off {
   opacity: .55;
 }
+.tile-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
 .tile .l {
   font-weight: 600;
   font-size: 14px;

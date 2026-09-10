@@ -9,7 +9,7 @@ const FILIALES = [
   ["AFI", "chart"],
   ["Fiduciaria", "bank"],
   ["ARS", "heart"],
-  ["Asistencia", "tool"],
+  ["Asistencia", "firstaid"],
   ["UNIT", "network"],
   ["Propartes", "car"],
   ["Administraciones", "building"],
@@ -57,7 +57,7 @@ function HeroSelector({ onSelect, onElegirGrupo }) {
         <div className="grupo-grid">
           {GRUPOS_SOLUCION.map((g) => (
             <div key={g.key} className="grupo-card" onClick={() => onElegirGrupo(g.key)}>
-              <div className="grupo-icon"><Icon name={g.icon} size={26} color="#fff" /></div>
+              <div className="grupo-icon"><Icon name={g.icon} size={42} color="#fff" /></div>
               <div className="grupo-label">{g.label}</div>
             </div>
           ))}

@@ -53,6 +53,7 @@ export const ICONS = {
   camera: '<rect x="3" y="7" width="18" height="13" rx="2"/><circle cx="12" cy="13.5" r="3.5"/><path d="M9 7l1-2h4l1 2"/>',
   circle: '<circle cx="12" cy="12" r="9"/>',
   mail: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M4 7l8 6 8-6"/>',
+  cart: '<circle cx="9" cy="21" r="1.4"/><circle cx="18" cy="21" r="1.4"/><path d="M1 1h3l2.4 13.2a2 2 0 0 0 2 1.6h9a2 2 0 0 0 2-1.6L21 6H6"/>',
 };
 
 export function Icon({ name, size = 18, color = "currentColor", style }) {
