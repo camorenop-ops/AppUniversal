@@ -23,7 +23,7 @@ export function HomeTab() {
     products, asistenciaProducts, dependientes,
     openProduct, openCotizar, openFondo, openFondoDetalle, openEstadoCuenta, openInfo,
     openRenovaciones, openEndosarPoliza, openPagoPolizas, openReclamo, openAfiliadoDetalle,
-    openCoberturasDetalle, openArsTraspaso, openAsistenciaSolicitud,
+    openCoberturasDetalle, openArsTraspaso, openAsistenciaSolicitud, openRedMedica,
   } = useApp();
 
   let content;
@@ -32,6 +32,8 @@ export function HomeTab() {
       <>
         <SectionLabel>Accesos rápidos</SectionLabel>
         <QuickActionsRow items={[
+          ["car", "Grúa 24/7", () => openAsistenciaSolicitud("vehicular"), "#E5484D"],
+          ["network", "Red médica", openRedMedica, "#0EA5A5"],
           ["refresh", "Renovación", openRenovaciones, "#2F6FE4"],
           ["filedesc", "Endosar póliza", openEndosarPoliza, "#7C5CFC"],
           ["creditcard", "Pago", openPagoPolizas, "#1F9254"],
