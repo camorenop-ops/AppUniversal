@@ -53,6 +53,28 @@ function AreaLogin({ onEntrar }) {
   );
 }
 
+function ContextoBar({ prestador, intermediario, onSalirPrestador, onSalirIntermediario }) {
+  if (!prestador && !intermediario) return null;
+  return (
+    <div className="agent-context-bar">
+      {prestador && (
+        <div className="agent-context-chip">
+          <Icon name="buildinghospital" size={14} color="var(--accent)" />
+          <span>Consulta de prestador: <strong>{prestador.nombre}</strong> ({prestador.tipo})</span>
+          <span className="agent-context-close" onClick={onSalirPrestador}><Icon name="close" size={12} /></span>
+        </div>
+      )}
+      {intermediario && (
+        <div className="agent-context-chip">
+          <Icon name="userplus" size={14} color="var(--accent)" />
+          <span>Cartera de: <strong>{intermediario.nombre}</strong></span>
+          <span className="agent-context-close" onClick={onSalirIntermediario}><Icon name="close" size={12} /></span>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function Briefing({ sesion, onContinuar }) {
   return (
     <div className="agent-login" style={{ maxWidth: 520 }}>
@@ -88,6 +110,7 @@ export default function DesktopApp() {
   const [query, setQuery] = useState("");
   const [vista, setVista] = useState({ view: "buscar" });
   const [prestadorIdentificado, setPrestadorIdentificado] = useState(null);
+  const [intermediarioActivo, setIntermediarioActivo] = useState(null);
 
   if (!sesion) {
     return (
@@ -113,12 +136,16 @@ export default function DesktopApp() {
   }
   function abrirIntermediario(id) {
     setVista({ view: "intermediario", id });
+    setIntermediarioActivo(getIntermediarioPorId(id));
   }
   function cambiarModo(m) {
     setModo(m);
     setVista({ view: "buscar" });
     if (m !== "prestador") {
       setPrestadorIdentificado(null);
+    }
+    if (m !== "intermediario") {
+      setIntermediarioActivo(null);
     }
   }
 
@@ -153,6 +180,13 @@ export default function DesktopApp() {
         <button className="ghost" onClick={() => setSesion(null)}>Cerrar sesión</button>
       </div>
 
+      <ContextoBar
+        prestador={prestadorIdentificado}
+        intermediario={intermediarioActivo}
+        onSalirPrestador={() => { setPrestadorIdentificado(null); irABusqueda(); }}
+        onSalirIntermediario={() => { setIntermediarioActivo(null); irABusqueda(); }}
+      />
+
       <div className="agent-breadcrumb">
         <span className="link" onClick={irABusqueda}>Inicio</span>
         {cliente && <> {" › "} {cliente.nombre}</>}
@@ -185,7 +219,6 @@ export default function DesktopApp() {
             prestador={prestadorIdentificado}
             cliente={clientePrestador}
             onVolver={irABusqueda}
-            onCambiarPrestador={() => { setPrestadorIdentificado(null); setVista({ view: "buscar" }); }}
           />
         )}
       </div>

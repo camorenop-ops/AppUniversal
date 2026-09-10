@@ -1,71 +1,88 @@
 import { useState } from "react";
 import { Icon } from "../components/Icon";
 import { SectionLabel } from "../components/UI";
-
-const TIPOS_PRESTADOR = ["Centro médico", "Laboratorio clínico", "Farmacia", "Médico independiente", "Centro de rehabilitación"];
+import { buscarPrestadoresSalud } from "../data/prestadores";
 
 export function IdentificarPrestadorForm({ onIdentificar }) {
-  const [nombre, setNombre] = useState("");
-  const [tipo, setTipo] = useState(null);
-  const [codigo, setCodigo] = useState("");
+  const [query, setQuery] = useState("");
+  const [seleccionado, setSeleccionado] = useState(null);
   const [telefono, setTelefono] = useState("");
+  const resultados = buscarPrestadoresSalud(query);
 
   return (
     <div>
       <SectionLabel>Consulta de prestador de salud</SectionLabel>
       <h1 style={{ fontSize: 20, color: "var(--navy)", margin: "2px 0 4px" }}>Identifica al prestador</h1>
       <p style={{ fontSize: 13, color: "var(--muted)", margin: "0 0 16px" }}>
-        Antes de consultar al cliente, registra quién está solicitando la validación de cobertura o la autorización.
+        Antes de consultar al cliente, busca y selecciona quién está solicitando la validación de cobertura o la autorización.
       </p>
 
-      <div className="card" style={{ maxWidth: 420 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 8, border: "1px solid var(--border-strong)", borderRadius: 10, padding: "10px 14px", marginBottom: 16, background: "var(--surface)", maxWidth: 520 }}>
+        <Icon name="search" size={16} color="var(--text-muted)" />
         <input
-          className="u-input"
-          placeholder="Nombre del prestador o centro médico"
-          value={nombre}
-          onChange={(e) => setNombre(e.target.value)}
-          style={{ marginBottom: 10, width: "100%" }}
+          autoFocus
+          value={query}
+          onChange={(e) => { setQuery(e.target.value); setSeleccionado(null); }}
+          placeholder="Nombre del prestador, ciudad o tipo…"
+          style={{ flex: 1, border: "none", outline: "none", fontSize: 14 }}
         />
-        <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 6 }}>Tipo de prestador</div>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 10 }}>
-          {TIPOS_PRESTADOR.map((t) => (
-            <div
-              key={t}
-              onClick={() => setTipo(t)}
-              className={"agent-tab" + (tipo === t ? " on" : "")}
-            >
-              {t}
-            </div>
-          ))}
-        </div>
-        <input
-          className="u-input"
-          placeholder="RNC o código del prestador (opcional)"
-          value={codigo}
-          onChange={(e) => setCodigo(e.target.value)}
-          style={{ marginBottom: 10, width: "100%" }}
-        />
-        <input
-          className="u-input"
-          placeholder="Teléfono de contacto"
-          value={telefono}
-          onChange={(e) => setTelefono(e.target.value)}
-          style={{ width: "100%" }}
-        />
-        <button
-          className="solid"
-          style={{ marginTop: 12, width: "100%" }}
-          disabled={!nombre.trim() || !tipo}
-          onClick={() => onIdentificar({ nombre: nombre.trim(), tipo, codigo: codigo.trim(), telefono: telefono.trim() })}
-        >
-          Continuar a la búsqueda del cliente
-        </button>
       </div>
+
+      {!seleccionado && (
+        resultados.length === 0 ? (
+          <div className="agent-empty">No se encontraron prestadores para "{query}".</div>
+        ) : (
+          <table className="agent-table" style={{ maxWidth: 720 }}>
+            <thead>
+              <tr><th>Prestador</th><th>Tipo</th><th>Ciudad</th><th>Código</th></tr>
+            </thead>
+            <tbody>
+              {resultados.map((p) => (
+                <tr key={p.id} onClick={() => setSeleccionado(p)}>
+                  <td style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                    <Icon name="buildinghospital" size={15} color="var(--accent)" />{p.nombre}
+                  </td>
+                  <td>{p.tipo}</td>
+                  <td>{p.ciudad}</td>
+                  <td>{p.codigo}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )
+      )}
+
+      {seleccionado && (
+        <div className="card" style={{ maxWidth: 420 }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <Icon name="buildinghospital" size={18} color="var(--accent)" />
+              <div style={{ fontWeight: 700, fontSize: 14.5 }}>{seleccionado.nombre}</div>
+            </div>
+            <span style={{ color: "var(--accent)", cursor: "pointer", fontSize: 12, fontWeight: 600 }} onClick={() => setSeleccionado(null)}>Cambiar</span>
+          </div>
+          <div style={{ fontSize: 12.5, color: "var(--muted)", marginTop: 4 }}>{seleccionado.tipo} · {seleccionado.ciudad} · Cód: {seleccionado.codigo}</div>
+          <input
+            className="u-input"
+            placeholder="Teléfono de contacto de quien llama (opcional)"
+            value={telefono}
+            onChange={(e) => setTelefono(e.target.value)}
+            style={{ marginTop: 12, width: "100%" }}
+          />
+          <button
+            className="solid"
+            style={{ marginTop: 12, width: "100%" }}
+            onClick={() => onIdentificar({ ...seleccionado, telefonoContacto: telefono.trim() })}
+          >
+            Continuar a la búsqueda del cliente
+          </button>
+        </div>
+      )}
     </div>
   );
 }
 
-export function PrestadorConsultaView({ prestador, cliente, onVolver, onCambiarPrestador }) {
+export function PrestadorConsultaView({ prestador, cliente, onVolver }) {
   const [servicio, setServicio] = useState("");
   const [observacion, setObservacion] = useState("");
   const [validacion, setValidacion] = useState(null);
@@ -105,11 +122,6 @@ export function PrestadorConsultaView({ prestador, cliente, onVolver, onCambiarP
           </div>
         </div>
         <button onClick={onVolver}>Nueva búsqueda</button>
-      </div>
-
-      <div className="agent-empty" style={{ marginBottom: 16 }}>
-        Atendiendo solicitud de <strong style={{ color: "var(--text)" }}>{prestador.nombre}</strong> ({prestador.tipo}).{" "}
-        <span style={{ color: "var(--accent)", cursor: "pointer", fontWeight: 600 }} onClick={onCambiarPrestador}>Cambiar prestador</span>
       </div>
 
       <SectionLabel>Cobertura de Salud</SectionLabel>

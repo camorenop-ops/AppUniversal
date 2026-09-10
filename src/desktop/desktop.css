@@ -88,6 +88,41 @@
   color: var(--navy);
 }
 
+.agent-context-bar {
+  position: sticky;
+  top: 58px;
+  z-index: 9;
+  background: var(--ice);
+  border-bottom: 1px solid var(--border);
+  padding: 8px 28px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.agent-context-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12.5px;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 5px 8px 5px 12px;
+}
+.agent-context-close {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  color: var(--text-muted);
+  padding: 3px;
+  border-radius: 999px;
+}
+.agent-context-close:hover {
+  background: var(--border);
+  color: var(--text);
+}
+
 .agent-breadcrumb {
   max-width: 1160px;
   margin: 0 auto;
