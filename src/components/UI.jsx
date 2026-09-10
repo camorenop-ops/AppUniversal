@@ -63,7 +63,7 @@ export function InfoCard({ icon, name, rows }) {
       {rows.map((r, i) => (
         <div key={i} style={{ display: "flex", justifyContent: "space-between", fontSize: 12.5, color: "var(--muted)", marginTop: 6 }}>
           <span>{r[0]}</span>
-          <span style={{ color: "#1a1f2b", fontWeight: 600 }}>{r[1]}</span>
+          <span style={{ color: "var(--text)", fontWeight: 600 }}>{r[1]}</span>
         </div>
       ))}
     </div>
@@ -135,7 +135,10 @@ export function Tile({ product, onClick, onCotizar }) {
   const off = product.noContratado;
   return (
     <div onClick={onClick} className={"tile" + (off ? " off" : "")}>
-      <Icon name={product.icon} size={20} color={off ? "var(--text-muted)" : "var(--accent)"} />
+      <div className="tile-top">
+        <Icon name={product.icon} size={20} color={off ? "var(--text-muted)" : "var(--accent)"} />
+        <Icon name="chevronright" size={14} color="var(--text-muted)" />
+      </div>
       <div className="l">{product.label}</div>
       <div className="s">{product.sub}</div>
       {onCotizar && (
@@ -143,7 +146,7 @@ export function Tile({ product, onClick, onCotizar }) {
           onClick={(e) => { e.stopPropagation(); onCotizar(product.key); }}
           className="cotizar-row"
         >
-          <Icon name="plus" size={12} color="var(--accent)" />
+          <Icon name="cart" size={13} color="var(--accent)" />
           <span>Cotizar</span>
         </div>
       )}
@@ -195,7 +198,7 @@ export function MetodoPagoRow({ icon, label, on, onClick }) {
       style={{ background: on ? "var(--ice)" : "transparent", borderRadius: 10, border: `1px solid ${on ? "var(--accent)" : "transparent"}`, padding: "9px 8px" }}
     >
       <span style={{ color: on ? "var(--accent)" : "var(--muted)" }}><Icon name={icon} size={17} /></span>
-      <span className="label" style={{ color: on ? "var(--accent)" : "#1a1f2b", fontWeight: on ? 600 : 400 }}>{label}</span>
+      <span className="label" style={{ color: on ? "var(--accent)" : "var(--text)", fontWeight: on ? 600 : 400 }}>{label}</span>
       {on && <Icon name="circlecheck" size={16} color="var(--accent)" />}
     </div>
   );
@@ -213,13 +216,13 @@ export function StepNav({ onBack, onForward, forwardLabel, disabled }) {
 const ESTADO_COLORS = {
   "Aprobado": ["var(--success-bg)", "var(--success-text)"],
   "Aprobada": ["var(--success-bg)", "var(--success-text)"],
-  "En revisión": ["#EEF1F6", "var(--muted)"],
+  "En revisión": ["var(--surface-alt)", "var(--muted)"],
   "Rechazado": ["rgba(140,47,29,0.12)", "var(--danger)"],
   "Rechazada": ["rgba(140,47,29,0.12)", "var(--danger)"],
 };
 
 export function EstadoBadge({ estado }) {
-  const c = ESTADO_COLORS[estado] || ["#EEF1F6", "var(--muted)"];
+  const c = ESTADO_COLORS[estado] || ["var(--surface-alt)", "var(--muted)"];
   return (
     <span style={{ display: "inline-block", padding: "2px 8px", borderRadius: 999, fontSize: 10.5, fontWeight: 700, background: c[0], color: c[1], whiteSpace: "nowrap" }}>
       {estado}
@@ -246,9 +249,9 @@ export function TablaComparativa({ filas, columnas, calcularPrecio, plan, onSele
               <div
                 key={c}
                 onClick={() => onSeleccionar(c, precio)}
-                style={{ flex: 1, textAlign: "center", padding: "8px 2px", borderRadius: 8, cursor: "pointer", background: on ? "var(--ice)" : "#fff", border: `1px solid ${on ? "var(--accent)" : "var(--border)"}` }}
+                style={{ flex: 1, textAlign: "center", padding: "8px 2px", borderRadius: 8, cursor: "pointer", background: on ? "var(--ice)" : "var(--surface)", border: `1px solid ${on ? "var(--accent)" : "var(--border)"}` }}
               >
-                <div style={{ fontSize: 9, fontWeight: 600, color: on ? "var(--accent)" : "#1a1f2b" }}>{c}</div>
+                <div style={{ fontSize: 9, fontWeight: 600, color: on ? "var(--accent)" : "var(--text)" }}>{c}</div>
                 <div style={{ fontSize: 8.5, color: on ? "var(--accent)" : "var(--muted)", marginTop: 2 }}>RD$ {precio.toLocaleString("es-DO")}</div>
               </div>
             );

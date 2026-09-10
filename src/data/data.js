@@ -1,5 +1,7 @@
 import adAuto from "../assets/ad-auto.jpg";
 import adSalud from "../assets/ad-salud.jpg";
+import adVida from "../assets/ad-vida.jpg";
+import adInternationalCare from "../assets/ad-international-care.jpg";
 
 export const INITIAL_DEPENDIENTES = [
   "Amy Carolina Pereyra García",
@@ -315,6 +317,11 @@ export const ASISTENCIA_INFO = {
   asistenciahogar: [["Estado", "Activo"], ["Cobertura", "Plomería, electricidad, cerrajería"]],
 };
 export const FILIALES = ["Seguros", "AFI", "Fiduciaria", "ARS", "Asistencia"];
+export const GRUPOS_SOLUCION = [
+  { key: "seguros", label: "Seguros", icon: "shield", filiales: ["Seguros", "ARS", "UNIT"] },
+  { key: "financieras", label: "Financieras", icon: "bank", filiales: ["AFI", "Fiduciaria"] },
+  { key: "servicios", label: "Servicios", icon: "firstaid", filiales: ["Asistencia", "Propartes", "Administraciones"] },
+];
 export const MUEBLES_HOGAR = [
   "Sala (mueble, TV, decoración)",
   "Comedor",
@@ -337,8 +344,9 @@ export const UBICACIONES_MUESTRA = [
 ];
 export const ANUNCIOS = [
   { tag: "SEGUROS UNIVERSAL · AUTO", t: "Retoque Express gratis con tu Súper Full", img: adAuto },
-  { tag: "SEGUROS UNIVERSAL · SALUD", t: "Plan Exclusivo: cobertura desde la gestación", img: adSalud },
-  { tag: "GRUPO UNIVERSAL", t: "60 años protegiendo lo que más quieres", img: null },
+  { tag: "SEGUROS UNIVERSAL · SALUD", t: "Plan Exclusivo: cobertura desde la gestación", img: adSalud, fit: "contain" },
+  { tag: "SEGUROS UNIVERSAL · VIDA", t: "Más que un seguro de vida, un respaldo para cada etapa", img: adVida, fit: "contain" },
+  { tag: "INTERNATIONAL CARE", t: "El complemento ideal para tu Plan Privado de Salud Exclusivo", img: adInternationalCare, fit: "contain" },
 ];
 export const CENTROS = [
   { x: 50, y: 62, label: "Tú", primary: true },

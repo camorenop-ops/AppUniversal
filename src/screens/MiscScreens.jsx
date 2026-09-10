@@ -11,7 +11,7 @@ export function ChatScreen() {
   return (
     <>
       <BackHeader title="Asistente Universal" />
-      <div style={{ background: "#EEF1F6", borderRadius: 12, borderTopLeftRadius: 2, padding: "10px 12px", maxWidth: "85%", fontSize: 13, marginBottom: 10 }}>
+      <div style={{ background: "var(--surface-alt)", borderRadius: 12, borderTopLeftRadius: 2, padding: "10px 12px", maxWidth: "85%", fontSize: 13, marginBottom: 10 }}>
         Hola Carlos, ¿en qué puedo ayudarte hoy?
       </div>
       <div style={{ display: "flex", flexDirection: "column", gap: 6, marginBottom: 14 }}>

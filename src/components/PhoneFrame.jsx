@@ -27,14 +27,15 @@ function ScreenContainer() {
 }
 
 export function PhoneFrame() {
-  const { current, activeTab, goTab, openChat } = useApp();
+  const { current, activeTab, activeGrupo, goTab, openChat } = useApp();
+  const enSelectorSolucion = current.view === "tab" && current.tab === "home" && !activeGrupo;
 
   return (
     <div className="phone">
       <div className="notch" />
       <div className="screen-body">
         <ScreenContainer />
-        {current.view !== "chat" && (
+        {current.view !== "chat" && !enSelectorSolucion && (
           <div id="fab" onClick={openChat}>
             <Icon name="messagecircle" size={22} />
           </div>
