@@ -27,12 +27,21 @@ function HeroSelector({ onSelect, onElegirGrupo }) {
   return (
     <div className="hero-selector">
       <div className="hero-track" ref={trackRef} onScroll={handleScroll}>
-        {ANUNCIOS.map((a, i) => {
-          const style = a.img
-            ? { backgroundImage: `url(${a.img})` }
-            : { background: "linear-gradient(135deg,var(--navy),var(--accent))" };
-          return <div key={i} className="hero-slide" style={style} onClick={() => onSelect(a.t)} />;
-        })}
+        {ANUNCIOS.map((a, i) => (
+          <div key={i} className="hero-slide" onClick={() => onSelect(a.t)}>
+            {a.img && a.fit === "contain" ? (
+              <>
+                <div className="hero-slide-bg" style={{ backgroundImage: `url(${a.img})` }} />
+                <div className="hero-slide-fg" style={{ backgroundImage: `url(${a.img})` }} />
+              </>
+            ) : (
+              <div
+                className="hero-slide-cover"
+                style={a.img ? { backgroundImage: `url(${a.img})` } : { background: "linear-gradient(135deg,var(--navy),var(--accent))" }}
+              />
+            )}
+          </div>
+        ))}
       </div>
       <div className="hero-scrim-top" />
       <div className="hero-scrim-bottom" />

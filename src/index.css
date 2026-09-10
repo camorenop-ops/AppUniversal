@@ -428,12 +428,36 @@ input.u-input {
   display: none;
 }
 .hero-slide {
+  position: relative;
   flex: 0 0 100%;
   height: 100%;
-  background-size: cover;
-  background-position: center;
+  overflow: hidden;
   scroll-snap-align: start;
   cursor: pointer;
+}
+.hero-slide-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  filter: blur(20px) brightness(.75);
+  transform: scale(1.15);
+}
+.hero-slide-fg {
+  position: absolute;
+  top: 80px;
+  left: 16px;
+  right: 16px;
+  bottom: 230px;
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.hero-slide-cover {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
 }
 .hero-scrim-top {
   position: absolute;
