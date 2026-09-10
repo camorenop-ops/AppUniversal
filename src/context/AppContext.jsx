@@ -34,6 +34,7 @@ export function AppProvider({ children }) {
   const [activeTab, setActiveTab] = useState("home");
   const [activeFilial, setActiveFilial] = useState("Seguros");
   const [memberIdx, setMemberIdx] = useState(0);
+  const [proposal, setProposal] = useState("ecosistema");
 
   const [products, setProducts] = useState(initialProducts);
   const [asistenciaProducts, setAsistenciaProducts] = useState(initialAsistenciaProducts);
@@ -653,7 +654,7 @@ export function AppProvider({ children }) {
   const enviarAsistenciaSolicitud = () => navigate({ view: "asistenciaSolicitudEnviada" });
 
   const value = {
-    stack, current, activeTab, activeFilial, memberIdx,
+    stack, current, activeTab, activeFilial, memberIdx, proposal, setProposal,
     products, asistenciaProducts, dependientes, reembolsos, autorizaciones,
     especialidadFiltro, setEspecialidadFiltro,
     tarjetas, debitosAutomaticos,

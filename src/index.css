@@ -761,3 +761,127 @@ body.standalone input.u-input { font-size: 14.5px; padding: 12px 14px; }
 body.standalone .qa-label { font-size: 11px; }
 body.standalone .back-header span { font-size: 17px; }
 body.standalone .home-logo { height: 34px !important; }
+
+/* ---------- Propuesta 1: Ecosistema Universal ---------- */
+.eco-card { margin-bottom: 4px; }
+.eco-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 10px;
+}
+.eco-card-label { font-size: 13.5px; font-weight: 700; }
+.eco-card-count { font-size: 11.5px; color: var(--accent); font-weight: 600; }
+.eco-bar { display: flex; gap: 4px; margin-bottom: 8px; }
+.eco-seg {
+  flex: 1;
+  height: 7px;
+  border-radius: 4px;
+  background: var(--border);
+  cursor: pointer;
+}
+.eco-seg.on { background: var(--accent); }
+.eco-legend { display: flex; flex-wrap: wrap; gap: 6px 12px; }
+.eco-legend-item { font-size: 11px; color: var(--text-muted); cursor: pointer; }
+.eco-legend-item.on { color: var(--accent); font-weight: 600; }
+.reco-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  cursor: pointer;
+}
+.reco-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.reco-body { flex: 1; min-width: 0; }
+.reco-title { font-size: 13px; font-weight: 600; }
+.reco-text { font-size: 11.5px; color: var(--muted); margin-top: 1px; }
+
+/* ---------- Propuesta 2: Autonomía total ---------- */
+.tramite-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+}
+.tramite-row:last-child { border-bottom: none; }
+.tramite-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  background: var(--ice);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.tramite-body { flex: 1; min-width: 0; }
+.tramite-title { font-size: 13px; font-weight: 600; }
+.tramite-sub { font-size: 11.5px; color: var(--muted); margin-top: 1px; }
+
+/* ---------- Propuesta 3: Servicio intuitivo guiado ---------- */
+.nba-card {
+  background: linear-gradient(135deg, var(--navy), var(--accent));
+  border-radius: 14px;
+  padding: 16px;
+  color: #fff;
+  margin-bottom: 6px;
+}
+.nba-title { font-size: 15px; font-weight: 700; text-wrap: balance; }
+.nba-text { font-size: 12.5px; color: rgba(255, 255, 255, .82); margin-top: 4px; line-height: 1.45; }
+.nba-card button.solid { background: #fff; color: var(--navy); border-color: #fff; }
+.intent-input {
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 13px;
+  color: var(--text);
+  flex: 1;
+  font-family: inherit;
+}
+.intent-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 4px; }
+.intent-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+}
+.filial-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+
+/* ---------- Selector de propuestas (fuera del marco del teléfono) ---------- */
+.proposal-switcher { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+.proposal-btn {
+  padding: 9px 14px;
+  border-radius: 10px;
+  border: 1.5px solid var(--border-strong);
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: left;
+}
+.proposal-btn.on {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--ice);
+}
