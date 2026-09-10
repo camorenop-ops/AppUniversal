@@ -1,8 +1,6 @@
-import { useRef, useState } from "react";
 import { useApp } from "../context/AppContext";
-import { LogoLockup, Icon } from "../components/Icon";
+import { Icon } from "../components/Icon";
 import { FilialTab, Row, SectionLabel, Tile, QuickActionsRow } from "../components/UI";
-import { ANUNCIOS, GRUPOS_SOLUCION } from "../data/data";
 
 const FILIALES = [
   ["Seguros", "shield"],
@@ -15,73 +13,17 @@ const FILIALES = [
   ["Administraciones", "building"],
 ];
 
-function HeroSelector({ onSelect, onElegirGrupo, titular }) {
-  const [idx, setIdx] = useState(0);
-  const trackRef = useRef(null);
-
-  function handleScroll(e) {
-    const w = e.currentTarget.clientWidth || 1;
-    setIdx(Math.round(e.currentTarget.scrollLeft / w));
-  }
-
-  return (
-    <div className="hero-selector">
-      <div className="hero-track" ref={trackRef} onScroll={handleScroll}>
-        {ANUNCIOS.map((a, i) => (
-          <div key={i} className="hero-slide" onClick={() => onSelect(a.t)}>
-            {a.img && a.fit === "contain" ? (
-              <>
-                <div className="hero-slide-bg" style={{ backgroundImage: `url(${a.img})` }} />
-                <div className="hero-slide-fg" style={{ backgroundImage: `url(${a.img})` }} />
-              </>
-            ) : (
-              <div
-                className="hero-slide-cover"
-                style={a.img ? { backgroundImage: `url(${a.img})` } : { background: "linear-gradient(135deg,var(--navy),var(--accent))" }}
-              />
-            )}
-          </div>
-        ))}
-      </div>
-      <div className="hero-scrim-top" />
-      <div className="hero-scrim-bottom" />
-      <div className="hero-top">
-        <LogoLockup size={26} className="home-logo" />
-        <div className="hero-greeting">{titular}</div>
-      </div>
-      <div className="hero-bottom">
-        <div className="hero-dots">
-          {ANUNCIOS.map((_, i) => <span key={i} className={"dot" + (i === idx ? " on" : "")} />)}
-        </div>
-        <div className="hero-label">Elige tu solución</div>
-        <div className="grupo-grid">
-          {GRUPOS_SOLUCION.map((g) => (
-            <div key={g.key} className="grupo-card" onClick={() => onElegirGrupo(g.key)}>
-              <div className="grupo-icon"><Icon name={g.icon} size={42} color="#fff" /></div>
-              <div className="grupo-label">{g.label}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
 export function HomeTab() {
   const {
-    activeFilial, setFilial, activeGrupo, elegirGrupo, volverASelectorGrupos,
+    activeFilial, setFilial, goTab,
     products, asistenciaProducts, dependientes, titular, fondos, proyectos,
-    openProduct, openCotizar, openFondo, openFondoDetalle, openEstadoCuenta, openInfo, openStub,
+    openProduct, openCotizar, openFondo, openFondoDetalle, openEstadoCuenta, openInfo,
     openRenovaciones, openEndosarPoliza, openPagoPolizas, openReclamo, openAfiliadoDetalle,
-    openCoberturasDetalle, openArsTraspaso, openAsistenciaSolicitud,
+    openCoberturasDetalle, openArsTraspaso, openAsistenciaSolicitud, openRedMedica,
   } = useApp();
 
-  if (!activeGrupo) {
-    return <HeroSelector onSelect={openStub} onElegirGrupo={elegirGrupo} titular={titular} />;
-  }
-
-  const grupo = GRUPOS_SOLUCION.find((g) => g.key === activeGrupo);
-  const filialesGrupo = FILIALES.filter(([label]) => grupo.filiales.includes(label));
+  const nombreCorto = titular.split(" ").filter((_, i) => i === 0 || i === 2).join(" ");
+  const iniciales = nombreCorto.split(" ").map((w) => w[0]).join("");
 
   let content;
   if (activeFilial === "Seguros") {
@@ -188,17 +130,31 @@ export function HomeTab() {
 
   return (
     <>
-      <div className="grupo-back-row" onClick={volverASelectorGrupos}>
-        <Icon name="arrowleft" size={16} />
-        <span>{grupo.label}</span>
-      </div>
-      {filialesGrupo.length > 1 && (
-        <div className="toptabs">
-          {filialesGrupo.map(([label, icon]) => (
-            <FilialTab key={label} icon={icon} label={label} on={label === activeFilial} onClick={() => setFilial(label)} />
-          ))}
+      <div className="home-header">
+        <div className="home-header-user">
+          <div className="home-avatar">{iniciales}</div>
+          <div>
+            <div className="home-header-hello">Bienvenido</div>
+            <div className="home-header-name">{nombreCorto}</div>
+          </div>
         </div>
-      )}
+        <div className="home-header-actions">
+          <span onClick={() => goTab("notif")} className="home-header-bell"><Icon name="bell" size={18} color="#fff" /></span>
+          <span onClick={() => openAsistenciaSolicitud("vehicular")} className="home-header-sos">SOS</span>
+        </div>
+      </div>
+      <SectionLabel>Accesos rápidos</SectionLabel>
+      <QuickActionsRow items={[
+        ["car", "Grúa 24/7", () => openAsistenciaSolicitud("vehicular")],
+        ["network", "Red médica", openRedMedica],
+        ["alerttriangle", "Reclamos", openReclamo],
+        ["creditcard", "Pagar", openPagoPolizas],
+      ]} />
+      <div className="toptabs">
+        {FILIALES.map(([label, icon]) => (
+          <FilialTab key={label} icon={icon} label={label} on={label === activeFilial} onClick={() => setFilial(label)} />
+        ))}
+      </div>
       {content}
     </>
   );
