@@ -49,6 +49,14 @@ export const BANCOS_RD = [
   "Banco Santa Cruz", "Banco Caribe", "Banco Promerica", "Banco Vimenca",
 ];
 
+export function initialTarjetas() {
+  return [
+    { id: "card-1", marca: "Visa", ultimos4: "4417", vencimiento: "08/27", titular: "Carlos Andrés Moreno Prieto" },
+  ];
+}
+export const TIPOS_CUENTA_BANCARIA = ["Cuenta de ahorros", "Cuenta corriente"];
+export const DIAS_PAGO_DEBITO = [1, 5, 10, 15, 20, 25];
+
 export const TIPOS_RECLAMO_AUTO = [
   ["tool", "asistencia", "Asistencia vehicular"],
   ["car", "choque", "Choque"],

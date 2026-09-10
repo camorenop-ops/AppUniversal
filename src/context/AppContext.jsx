@@ -11,6 +11,7 @@ import {
   UBICACIONES_MUESTRA,
   TITULAR_NOMBRE,
   GRUPOS_SOLUCION,
+  initialTarjetas,
 } from "../data/data";
 
 function avanzarUnAnio(fecha) {
@@ -42,6 +43,8 @@ export function AppProvider({ children }) {
   const [reembolsos, setReembolsos] = useState(initialReembolsos);
   const [autorizaciones, setAutorizaciones] = useState(initialAutorizaciones);
   const [especialidadFiltro, setEspecialidadFiltro] = useState("Todas");
+  const [tarjetas, setTarjetas] = useState(initialTarjetas);
+  const [debitosAutomaticos, setDebitosAutomaticos] = useState([]);
 
   const [cot, setCot] = useState(null);
   const [reembolsoForm, setReembolsoForm] = useState(null);
@@ -51,6 +54,8 @@ export function AppProvider({ children }) {
   const [renovacionForm, setRenovacionForm] = useState(null);
   const [endosoForm, setEndosoForm] = useState(null);
   const [pagoPolizasForm, setPagoPolizasForm] = useState(null);
+  const [tarjetaForm, setTarjetaForm] = useState(null);
+  const [debitoForm, setDebitoForm] = useState(null);
   const [reclamoForm, setReclamoForm] = useState(null);
   const [traspasoForm, setTraspasoForm] = useState(null);
   const [asistenciaSolicitudForm, setAsistenciaSolicitudForm] = useState(null);
@@ -541,6 +546,54 @@ export function AppProvider({ children }) {
   }
   const confirmarPagoPolizas = () => navigate({ view: "pagoPolizasConfirmado" });
 
+  // ---------- métodos de pago (tarjetas y débitos automáticos) ----------
+  const openMetodosPago = () => navigate({ view: "metodosPago" });
+  function volverAMetodosPago() {
+    setStack([]);
+    setActiveTab("cuenta");
+    setCurrent({ view: "metodosPago" });
+  }
+  function openAgregarTarjeta() {
+    setTarjetaForm({ numero: "", titular: "", vencimiento: "" });
+    navigate({ view: "agregarTarjeta" });
+  }
+  function setTarjetaField(field, val) {
+    setTarjetaForm({ ...tarjetaForm, [field]: val });
+  }
+  function guardarTarjeta() {
+    const numero = tarjetaForm.numero.replace(/\s/g, "");
+    const marca = numero.startsWith("4") ? "Visa" : numero.startsWith("5") ? "Mastercard" : "Tarjeta";
+    setTarjetas([...tarjetas, {
+      id: "card-" + Date.now(),
+      marca,
+      ultimos4: numero.slice(-4),
+      vencimiento: tarjetaForm.vencimiento,
+      titular: tarjetaForm.titular,
+    }]);
+    navigate({ view: "tarjetaAgregada" });
+  }
+  function eliminarTarjeta(id) {
+    setTarjetas(tarjetas.filter((t) => t.id !== id));
+  }
+  function openAgregarDebito() {
+    setDebitoForm({ filial: null, productoKey: null, productoLabel: null, banco: null, tipoCuenta: null, numeroCuenta: "", diaPago: null });
+    navigate({ view: "agregarDebito" });
+  }
+  function elegirDestinoDebito(filial, productoKey, productoLabel) {
+    setDebitoForm({ ...debitoForm, filial, productoKey, productoLabel });
+    navigate({ view: "agregarDebitoDetalle" });
+  }
+  function setDebitoField(field, val) {
+    setDebitoForm({ ...debitoForm, [field]: val });
+  }
+  function guardarDebito() {
+    setDebitosAutomaticos([...debitosAutomaticos, { id: "debito-" + Date.now(), ...debitoForm }]);
+    navigate({ view: "debitoRegistrado" });
+  }
+  function eliminarDebito(id) {
+    setDebitosAutomaticos(debitosAutomaticos.filter((d) => d.id !== id));
+  }
+
   // ---------- reclamos ----------
   function openReclamo() {
     setReclamoForm({ productKey: null, tipoAuto: null, fotoCapturada: false, descripcion: "", documentos: {} });
@@ -613,7 +666,9 @@ export function AppProvider({ children }) {
     stack, current, activeTab, activeFilial, activeGrupo, memberIdx,
     products, asistenciaProducts, dependientes, reembolsos, autorizaciones,
     especialidadFiltro, setEspecialidadFiltro,
+    tarjetas, debitosAutomaticos,
     cot, reembolsoForm, autForm, depForm, cambioPlanForm, renovacionForm, endosoForm, pagoPolizasForm, reclamoForm, traspasoForm,
+    tarjetaForm, debitoForm,
     asistenciaSolicitudForm, evaluacionForm, telemedicinaForm,
     navigate, goBack, goTab, setFilial, elegirGrupo, volverASelectorGrupos, setMember, findProduct,
     openChat, openMapaCentros, openRedMedica, openFondo, openFondoDetalle,
@@ -638,6 +693,8 @@ export function AppProvider({ children }) {
     openEndosarPoliza, seleccionarPolizaEndoso, seleccionarTipoEndoso, setEndosoField,
     continuarEndosoDatos, aceptarCondicionesEndoso, enviarEndoso,
     openPagoPolizas, toggleSeleccionPago, continuarPagoPolizas, setMetodoPagoPolizas, confirmarPagoPolizas,
+    openMetodosPago, volverAMetodosPago, openAgregarTarjeta, setTarjetaField, guardarTarjeta, eliminarTarjeta,
+    openAgregarDebito, elegirDestinoDebito, setDebitoField, guardarDebito, eliminarDebito,
     openReclamo, seleccionarPolizaReclamo, seleccionarTipoReclamoAuto, capturarFotoReclamo,
     setReclamoDescripcion, toggleDocumentoReclamo, someterReclamo,
     openArsTraspaso, abrirArsTraspasoSolicitar, setTraspasoField, enviarArsTraspaso, abrirArsTraspasoEstado,
