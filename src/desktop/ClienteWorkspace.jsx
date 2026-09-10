@@ -11,6 +11,19 @@ import { getIntermediarioPorId } from "../data/intermediarios";
 const PLANES_PROPIEDAD_DETALLE = ["hogar", "garantivilla"];
 const money = (n) => `RD$ ${Number(n || 0).toLocaleString("es-DO")}`;
 
+const PREFIJO_POLIZA = {
+  salud: "SAL", auto: "VEH", vida: "VID", hogar: "CAS", garantivilla: "VIL", viaje: "VIA",
+  goldassist: "GAS", asistenciahogar: "ASH",
+};
+function numeroPoliza(cliente, product) {
+  const prefijo = PREFIJO_POLIZA[product.key] || "POL";
+  const digitos = (cliente.contrato || "").replace(/\D/g, "").slice(-6) || "000000";
+  return `${prefijo}-${digitos}-01`;
+}
+function iniciales(nombre) {
+  return nombre.split(" ").filter(Boolean).slice(0, 2).map((p) => p[0]).join("").toUpperCase();
+}
+
 function AccionesRapidas({ items }) {
   return (
     <div className="agent-actions">
@@ -36,6 +49,7 @@ function ClienteWorkspaceInner({ cliente, onAbrirIntermediario, onVolver }) {
   const app = useApp();
   const { current, products, reembolsos, autorizaciones, fondos, proyectos, estadoCuenta, traspasoArsPendiente, goTab } = app;
   const [tab, setTab] = useState("resumen");
+  const [polizaSeleccionada, setPolizaSeleccionada] = useState(null);
   const intermediario = cliente.intermediarioId ? getIntermediarioPorId(cliente.intermediarioId) : null;
   const enFlujo = current.view !== "tab";
 
@@ -95,7 +109,7 @@ function ClienteWorkspaceInner({ cliente, onAbrirIntermediario, onVolver }) {
         ))}
       </div>
 
-      {tab === "resumen" && <ResumenTab />}
+      {tab === "resumen" && <ResumenTab onAbrirPoliza={setPolizaSeleccionada} />}
       {tab === "polizas" && <PolizasTab />}
       {tab === "afiliados" && <AfiliadosSaludTab titular={cliente.nombre} />}
       {tab === "ars" && <ArsTab titular={cliente.nombre} />}
@@ -117,21 +131,122 @@ function ClienteWorkspaceInner({ cliente, onAbrirIntermediario, onVolver }) {
           </div>
         </div>
       )}
+
+      {polizaSeleccionada && (
+        <PolizaPanel
+          cliente={cliente}
+          product={polizaSeleccionada}
+          intermediario={intermediario}
+          onAbrirIntermediario={onAbrirIntermediario}
+          onClose={() => setPolizaSeleccionada(null)}
+        />
+      )}
     </div>
   );
 }
 
-function ResumenTab() {
+function PolizaPanel({ cliente, product, intermediario, onAbrirIntermediario, onClose }) {
+  const { titular, dependientes, openCarnet, openCarnetBien, openCoberturasDetalle, openPagoPolizas, openReclamo, seleccionarPolizaReclamo, openInfo, openAsistenciaSolicitud } = useApp();
+  const esAsistencia = product.key === "goldassist" || product.key === "asistenciahogar";
+
+  function ejecutar(fn) {
+    fn();
+    onClose();
+  }
+
+  const acciones = esAsistencia
+    ? [
+        ["filedesc", "Ver detalle", "Cobertura y condiciones", () => ejecutar(() => openInfo("Asistencia", product.key))],
+        ["alerttriangle", "Reportar incidente", "Solicitar asistencia ahora", () => ejecutar(() => openAsistenciaSolicitud(product.key === "asistenciahogar" ? "hogar" : "vehicular"))],
+      ]
+    : [
+        ["creditcard", "Carnet Digital", "Enviar por WhatsApp", () => ejecutar(() => (product.key === "salud" ? openCarnet() : openCarnetBien(product.key)))],
+        ["filedesc", "Condiciones", "Ver coberturas", () => ejecutar(() => openCoberturasDetalle(PLANES_PROPIEDAD_DETALLE.includes(product.key) ? "Amplia" : product.plan))],
+        ["clock", "Historial de pagos", "Ver pagos y renovación", () => ejecutar(openPagoPolizas)],
+        ["alerttriangle", "Reportar incidente", "Iniciar reclamación", () => ejecutar(() => { openReclamo(); seleccionarPolizaReclamo(product.key); })],
+      ];
+
+  return (
+    <div className="poliza-panel-overlay" onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
+      <div className="poliza-panel">
+        <div className="poliza-panel-header">
+          <div className="poliza-panel-close" onClick={onClose}><Icon name="close" size={18} color="#fff" /></div>
+          <div className="poliza-panel-eyebrow">Ficha de póliza</div>
+          <div className="poliza-panel-title">{product.label}{product.plan ? ` ${product.plan}` : ""}</div>
+          <div className="poliza-panel-id">{numeroPoliza(cliente, product)}</div>
+        </div>
+
+        <div className="poliza-panel-body">
+          <div className="card" style={{ marginBottom: 20 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", padding: "4px 0" }}>
+              <span style={{ fontSize: 12.5, color: "var(--muted)" }}>Estado de la póliza</span>
+              <span style={{ fontSize: 12.5, fontWeight: 700, color: "var(--success-text)" }}>Al día</span>
+            </div>
+            <div style={{ display: "flex", justifyContent: "space-between", padding: "8px 0", borderTop: "1px solid var(--border)" }}>
+              <span style={{ fontSize: 12.5, color: "var(--muted)" }}>Titular</span>
+              <span style={{ fontSize: 12.5, fontWeight: 600 }}>{titular}</span>
+            </div>
+            <div style={{ display: "flex", justifyContent: "space-between", padding: "8px 0 4px", borderTop: "1px solid var(--border)" }}>
+              <span style={{ fontSize: 12.5, color: "var(--muted)" }}>Plan / Detalle</span>
+              <span style={{ fontSize: 12.5, fontWeight: 600, textAlign: "right" }}>
+                {product.key === "salud" ? `${dependientes.length} dependientes` : (product.extra || product.sub)}
+              </span>
+            </div>
+          </div>
+
+          <SectionLabel>Acciones inmediatas</SectionLabel>
+          <div className="poliza-actions-grid">
+            {acciones.map(([icon, label, sub, onClick], i) => (
+              <div key={i} className="poliza-action-btn" onClick={onClick}>
+                <Icon name={icon} size={18} color="var(--accent)" />
+                <div className="lbl">{label}</div>
+                <div className="sub">{sub}</div>
+              </div>
+            ))}
+          </div>
+
+          <SectionLabel>Intermediario asignado</SectionLabel>
+          {intermediario ? (
+            <div className="poliza-intermediario-card" onClick={() => { onClose(); onAbrirIntermediario(intermediario.id); }}>
+              <div className="poliza-avatar">{iniciales(intermediario.nombre)}</div>
+              <div>
+                <div style={{ fontWeight: 700, fontSize: 13.5 }}>{intermediario.nombre}</div>
+                <div style={{ fontSize: 11.5, color: "var(--muted)", marginTop: 2 }}>{intermediario.tipo} · Cód: {intermediario.codigo}</div>
+                <div style={{ fontSize: 11.5, color: "var(--accent)", marginTop: 2 }}>{intermediario.correo} · {intermediario.telefono}</div>
+              </div>
+            </div>
+          ) : (
+            <div className="agent-empty">Canal directo, sin intermediario asignado.</div>
+          )}
+        </div>
+
+        <div className="poliza-panel-footer">
+          <button onClick={onClose}>Cerrar</button>
+          <button className="solid" onClick={() => window.print()}>Imprimir extracto</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ResumenTab({ onAbrirPoliza }) {
   const { products, asistenciaProducts } = useApp();
   return (
     <>
       <SectionLabel>Productos del cliente</SectionLabel>
       <div className="agent-grid2">
         {[...products, ...asistenciaProducts].map((p) => (
-          <div className="card" key={p.key}>
-            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-              <Icon name={p.icon} size={20} color={p.noContratado ? "var(--text-muted)" : "var(--accent)"} />
-              <div style={{ fontWeight: 600, fontSize: 14 }}>{p.label}</div>
+          <div
+            className={"card" + (p.noContratado ? "" : " card-clickable")}
+            key={p.key}
+            onClick={() => !p.noContratado && onAbrirPoliza(p)}
+          >
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <Icon name={p.icon} size={20} color={p.noContratado ? "var(--text-muted)" : "var(--accent)"} />
+                <div style={{ fontWeight: 600, fontSize: 14 }}>{p.label}</div>
+              </div>
+              {!p.noContratado && <Icon name="chevronright" size={15} color="var(--text-muted)" />}
             </div>
             <div style={{ fontSize: 12.5, color: "var(--muted)", marginTop: 6 }}>{p.sub}</div>
             {!p.noContratado && <div className="badge-active" style={{ marginTop: 8 }}>Activo</div>}
