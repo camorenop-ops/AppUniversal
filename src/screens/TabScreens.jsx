@@ -1,7 +1,6 @@
 import { useApp } from "../context/AppContext";
 import { Icon } from "../components/Icon";
 import { FilialTab, Row, SectionLabel, Tile, QuickActionsRow } from "../components/UI";
-import { FONDOS, PROYECTOS, TITULAR_NOMBRE } from "../data/data";
 
 const FILIALES = [
   ["Seguros", "shield"],
@@ -14,17 +13,17 @@ const FILIALES = [
   ["Administraciones", "building"],
 ];
 
-const NOMBRE_CORTO = TITULAR_NOMBRE.split(" ").filter((_, i) => i === 0 || i === 2).join(" ");
-const INICIALES = NOMBRE_CORTO.split(" ").map((w) => w[0]).join("");
-
 export function HomeTab() {
   const {
     activeFilial, setFilial, goTab,
-    products, asistenciaProducts, dependientes,
+    products, asistenciaProducts, dependientes, titular, fondos, proyectos,
     openProduct, openCotizar, openFondo, openFondoDetalle, openEstadoCuenta, openInfo,
     openRenovaciones, openEndosarPoliza, openPagoPolizas, openReclamo, openAfiliadoDetalle,
     openCoberturasDetalle, openArsTraspaso, openAsistenciaSolicitud, openRedMedica,
   } = useApp();
+
+  const nombreCorto = titular.split(" ").filter((_, i) => i === 0 || i === 2).join(" ");
+  const iniciales = nombreCorto.split(" ").map((w) => w[0]).join("");
 
   let content;
   if (activeFilial === "Seguros") {
@@ -62,7 +61,8 @@ export function HomeTab() {
         ]} />
         <SectionLabel>Fondos</SectionLabel>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(2,minmax(0,1fr))", gap: 10 }}>
-          {FONDOS.map((f) => (
+          {fondos.length === 0 && <div style={{ fontSize: 12.5, color: "var(--text-muted)", gridColumn: "1 / -1" }}>No tienes fondos AFI contratados.</div>}
+          {fondos.map((f) => (
             <div key={f.key} onClick={() => openFondoDetalle(f.key)} className={"tile" + (f.invertido ? "" : " off")}>
               <Icon name="chart" size={18} color={f.invertido ? "var(--accent)" : "var(--text-muted)"} />
               <div className="l">{f.name}</div>
@@ -78,7 +78,8 @@ export function HomeTab() {
         <SectionLabel>Accesos rápidos</SectionLabel>
         <QuickActionsRow items={[["receipt", "Estado de cuenta", openEstadoCuenta, "#2F6FE4"]]} />
         <SectionLabel>Mis proyectos</SectionLabel>
-        {PROYECTOS.map((p) => (
+        {proyectos.length === 0 && <div style={{ fontSize: 12.5, color: "var(--text-muted)" }}>No tienes proyectos con Fiduciaria.</div>}
+        {proyectos.map((p) => (
           <Row key={p.name} icon="building" label={p.name} onClick={() => openInfo("Fiduciaria", p.name)} />
         ))}
       </>
@@ -92,7 +93,7 @@ export function HomeTab() {
           ["network", "Solicitar traspaso", openArsTraspaso, "#7C5CFC"],
         ]} />
         <SectionLabel>Consulta de afiliados</SectionLabel>
-        {[TITULAR_NOMBRE, ...dependientes].map((d) => (
+        {[titular, ...dependientes].map((d) => (
           <Row key={d} icon="user" label={d} onClick={() => openAfiliadoDetalle(d, "ars")} />
         ))}
       </>
@@ -133,10 +134,10 @@ export function HomeTab() {
     <>
       <div className="home-header">
         <div className="home-header-user">
-          <div className="home-avatar">{INICIALES}</div>
+          <div className="home-avatar">{iniciales}</div>
           <div>
             <div className="home-header-hello">Bienvenido</div>
-            <div className="home-header-name">{NOMBRE_CORTO}</div>
+            <div className="home-header-name">{nombreCorto}</div>
           </div>
         </div>
         <div className="home-header-actions">
@@ -183,14 +184,14 @@ export function NotifTab() {
 }
 
 export function CuentaTab() {
-  const { openCarnet, openMetodosPago, openStub } = useApp();
+  const { openCarnet, openMetodosPago, openStub, titular, contrato, afiliadoDesde } = useApp();
   return (
     <>
       <div style={{ fontSize: 15, fontWeight: 600, marginBottom: 10 }}>Ficha del afiliado</div>
       <div className="card" style={{ marginBottom: 6 }}>
-        <div style={{ fontWeight: 600, fontSize: 14 }}>{TITULAR_NOMBRE}</div>
-        <div style={{ fontSize: 12, color: "var(--muted)", marginTop: 4 }}>Contrato: 03003780-28817</div>
-        <div style={{ fontSize: 12, color: "var(--muted)" }}>Afiliado desde: 01/02/2024</div>
+        <div style={{ fontWeight: 600, fontSize: 14 }}>{titular}</div>
+        <div style={{ fontSize: 12, color: "var(--muted)", marginTop: 4 }}>Contrato: {contrato}</div>
+        <div style={{ fontSize: 12, color: "var(--muted)" }}>Afiliado desde: {afiliadoDesde}</div>
       </div>
       <Row icon="creditcard" label="Mis carnets" onClick={openCarnet} />
       <Row icon="cash" label="Métodos de pago" onClick={openMetodosPago} />
