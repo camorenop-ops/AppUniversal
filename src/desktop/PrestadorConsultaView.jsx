@@ -1,7 +1,18 @@
 import { useState } from "react";
 import { Icon } from "../components/Icon";
-import { SectionLabel } from "../components/UI";
+import { SectionLabel, EstadoBadge } from "../components/UI";
 import { buscarPrestadoresSalud } from "../data/prestadores";
+
+const TIPOS_AUTORIZACION = ["Consulta médica", "Laboratorio", "Imágenes diagnósticas", "Medicamentos", "Procedimiento/Cirugía", "Hospitalización", "Terapia/Rehabilitación"];
+const ORIGENES = ["Enfermedad común", "Accidente de tránsito", "Accidente laboral", "Maternidad", "Enfermedad profesional"];
+
+function money(n) {
+  return `RD$ ${n.toLocaleString("es-DO")}`;
+}
+
+function FieldLabel({ children }) {
+  return <div style={{ fontSize: 11, fontWeight: 700, color: "var(--muted)", textTransform: "uppercase", letterSpacing: ".03em", margin: "14px 0 8px" }}>{children}</div>;
+}
 
 export function IdentificarPrestadorForm({ onIdentificar }) {
   const [query, setQuery] = useState("");
@@ -83,12 +94,21 @@ export function IdentificarPrestadorForm({ onIdentificar }) {
 }
 
 export function PrestadorConsultaView({ prestador, cliente, onVolver }) {
-  const [servicio, setServicio] = useState("");
-  const [observacion, setObservacion] = useState("");
   const [validacion, setValidacion] = useState(null);
   const [registros, setRegistros] = useState([]);
 
+  const [tipoAutorizacion, setTipoAutorizacion] = useState(TIPOS_AUTORIZACION[0]);
+  const [urgencia, setUrgencia] = useState(false);
+  const [medicoNombre, setMedicoNombre] = useState("");
+  const [medicoCodigo, setMedicoCodigo] = useState("");
+  const [diagnostico, setDiagnostico] = useState("");
+  const [origen, setOrigen] = useState(ORIGENES[0]);
+  const [observacion, setObservacion] = useState("");
+  const [prestaciones, setPrestaciones] = useState([]);
+  const [nuevaPrestacion, setNuevaPrestacion] = useState({ descripcion: "", codigo: "", cantidad: "1", valorUnitario: "" });
+
   const salud = cliente.products.find((p) => p.key === "salud" && !p.noContratado);
+  const totalPrestaciones = prestaciones.reduce((sum, p) => sum + p.cantidad * p.valorUnitario, 0);
 
   function validarCobertura() {
     setValidacion({
@@ -99,15 +119,49 @@ export function PrestadorConsultaView({ prestador, cliente, onVolver }) {
     });
   }
 
+  function agregarPrestacion() {
+    if (!nuevaPrestacion.descripcion.trim()) return;
+    const cantidad = Number(nuevaPrestacion.cantidad) || 1;
+    const valorUnitario = Number(nuevaPrestacion.valorUnitario) || 0;
+    setPrestaciones((p) => [
+      ...p,
+      { id: `${Date.now()}-${p.length}`, descripcion: nuevaPrestacion.descripcion.trim(), codigo: nuevaPrestacion.codigo.trim(), cantidad, valorUnitario },
+    ]);
+    setNuevaPrestacion({ descripcion: "", codigo: "", cantidad: "1", valorUnitario: "" });
+  }
+
+  function quitarPrestacion(id) {
+    setPrestaciones((p) => p.filter((x) => x.id !== id));
+  }
+
   function registrarAutorizacion() {
-    if (!servicio.trim()) return;
+    if (prestaciones.length === 0) return;
     const numero = `AUT-${Date.now().toString().slice(-6)}`;
     setRegistros((r) => [
-      { numero, servicio: servicio.trim(), observacion: observacion.trim(), fecha: new Date().toLocaleDateString("es-DO") },
+      {
+        numero,
+        fecha: new Date().toLocaleDateString("es-DO"),
+        estado: "Pendiente",
+        tipo: tipoAutorizacion,
+        urgencia,
+        medicoNombre: medicoNombre.trim(),
+        medicoCodigo: medicoCodigo.trim(),
+        diagnostico: diagnostico.trim(),
+        origen,
+        observacion: observacion.trim(),
+        prestaciones,
+        total: totalPrestaciones,
+      },
       ...r,
     ]);
-    setServicio("");
+    setTipoAutorizacion(TIPOS_AUTORIZACION[0]);
+    setUrgencia(false);
+    setMedicoNombre("");
+    setMedicoCodigo("");
+    setDiagnostico("");
+    setOrigen(ORIGENES[0]);
     setObservacion("");
+    setPrestaciones([]);
   }
 
   return (
@@ -164,28 +218,79 @@ export function PrestadorConsultaView({ prestador, cliente, onVolver }) {
       )}
 
       <SectionLabel>Registrar solicitud de autorización</SectionLabel>
-      <div className="card" style={{ marginBottom: 16, maxWidth: 420 }}>
-        <input
-          className="u-input"
-          placeholder="Servicio solicitado"
-          value={servicio}
-          onChange={(e) => setServicio(e.target.value)}
-          style={{ marginBottom: 8, width: "100%" }}
-        />
-        <input
-          className="u-input"
-          placeholder="Observación (opcional)"
-          value={observacion}
-          onChange={(e) => setObservacion(e.target.value)}
-          style={{ width: "100%" }}
-        />
+      <div className="card" style={{ marginBottom: 16, maxWidth: 640 }}>
+        <FieldLabel>Tipo de solicitud</FieldLabel>
+        <div className="agent-chiprow">
+          {TIPOS_AUTORIZACION.map((t) => (
+            <span key={t} className={"agent-chip" + (tipoAutorizacion === t ? " on" : "")} onClick={() => setTipoAutorizacion(t)}>{t}</span>
+          ))}
+          <span className={"agent-chip warn" + (urgencia ? " on" : "")} onClick={() => setUrgencia((u) => !u)}>
+            <Icon name="alerttriangle" size={12} style={{ marginRight: 4 }} />Urgencia
+          </span>
+        </div>
+
+        <FieldLabel>Médico tratante (opcional)</FieldLabel>
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+          <input className="u-input" placeholder="Nombre del médico" value={medicoNombre} onChange={(e) => setMedicoNombre(e.target.value)} style={{ flex: "2 1 200px" }} />
+          <input className="u-input" placeholder="Exequátur / código" value={medicoCodigo} onChange={(e) => setMedicoCodigo(e.target.value)} style={{ flex: "1 1 140px" }} />
+        </div>
+
+        <FieldLabel>Diagnóstico y origen</FieldLabel>
+        <input className="u-input" placeholder="Diagnóstico (CIE-10 y descripción)" value={diagnostico} onChange={(e) => setDiagnostico(e.target.value)} style={{ width: "100%" }} />
+        <div className="agent-chiprow">
+          {ORIGENES.map((o) => (
+            <span key={o} className={"agent-chip" + (origen === o ? " on" : "")} onClick={() => setOrigen(o)}>{o}</span>
+          ))}
+        </div>
+
+        <FieldLabel>Prestaciones solicitadas</FieldLabel>
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "flex-start" }}>
+          <input className="u-input" placeholder="Descripción del servicio" value={nuevaPrestacion.descripcion} onChange={(e) => setNuevaPrestacion((p) => ({ ...p, descripcion: e.target.value }))} style={{ flex: "2 1 180px" }} />
+          <input className="u-input" placeholder="Código" value={nuevaPrestacion.codigo} onChange={(e) => setNuevaPrestacion((p) => ({ ...p, codigo: e.target.value }))} style={{ flex: "1 1 90px" }} />
+          <input className="u-input" type="number" min="1" placeholder="Cant." value={nuevaPrestacion.cantidad} onChange={(e) => setNuevaPrestacion((p) => ({ ...p, cantidad: e.target.value }))} style={{ flex: "1 1 70px" }} />
+          <input className="u-input" type="number" min="0" placeholder="Valor unitario" value={nuevaPrestacion.valorUnitario} onChange={(e) => setNuevaPrestacion((p) => ({ ...p, valorUnitario: e.target.value }))} style={{ flex: "1 1 110px" }} />
+          <button className="agent-action" disabled={!nuevaPrestacion.descripcion.trim()} onClick={agregarPrestacion}>
+            <Icon name="plus" size={14} />Agregar
+          </button>
+        </div>
+
+        {prestaciones.length > 0 && (
+          <>
+            <table className="agent-table" style={{ marginTop: 4, marginBottom: 10 }}>
+              <thead>
+                <tr><th>Descripción</th><th>Código</th><th>Cant.</th><th>Valor unit.</th><th>Total</th><th /></tr>
+              </thead>
+              <tbody>
+                {prestaciones.map((p) => (
+                  <tr key={p.id}>
+                    <td>{p.descripcion}</td>
+                    <td>{p.codigo || "—"}</td>
+                    <td>{p.cantidad}</td>
+                    <td>{money(p.valorUnitario)}</td>
+                    <td>{money(p.cantidad * p.valorUnitario)}</td>
+                    <td style={{ cursor: "pointer" }} onClick={() => quitarPrestacion(p.id)}>
+                      <Icon name="trash" size={14} color="var(--danger)" />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <div style={{ display: "flex", justifyContent: "flex-end", fontSize: 13, fontWeight: 700, marginBottom: 4 }}>
+              Total solicitado:&nbsp;<span style={{ color: "var(--accent)" }}>{money(totalPrestaciones)}</span>
+            </div>
+          </>
+        )}
+
+        <FieldLabel>Observación</FieldLabel>
+        <input className="u-input" placeholder="Observación (opcional)" value={observacion} onChange={(e) => setObservacion(e.target.value)} style={{ width: "100%" }} />
+
         <button
           className="solid"
-          style={{ marginTop: 10, width: "100%" }}
-          disabled={!servicio.trim()}
+          style={{ marginTop: 6, width: "100%" }}
+          disabled={prestaciones.length === 0}
           onClick={registrarAutorizacion}
         >
-          Registrar autorización
+          Registrar solicitud de autorización
         </button>
       </div>
 
@@ -193,13 +298,52 @@ export function PrestadorConsultaView({ prestador, cliente, onVolver }) {
         <>
           <SectionLabel>Autorizaciones registradas en esta consulta</SectionLabel>
           {registros.map((r) => (
-            <div className="card" key={r.numero} style={{ marginBottom: 8, maxWidth: 420 }}>
-              <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <strong style={{ fontSize: 13.5 }}>{r.numero}</strong>
+            <div className="card" key={r.numero} style={{ marginBottom: 10, maxWidth: 640 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 6 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <strong style={{ fontSize: 13.5 }}>{r.numero}</strong>
+                  <EstadoBadge estado={r.estado} />
+                  {r.urgencia && (
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: 3, fontSize: 10.5, fontWeight: 700, color: "var(--danger)" }}>
+                      <Icon name="alerttriangle" size={12} color="var(--danger)" />Urgencia
+                    </span>
+                  )}
+                </div>
                 <span style={{ fontSize: 11, color: "var(--text-muted)" }}>{r.fecha}</span>
               </div>
-              <div style={{ fontSize: 12.5, marginTop: 4 }}>{r.servicio} — {prestador.nombre}</div>
-              {r.observacion && <div style={{ fontSize: 12, color: "var(--muted)", marginTop: 4 }}>{r.observacion}</div>}
+
+              <div style={{ fontSize: 12.5, color: "var(--muted)", marginTop: 8 }}>
+                {r.tipo} · {prestador.nombre}
+                {r.medicoNombre && <> · Dr(a). {r.medicoNombre}{r.medicoCodigo ? ` (${r.medicoCodigo})` : ""}</>}
+              </div>
+              {(r.diagnostico || r.origen) && (
+                <div style={{ fontSize: 12.5, color: "var(--muted)", marginTop: 4 }}>
+                  {r.diagnostico && <>Diagnóstico: <strong style={{ color: "var(--text)" }}>{r.diagnostico}</strong> · </>}
+                  Origen: <strong style={{ color: "var(--text)" }}>{r.origen}</strong>
+                </div>
+              )}
+
+              <table className="agent-table" style={{ marginTop: 10 }}>
+                <thead>
+                  <tr><th>Descripción</th><th>Código</th><th>Cant.</th><th>Valor unit.</th><th>Total</th></tr>
+                </thead>
+                <tbody>
+                  {r.prestaciones.map((p) => (
+                    <tr key={p.id}>
+                      <td>{p.descripcion}</td>
+                      <td>{p.codigo || "—"}</td>
+                      <td>{p.cantidad}</td>
+                      <td>{money(p.valorUnitario)}</td>
+                      <td>{money(p.cantidad * p.valorUnitario)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <div style={{ display: "flex", justifyContent: "flex-end", fontSize: 12.5, fontWeight: 700, marginTop: 8 }}>
+                Total:&nbsp;<span style={{ color: "var(--accent)" }}>{money(r.total)}</span>
+              </div>
+
+              {r.observacion && <div style={{ fontSize: 12, color: "var(--muted)", marginTop: 8 }}>{r.observacion}</div>}
             </div>
           ))}
         </>
