@@ -10,10 +10,31 @@ import { getClientePorId } from "../data/clientes";
 import { getIntermediarioPorId } from "../data/intermediarios";
 
 const AREAS = [
-  ["Servicio al Cliente", "messagecircle"],
-  ["Calle", "car"],
-  ["Sucursales", "building"],
+  ["Call Center", "phone"],
+  ["Sucursal", "building"],
+  ["Negocios", "chart"],
   ["Backoffice", "filedesc"],
+];
+
+const SUCURSALES = [
+  "Santo Domingo — Piantini",
+  "Santo Domingo — Naco",
+  "Santo Domingo — 27 de Febrero",
+  "Santiago — Centro",
+  "La Romana",
+  "Puerto Plata",
+  "San Pedro de Macorís",
+  "Punta Cana — Bávaro",
+];
+
+const AREAS_BACKOFFICE = [
+  "Suscripción",
+  "Siniestros y Reclamos",
+  "Cobros y Cartera",
+  "Emisión de pólizas",
+  "Atención a Intermediarios",
+  "Contabilidad y Finanzas",
+  "Cumplimiento y Legal",
 ];
 
 const NOVEDADES = [
@@ -25,7 +46,16 @@ const NOVEDADES = [
 
 function AreaLogin({ onEntrar }) {
   const [area, setArea] = useState(null);
+  const [subArea, setSubArea] = useState(null);
   const [nombre, setNombre] = useState("");
+
+  const subOpciones = area === "Sucursal" ? SUCURSALES : area === "Backoffice" ? AREAS_BACKOFFICE : null;
+  const listo = area && (!subOpciones || subArea) && nombre.trim();
+
+  function elegirArea(a) {
+    setArea(a);
+    setSubArea(null);
+  }
 
   return (
     <div className="agent-login">
@@ -34,19 +64,33 @@ function AreaLogin({ onEntrar }) {
       <p>Selecciona tu área y tu nombre de usuario para consultar clientes e intermediarios con la misma información de la app Universal.</p>
       <div className="area-grid">
         {AREAS.map(([label, icon]) => (
-          <div key={label} className={"area-option" + (area === label ? " on" : "")} onClick={() => setArea(label)}>
+          <div key={label} className={"area-option" + (area === label ? " on" : "")} onClick={() => elegirArea(label)}>
             <Icon name={icon} size={18} color={area === label ? "var(--accent)" : "var(--muted)"} />
             <div style={{ marginTop: 6 }}>{label}</div>
           </div>
         ))}
       </div>
+
+      {subOpciones && (
+        <div style={{ textAlign: "left", marginBottom: 14 }}>
+          <div style={{ fontSize: 11, fontWeight: 700, color: "var(--muted)", textTransform: "uppercase", letterSpacing: ".03em", marginBottom: 8 }}>
+            {area === "Sucursal" ? "Selecciona tu sucursal" : "Selecciona tu área de Backoffice"}
+          </div>
+          <div className="agent-chiprow">
+            {subOpciones.map((o) => (
+              <span key={o} className={"agent-chip" + (subArea === o ? " on" : "")} onClick={() => setSubArea(o)}>{o}</span>
+            ))}
+          </div>
+        </div>
+      )}
+
       <input
         className="u-input"
         placeholder="Nombre del agente"
         value={nombre}
         onChange={(e) => setNombre(e.target.value)}
       />
-      <button className="solid" style={{ width: "100%" }} disabled={!area || !nombre.trim()} onClick={() => onEntrar({ area, nombre: nombre.trim() })}>
+      <button className="solid" style={{ width: "100%" }} disabled={!listo} onClick={() => onEntrar({ area, subArea, nombre: nombre.trim() })}>
         Entrar a la consola
       </button>
     </div>
@@ -81,7 +125,8 @@ function Briefing({ sesion, onContinuar }) {
       <LogoLockup size={28} />
       <h1>Hola, {sesion.nombre}</h1>
       <p>
-        Ingresaste por el canal <strong style={{ color: "var(--accent)" }}>{sesion.area}</strong>.
+        Ingresaste por el canal <strong style={{ color: "var(--accent)" }}>{sesion.area}</strong>
+        {sesion.subArea && <> — <strong style={{ color: "var(--accent)" }}>{sesion.subArea}</strong></>}.
         Antes de continuar, revisa las novedades de esta semana.
       </p>
       <div style={{ textAlign: "left" }}>
@@ -160,7 +205,7 @@ export default function DesktopApp() {
           <LogoLockup size={20} />
           <span>Consola interna</span>
         </div>
-        <span className="area-badge">{sesion.area}</span>
+        <span className="area-badge">{sesion.area}{sesion.subArea ? ` · ${sesion.subArea}` : ""}</span>
         <div className="agent-searchbar">
           <div className="agent-scope">
             <span className={modo === "cliente" ? "on" : ""} onClick={() => cambiarModo("cliente")}>Cliente</span>
